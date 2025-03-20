@@ -8,9 +8,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import coil3.compose.AsyncImage
 import com.alespotify.model.Cancion
 import kotlinx.coroutines.launch
+
 // import COIL
+
 
 @Composable
 fun LlamadaApi() {
@@ -35,10 +38,9 @@ fun LlamadaApi() {
 fun ListaCanciones(canciones: List<Cancion>) {
     LazyColumn {
         items(canciones) { cancion ->
-            Text(text = "${cancion.title} - ${cancion.id}")
-//            AsyncImage(
-//                model = cancion.thumbImage
-//            )
+            Text(text = "${cancion.title} - ${cancion.thumbImage}")
+
+            AsyncImage(model = cancion.thumbImage, contentDescription = null)
         }
     }
 }

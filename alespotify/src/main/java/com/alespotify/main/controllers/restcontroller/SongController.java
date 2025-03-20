@@ -31,6 +31,7 @@ public class SongController {
 
     @GetMapping
     public List<Song> findAllSongs() {
+        //List<Song> lista = songRepository.findAll();
         // artista
         a1.setName("QVDO");
         a1.setId(new ObjectId());

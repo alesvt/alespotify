@@ -17,7 +17,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,12 +28,12 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -61,8 +61,10 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
 
-
-            implementation(libs.coil.compose)
+            // implementation(libs.coil3.compose)
+            //  implementation(libs.coil.network.okhttp)
+            implementation("io.coil-kt.coil3:coil-compose:3.1.0")
+            implementation("io.coil-kt.coil3:coil:3.1.0")
 
         }
         desktopMain.dependencies {
