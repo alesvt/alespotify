@@ -31,6 +31,7 @@ public class SongController {
 
     @GetMapping
     public List<Song> findAllSongs() {
+        // FIXME el problema es aquí, dice que el mapeador no es correcto, tanto para artistas, usuarios, etc
         //List<Song> lista = songRepository.findAll();
         // artista
         a1.setName("QVDO");
