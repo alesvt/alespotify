@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="357e89a5-f117-45d7-ac59-a0c7ff8adfa6" name="mongoaws Mapping">
+      <data-sources db="ce5baf0c-564a-4409-a609-f92c6fb5b3d2" ddl="a0e4a00a-b418-4a3e-8022-b6daa0ee84aa" />
+      <scope>
+        <node kind="schema" qname="Alespotify" />
+      </scope>
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="a0e4a00a-b418-4a3e-8022-b6daa0ee84aa" />
+          <option name="name" value="mongoaws (DDL)" />
+          <option name="dbmsName" value="MONGO" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$" />
+            </array>
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>

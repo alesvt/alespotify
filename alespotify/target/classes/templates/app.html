@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alespotify - Inicio</title>
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <header>
+        <span href="" class="collapse"></span>
+        <div class="logo"></div>
+        <div class="menu-item menu">
+            <p>Menú</p>
+
+            <div class="menu-items">
+                <i class="fa-solid fa-music"></i>
+                <span>Explorar</span>
+            </div>
+            <div class="menu-items">
+                <i class="fa-solid fa-list-ul"></i>
+                <span>Playlists</span>
+            </div>
+            <div class="menu-items">
+                <i class="fa-solid fa-users"></i>
+                <span>Artistas</span>
+            </div>
+            <div class="menu-items">
+                <i class="fa-solid fa-rectangle-list"></i>
+                <span>Álbumes</span>
+            </div>
+        </div>
+        <div class="menu-item my-space">
+            <p>Tu espacio</p>
+            <div class="menu-items">
+                <i class="fa-solid fa-rectangle-list"></i>
+                <span>Álbumes</span>
+            </div>
+            <div class="menu-items">
+                <i class="fa-solid fa-star"></i>
+                <span>Favoritos</span>
+            </div>
+        </div>
+
+
+        <div class="menu-item playlists">
+            <p>Playlists</p>
+            <div class="menu-items">
+                <i class="fa-solid fa-plus"></i>
+                <span>Crear nueva</span>
+            </div>
+            <!--
+        repetir por cada playlist que tenga el usuario
+        <div class="menu-items">
+            <i>icono</i>
+            <span>Favoritos</span>
+        </div> -->
+        </div>
+
+
+    </header>
+    <div id="container">
+        <div class="panel panel-superior"></div>
+        <div class="panel panel-medio">
+            <div class="buttons">
+                <div class="" id="prev"><i class="fa-solid fa-less-than"></i></div>
+                <div class="" id="next"><i class="fa-solid fa-greater-than"></i></div>
+            </div>
+            <p>Artistas más escuchados</p>
+            <div class="artist-container">
+
+                <!-- FOREACH -->
+                <div class="artist-item">
+                    <div class="artist-image">
+                        <img src="https://assets.dyler.com/uploads/posts/393/images/11139/rims-made-by-bbs.jpeg" alt="">
+                    </div>
+                    <span class="artist-name">Name</span>
+                    <span class="artist-songs">150 songs</span>
+                </div>
+                <div class="artist-item">
+                    <div class="artist-image">
+                        <img src="https://assets.dyler.com/uploads/posts/393/images/11139/rims-made-by-bbs.jpeg" alt="">
+                    </div>
+                    <span class="artist-name">Name</span>
+                    <span class="artist-songs">150 songs</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-inferior canciones-escuchadas">
+            <p>Canciones más escuchadas</p>
+
+            <div class="songs-container" th:each="song : ${songs}">
+                <div class="song-item">
+                    <div class="song-image">
+                        <img src="${song.song_source}" alt="">
+                    </div>
+                    <div class="song-info">
+                        <span class="song-name">Nombre de la canción</span>
+                        <span class="more-info">Llanta · duracion</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-inferior playlists-publicas">
+            <p>Playlists destacadas</p>
+            <div class="songs-container">
+                <div class="song-item">
+
+                    <div class="song-image">
+                        <img src="https://blog.brlogic.com/es/wp-content/uploads/sites/8/2024/03/la-historia-del-rock.jpg"
+                            alt="">
+                    </div>
+                    <div class="song-info">
+                        <span class="song-name">a</span>
+                        <span class="more-info">b</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-inferior reproductor" id="reproductor">
+            <p>Reproductor</p>
+            <img src="" alt="">
+            <div class="progress-bar" id="progress-bar"></div>
+            <div class="player-action-buttons">
+                <div id="random-song"></div>
+                <div id="previous-song"></div>
+                <div id="play-song"></div>
+                <div id="next-song"></div>
+                <div id="repeat"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:src="@{../js/app.js}"></script>
+
+</body>
+
+</html>
