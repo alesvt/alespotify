@@ -1,0 +1,17 @@
+[
+  {
+    "song_title": "Siete",
+    "song_artists": [
+      "Quevedo"
+    ],
+    "song_genre": [
+      "Reggaetón",
+      ""
+    ],
+    "song_length": 355,
+    "song_source": "C:/Users/alessandro.volta/Desktop/proyecto/pr/alespotify/src/main/resources/songs/Siete.mp3",
+    "song_thumb_image": "https://images.genius.com/3018a16adf2de0b9da230241e042cc16.619x619x1.jpg",
+    "times_played": 0,
+    "added_to_playlists": 0
+  }
+]

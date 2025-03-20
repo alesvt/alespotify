@@ -1,0 +1,14 @@
+[{
+  "_id": {
+    "$oid": "67d1ba3785c59abe9bf5e454"
+  },
+  "playlist_songs": [],
+  "playlist_name": "playlist name",
+  "playlist_image": "playlistimage.png",
+  "playlist_creation_date": "creation date",
+  "playlist_update_date": "update date",
+  "public": true,
+  "user_id": {
+    "$oid": "67d1b71f85c59abe9bf5e43e"
+  }
+}]

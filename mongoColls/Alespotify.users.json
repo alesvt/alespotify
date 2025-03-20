@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "67d1b71f85c59abe9bf5e43e"
+  },
+  "user_name": "user_name",
+  "user_email": "user_email@email.com",
+  "user_password": "hashed_password",
+  "playlists": [],
+  "favourites": []
+},
+{
+  "_id": {
+    "$oid": "67d8177c930f217cecdba6dc"
+  },
+  "user_name": "alesv",
+  "user_password": "$2a$10$/IrpKAZK/0U9N8BAa0sxDuPiW4Lfcbv6BL3VT.oKv.rYYBUUPsPNC",
+  "user_email": "a@b.c",
+  "_class": "com.alespotify.main.models.User"
+}]

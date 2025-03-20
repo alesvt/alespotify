@@ -1,0 +1,10 @@
+[{
+  "_id": {
+    "$oid": "67d1b8f685c59abe9bf5e443"
+  },
+  "artist_name": "Artist name",
+  "artist_image": "image.png",
+  "artist_description": "Artist description",
+  "artist_albums": [],
+  "artist_songs": []
+}]
