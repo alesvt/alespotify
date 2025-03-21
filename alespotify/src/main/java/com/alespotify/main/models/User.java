@@ -14,8 +14,8 @@ import org.bson.types.ObjectId;
 @Document(collection = "users")
 @Data
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ObjectId id;
 
     @Field(name = "user_name")
@@ -31,36 +31,13 @@ public class User {
      * private ArrayList<Playlist> playlists;
      */
 
-
-    public ObjectId getId() {
-        return id;
+    public User() {
     }
 
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    public User(String username, String password, String email) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
+        this.id = new ObjectId();
     }
 }
