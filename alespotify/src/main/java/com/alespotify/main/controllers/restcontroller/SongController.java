@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/songs")
 public class SongController {
 
@@ -30,17 +31,12 @@ public class SongController {
 
     @GetMapping
     public List<Song> findAllSongs() {
-        // FIXME el problema es aquí, dice que el mapeador no es correcto, tanto para artistas, usuarios, etc
-        //List<Song> lista = songRepository.findAll();
-        // artista
-
-
         return songRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public Song findSong(@PathVariable String id) {
-        return new Song();
+        return songRepository.findById(id).orElse(null);
 
     }
 }
