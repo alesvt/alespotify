@@ -1,10 +1,11 @@
 package com.alespotify.model
 
 import kotlinx.serialization.Serializable
+import org.mongodb.kbson.ObjectId
 
 @Serializable
 data class Cancion(
-    val id: Id,
+    val id: ObjectId,
     val title: String, // Cambiado de song_title a title
     val artists: List<Artist>, // Cambiado de song_artists a artists
     val album: Album?, // Cambiado de song_album a album
@@ -16,8 +17,4 @@ data class Cancion(
     val addedToPlaylists: Int
 )
 
-@Serializable
-data class Id(
-    val timestamp: Long,
-    val date: String,
-)
+

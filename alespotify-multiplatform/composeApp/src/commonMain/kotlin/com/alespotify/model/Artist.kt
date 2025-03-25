@@ -1,10 +1,11 @@
 package com.alespotify.model
 
 import kotlinx.serialization.Serializable
+import org.mongodb.kbson.ObjectId
 
 @Serializable
 data class Artist(
-    val id: Id,
+    val id: ObjectId,
     val name: String,
     val image: String,
     val description: String,

@@ -57,18 +57,29 @@ kotlin {
 
             // añadidas por mi
             implementation(libs.ktor.client.core)
-            implementation("io.ktor:ktor-client-content-negotiation:3.1.1")
+            implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
-
+            implementation("io.realm.kotlin:library-base:1.16.0")
+            // If using Device Sync
+            implementation("io.realm.kotlin:library-sync:1.16.0")
+            // If using coroutines with the SDK
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.bson.kotlinx)
             // implementation(libs.coil3.compose)
             //  implementation(libs.coil.network.okhttp)
             implementation("io.coil-kt.coil3:coil-compose:3.1.0")
             implementation("io.coil-kt.coil3:coil:3.1.0")
+            // Kotlin coroutine dependency
+            implementation(libs.kotlinx.coroutines.core.v164)
+            implementation(libs.navigation.compose)
+            // MongoDB Kotlin driver dependency
+
 
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation("io.ktor:ktor-client-apache5:3.1.0")
             implementation(libs.kotlinx.coroutines.swing)
         }
         iosMain.dependencies {

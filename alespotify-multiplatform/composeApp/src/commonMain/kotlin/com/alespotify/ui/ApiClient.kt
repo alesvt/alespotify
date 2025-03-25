@@ -8,6 +8,7 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.buildJsonArray
 
 
@@ -35,13 +36,17 @@ class ApiClient {
     suspend fun obtenerCanciones(): List<Cancion> {
         try {
             return httpClient.get("http://192.168.0.113:8080/api/songs").body()
-
         } catch (e: Exception) {
             println("Error: ${e.message}")
         } finally {
             httpClient.close();
-
         }
         return emptyList()
+    }
+
+
+    fun login() {
+        val uri = "mongodb://admin:root@localhost:27017/";
+        //  val mongoClient = MongoClient.create(uri);
     }
 }
