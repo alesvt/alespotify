@@ -39,4 +39,9 @@ public class SongController {
         return songRepository.findById(id).orElse(null);
 
     }
+
+    @PostMapping(consumes = "application/json")
+    public Song createSong(@RequestBody Song song) {
+        return songRepository.save(song);
+    }
 }
