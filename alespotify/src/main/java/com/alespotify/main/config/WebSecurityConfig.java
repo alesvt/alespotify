@@ -44,7 +44,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                // esto para definir las rutas que los usuarios pueden ver sin estar autenticados
+                // Rutas públicas que no requieren autenticación
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
                                 "/",
                                 "/index",
@@ -52,9 +52,12 @@ public class WebSecurityConfig {
                                 "/api/songs",
                                 "/api/songs/**"
                         ).permitAll()
+                        // Rutas que requieren autenticación (normal o API Key)
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Nuestro filtro personalizado para API Key
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
