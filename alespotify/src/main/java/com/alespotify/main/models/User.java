@@ -1,14 +1,18 @@
 package com.alespotify.main.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
 
 
 @Document(collection = "users")
@@ -25,6 +29,11 @@ public class User {
     @Field(name = "user_email")
     private String email;
 
+
+    @JsonIgnore
+    @DocumentReference
+    @Field("user_playlists")
+    private ArrayList<Playlist> playlists;
 
     /**
      * private Favourites favourites;
