@@ -37,8 +37,11 @@ public class User {
 
     /**
      * private Favourites favourites;
-     * private ArrayList<Playlist> playlists;
      */
+    @JsonIgnore
+    @DocumentReference
+    @Field("user_favourites")
+    private Playlist favourites;
 
     public User() {
     }

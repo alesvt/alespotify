@@ -32,7 +32,6 @@ public class Artist {
     @Field(name = "artist_albums")
     private ArrayList<Album> albums;
 
-    @JsonIgnore
     @DocumentReference
     @Field(name = "artist_songs")
     private ArrayList<Song> songs;

@@ -17,7 +17,7 @@ public class Playlist {
     @MongoId(FieldType.OBJECT_ID)
     private ObjectId id;
 
-    @Field(name="playlist_name")
+    @Field(name = "playlist_name")
     private String name;
 
     @Field("playlist_image")
@@ -33,16 +33,24 @@ public class Playlist {
     private boolean publicPlaylist;
 
     @DocumentReference
-    @JsonIgnore
     @Field(name = "playlist_songs")
     private ArrayList<Song> songs;
 
 
-    @Field("user_id")
+    @Field(name = "playlist_user")
     @DocumentReference
-    @JsonIgnore
     private User user;
 
+    public Playlist() {
+    }
 
+    public Playlist(String name, String image, Date creationDate, ArrayList<Song> songs, User user) {
+        this.name = name;
+        this.image = image;
+        this.creationDate = creationDate;
+        this.songs = songs;
+        this.user = user;
+
+    }
 
 }

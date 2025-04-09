@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                                 "/index",
                                 "/register",
                                 "/info",
+                                "/api/**",
                                 "/api/songs",
                                 "/api/songs/**"
                         ).permitAll()
