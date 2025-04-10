@@ -73,8 +73,8 @@ kotlin {
             // Kotlin coroutine dependency
             implementation(libs.kotlinx.coroutines.core.v164)
             implementation(libs.navigation.compose)
-            // MongoDB Kotlin driver dependency
 
+            implementation(compose.components.resources)
 
         }
         desktopMain.dependencies {

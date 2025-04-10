@@ -19,5 +19,5 @@ sealed class DestinosNavegacion(
             navArgument("password") { type = NavType.StringType }
         )
     )
-
+    object android : DestinosNavegacion("android", "DatosAndroid")
 }

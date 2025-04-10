@@ -33,4 +33,8 @@
       android:fillColor="#00000000"
       android:strokeColor="#083042"
       android:fillType="nonZero"/>
+  <string name="app_name">Alespotify</string>
+
 </vector>
+
+

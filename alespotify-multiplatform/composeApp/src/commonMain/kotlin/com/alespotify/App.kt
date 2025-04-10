@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-@Composable
 
+@Composable
 fun App() {
     val apiClient = ApiClient()
     var canciones by remember { mutableStateOf<List<Cancion>>(emptyList()) }
@@ -28,7 +28,7 @@ fun App() {
 
     LaunchedEffect(Unit) {
         scope.launch {
-            canciones = apiClient.obtenerCanciones()
+           // canciones = apiClient.obtenerCanciones()
 
         }
     }

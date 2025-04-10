@@ -23,7 +23,7 @@ fun LlamadaApi() {
 
     LaunchedEffect(Unit) {
         scope.launch {
-            canciones = apiClient.obtenerCanciones()
+          //  canciones = apiClient.obtenerCanciones()
         }
     }
 
