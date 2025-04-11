@@ -42,8 +42,6 @@ kotlin {
             implementation(libs.androidx.ui) // Reemplaza con la versión más reciente
             implementation(libs.material)
             implementation(libs.androidx.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose.v171)
-            implementation("io.ktor:ktor-client-android:3.0.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -67,11 +65,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.bson.kotlinx)
             // implementation(libs.coil3.compose)
-            //  implementation(libs.coil.network.okhttp)
-            implementation("io.coil-kt.coil3:coil-compose:3.1.0")
-            implementation("io.coil-kt.coil3:coil:3.1.0")
+             // implementation("")
+            implementation(libs.coil.compose)
+            implementation(libs.coil)
             // Kotlin coroutine dependency
-            implementation(libs.kotlinx.coroutines.core.v164)
             implementation(libs.navigation.compose)
 
             implementation(compose.components.resources)

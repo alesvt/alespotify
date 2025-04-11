@@ -1,10 +1,10 @@
 package com.alespotify.ui.screens
 
-
+/*
 import alespotify_multiplatform.composeapp.generated.resources.Res
 import alespotify_multiplatform.composeapp.generated.resources.allStringResources
 import alespotify_multiplatform.composeapp.generated.resources.compose_multiplatform
-
+*/
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -423,23 +423,17 @@ fun PlayScreen(song: Cancion, user: User) {
                 contentAlignment = Alignment.Center
             ) {
                 var imageLoaded by rememberSaveable { mutableStateOf(false) }
-                val painter1 = rememberAsyncImagePainter(
-                    model = song.thumbImage,
-                    onSuccess = {
-                        imageLoaded = true
+                val painter = rememberAsyncImagePainter(
+                    model = "https://ignsl.es/wp-content/uploads/2024/07/verifactu.jpg",
+                    onError = { error ->
+                        println("Error al cargar la imagen: ${error.result}")
                     }
                 )
-                if (imageLoaded){
-                    Image(
-                        painter = painter1,
-                        contentDescription = null,
-                        modifier = Modifier.aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
-
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    print("no ha cargado aún")
-                }
+                Image(
+                    painter = painter,
+                    contentDescription = "Descripción de la imagen",
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
             // Playback controls
