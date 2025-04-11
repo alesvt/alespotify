@@ -61,7 +61,7 @@ fun MainView() {
         } else {
             navController.navigate("ios")
         }
-    }){
+    }) {
         Text("Navegar a la vista especifica")
     }
 }
@@ -131,14 +131,25 @@ fun DatosScreen() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Good afternoon", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Good afternoon",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                         Avatar("JD", "placeholder.svg")
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        FeaturedCard("Weekly Discoveries", "Fresh music curated just for you", "placeholder.svg")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        FeaturedCard(
+                            "Weekly Discoveries",
+                            "Fresh music curated just for you",
+                            "placeholder.svg"
+                        )
                         Column(modifier = Modifier.weight(1f)) {
                             RecentlyPlayedCard()
                             Spacer(modifier = Modifier.height(16.dp))
@@ -148,7 +159,12 @@ fun DatosScreen() {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(text = "Made For You", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
+                    Text(
+                        text = "Made For You",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         items(List(6) { it + 1 }) { index ->
                             MadeForYouCard(index)
@@ -157,7 +173,12 @@ fun DatosScreen() {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(text = "New Releases", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
+                    Text(
+                        text = "New Releases",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         items(List(8) { it + 1 }) { index ->
                             NewReleaseCard(index)
@@ -182,8 +203,10 @@ fun DatosScreen() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
-    val backgroundColor = if (selected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
-    val textColor = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+    val backgroundColor =
+        if (selected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
+    val textColor =
+        if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
 
     Row(
         modifier = Modifier
@@ -193,7 +216,12 @@ fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = text, tint = textColor, modifier = Modifier.size(24.dp))
+        Icon(
+            imageVector = icon,
+            contentDescription = text,
+            tint = textColor,
+            modifier = Modifier.size(24.dp)
+        )
         Spacer(modifier = Modifier.width(12.dp))
         Text(text = text, color = textColor, fontSize = 14.sp)
     }
@@ -231,7 +259,12 @@ fun FeaturedCard(title: String, description: String, imagePath: String) {
                     .align(Alignment.BottomStart)
                     .padding(16.dp)
             ) {
-                Text(text = title, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 Text(text = description, color = Color.White.copy(alpha = 0.8f), fontSize = 14.sp)
                 Button(onClick = { }, modifier = Modifier.padding(top = 8.dp)) {
                     Text("Play Now")
@@ -240,15 +273,24 @@ fun FeaturedCard(title: String, description: String, imagePath: String) {
         }
     }
 }
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun RecentlyPlayedCard() {
     Card {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Recently Played", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+            Text(
+                text = "Recently Played",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 List(3) { it + 1 }.forEach { index ->
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Image(
                             rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
                             contentDescription = "Track $index",
@@ -257,7 +299,11 @@ fun RecentlyPlayedCard() {
                         )
                         Column {
                             Text(text = "Track Title $index", fontWeight = FontWeight.Medium)
-                            Text(text = "Artist Name", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+                            Text(
+                                text = "Artist Name",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                            )
                         }
                     }
                 }
@@ -265,12 +311,18 @@ fun RecentlyPlayedCard() {
         }
     }
 }
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun TopArtistsCard() {
     Card {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Your Top Artists", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+            Text(
+                text = "Your Top Artists",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
             Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 List(3) { it + 1 }.forEach { index ->
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -280,13 +332,18 @@ fun TopArtistsCard() {
                             modifier = Modifier.size(64.dp).clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
-                        Text(text = "Artist $index", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        Text(
+                            text = "Artist $index",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 }
             }
         }
     }
 }
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MadeForYouCard(index: Int) {
@@ -304,10 +361,15 @@ fun MadeForYouCard(index: Int) {
         }
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = "Playlist $index", fontWeight = FontWeight.Medium)
-            Text(text = "By Melodify", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+            Text(
+                text = "By Melodify",
+                fontSize = 12.sp,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            )
         }
     }
 }
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun NewReleaseCard(index: Int) {
@@ -322,7 +384,11 @@ fun NewReleaseCard(index: Int) {
         }
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = "New Album $index", fontWeight = FontWeight.Medium)
-            Text(text = "Artist Name", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+            Text(
+                text = "Artist Name",
+                fontSize = 12.sp,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            )
         }
     }
 }
@@ -348,7 +414,10 @@ fun PlayerControls(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Image(
                     rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
                     contentDescription = "Now Playing",
@@ -357,22 +426,55 @@ fun PlayerControls(
                 )
                 Column {
                     Text(text = "Current Track", fontWeight = FontWeight.Medium)
-                    Text(text = "Current Artist", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+                    Text(
+                        text = "Current Artist",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                    )
                 }
                 IconButton(onClick = { }) {
                     Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Like")
                 }
             }
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                IconButton(onClick = { }) { Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Shuffle") }
-                IconButton(onClick = { }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Skip Back") }
-                IconButton(onClick = onPlayPauseToggle) {
-                    Icon(imageVector = if (isPlaying) Icons.Filled.KeyboardArrowDown else Icons.Filled.PlayArrow, contentDescription = "Play/Pause")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = "Shuffle"
+                    )
                 }
-                IconButton(onClick = { }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Skip Forward") }
-                IconButton(onClick = { }) { Icon(imageVector = Icons.Filled.Star, contentDescription = "Repeat") }
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Skip Back"
+                    )
+                }
+                IconButton(onClick = onPlayPauseToggle) {
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Filled.KeyboardArrowDown else Icons.Filled.PlayArrow,
+                        contentDescription = "Play/Pause"
+                    )
+                }
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = "Skip Forward"
+                    )
+                }
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "Repeat"
+                    )
+                }
             }
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Icon(imageVector = Icons.Filled.Star, contentDescription = "Volume")
                 Slider(value = volumeSliderValue, onValueChange = onVolumeSliderValueChange)
             }
@@ -381,15 +483,25 @@ fun PlayerControls(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(text = "1:23", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-            Slider(value = sliderValue, onValueChange = onSliderValueChange, modifier = Modifier.weight(1f))
-            Text(text = "3:45", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+        ) {
+            Text(
+                text = "1:23",
+                fontSize = 12.sp,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            )
+            Slider(
+                value = sliderValue,
+                onValueChange = onSliderValueChange,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "3:45",
+                fontSize = 12.sp,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            )
         }
     }
 }
-
-
 
 
 @Composable
@@ -398,7 +510,7 @@ fun PlayScreen(song: Cancion, user: User) {
         // Background blur (puedes necesitar implementar un efecto de desenfoque personalizado)
         // en Android, puedes usar RenderEffect y en iOS, Core Image filters
         Image(
-            painter = rememberAsyncImagePainter("https://img.freepik.com/vector-gratis/casa-encantadora-ilustracion-arbol_1308-176337.jpg?semt=ais_country_boost&w=740"), // Reemplaza con tu imagen
+            painter = rememberAsyncImagePainter("https://img.freepik.com/vector-gratis/casa-encantadora-ilustracion-arbol_1308-176337.jpg"), // Reemplaza con tu imagen
             contentDescription = "Background Blur",
             modifier = Modifier.fillMaxSize().alpha(0.3f),
             contentScale = ContentScale.Crop
@@ -407,11 +519,18 @@ fun PlayScreen(song: Cancion, user: User) {
         Column(modifier = Modifier.fillMaxSize()) {
             // Song info
             Column(
-                modifier = Modifier.fillMaxWidth().padding(top = 48.dp, bottom = 24.dp, start = 24.dp, end = 24.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 48.dp, bottom = 24.dp, start = 24.dp, end = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(song.title, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
+                Text(
+                    song.title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
                 Text(song.artists[0].name, fontSize = 14.sp, color = Color.Gray)
             }
 
@@ -459,16 +578,27 @@ fun PlayScreen(song: Cancion, user: User) {
                 }
 
                 // Control buttons
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     IconButton(onClick = {}) {
                         //ShuffleIcon(tint = Color.Gray)
                     }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         IconButton(onClick = {}) {
                             //SkipBackIcon(tint = Color.White)
                         }
-                        IconButton(onClick = {}, modifier = Modifier.size(56.dp).background(Color.White, shape = RoundedCornerShape(28.dp))) {
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.size(56.dp)
+                                .background(Color.White, shape = RoundedCornerShape(28.dp))
+                        ) {
                             Icons.Filled.PlayArrow
                         }
                         IconButton(onClick = {}) {
@@ -484,14 +614,20 @@ fun PlayScreen(song: Cancion, user: User) {
 
             // Navigation bar
             Row(
-                modifier = Modifier.fillMaxWidth().background(Color(0xFF282828)).padding(vertical = 16.dp, horizontal = 24.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .background(Color(0xFF282828))
+                    .padding(vertical = 16.dp, horizontal = 24.dp),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 NavigationButton(icon = {
                     Icon(Icons.Filled.Home, "home")
                 }, text = "Home")
-                NavigationButton(icon = {}, text = "Buscar")
-                NavigationButton(icon = {}, text = "Library")
+                NavigationButton(icon = {
+                    Icon(Icons.Filled.Search, "buscar")
+                }, text = "Buscar")
+                NavigationButton(icon = {
+                    Icon(Icons.AutoMirrored.Filled.List, "Library")
+                }, text = "Library")
                 NavigationButton(icon = {
                     Icon(Icons.Filled.Person, "person")
                 }, text = user.name)
@@ -501,7 +637,9 @@ fun PlayScreen(song: Cancion, user: User) {
 }
 
 fun secondsToMMSS(length: Int): String {
-    return "${(length / 60).toString().padStart(2, '0')}: ${(length % 60).toString().padStart(2, '0')}"
+    return "${(length / 60).toString().padStart(2, '0')}: ${
+        (length % 60).toString().padStart(2, '0')
+    }"
 }
 
 @Composable
