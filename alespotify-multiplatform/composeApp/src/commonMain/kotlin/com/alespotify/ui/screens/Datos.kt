@@ -65,332 +65,330 @@ fun MainView() {
         Text("Navegar a la vista especifica")
     }
 }
-//
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun DatosScreen() {
-//    var isPlaying by remember { mutableStateOf(false) }
-//    var sliderValue by remember { mutableStateOf(33f) }
-//    var volumeSliderValue by remember { mutableStateOf(80f) }
-//
-//
-//    MaterialTheme(colors = MyColors) {
-//        Row(modifier = Modifier.fillMaxSize()) {
-//            // Sidebar
-//            Column(
-//                modifier = Modifier
-//                    .width(256.dp)
-//                    .fillMaxHeight()
-//                    .background(MaterialTheme.colors.surface)
-//            ) {
-//                Column(modifier = Modifier.padding(16.dp)) {
-//                    Text(
-//                        text = "Alespotify",
-//                        fontSize = 24.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        color = MaterialTheme.colors.primary,
-//                        modifier = Modifier.padding(bottom = 16.dp)
-//                    )
-//                    NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true)
-//                    NavigationLink(icon = Icons.Filled.Search, text = "Search")
-//                    NavigationLink(icon = Icons.Filled.KeyboardArrowUp, text = "Your Library")
-//                }
-//
-//                Divider(modifier = Modifier.padding(vertical = 16.dp))
-//
-//                Column(modifier = Modifier.padding(16.dp)) {
-//                    Text(
-//                        text = "Your Playlists",
-//                        fontSize = 14.sp,
-//                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
-//                        modifier = Modifier.padding(bottom = 8.dp)
-//                    )
-//                    NavigationLink(icon = Icons.Filled.Favorite, text = "Liked Songs")
-//                    NavigationLink(icon = Icons.Filled.Settings, text = "Recently Played")
-//                    NavigationLink(icon = Icons.Filled.Settings, text = "Your Episodes")
-//                }
-//
-//                Spacer(modifier = Modifier.weight(1f))
-//
-//                Column(modifier = Modifier.padding(16.dp)) {
-//                    NavigationLink(icon = Icons.Filled.AccountBox, text = "Profile")
-//                    NavigationLink(icon = Icons.Filled.Settings, text = "Settings")
-//                    NavigationLink(icon = Icons.Filled.Star, text = "Log out")
-//                }
-//            }
-//
-//            // Main Content
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .verticalScroll(rememberScrollState())
-//                    .background(MaterialTheme.colors.background)
-//            ) {
-//                Column(modifier = Modifier.padding(16.dp)) {
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.SpaceBetween,
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Text(text = "Good afternoon", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-//                        Avatar("JD", "placeholder.svg")
-//                    }
-//
-//                    Spacer(modifier = Modifier.height(16.dp))
-//
-//                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-//                        FeaturedCard("Weekly Discoveries", "Fresh music curated just for you", "placeholder.svg")
-//                        Column(modifier = Modifier.weight(1f)) {
-//                            RecentlyPlayedCard()
-//                            Spacer(modifier = Modifier.height(16.dp))
-//                            TopArtistsCard()
-//                        }
-//                    }
-//
-//                    Spacer(modifier = Modifier.height(16.dp))
-//
-//                    Text(text = "Made For You", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
-//                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-//                        items(List(6) { it + 1 }) { index ->
-//                            MadeForYouCard(index)
-//                        }
-//                    }
-//
-//                    Spacer(modifier = Modifier.height(16.dp))
-//
-//                    Text(text = "New Releases", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
-//                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-//                        items(List(8) { it + 1 }) { index ->
-//                            NewReleaseCard(index)
-//                        }
-//                    }
-//                }
-//
-//                // Player
-//                PlayerControls(
-//                    isPlaying = isPlaying,
-//                    onPlayPauseToggle = { isPlaying = !isPlaying },
-//                    sliderValue = sliderValue,
-//                    onSliderValueChange = { sliderValue = it },
-//                    volumeSliderValue = volumeSliderValue,
-//                    onVolumeSliderValueChange = { volumeSliderValue = it }
-//                )
-//            }
-//        }
-//    }
-//}
-//
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
-//    val backgroundColor = if (selected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
-//    val textColor = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
-//
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clickable { }
-//            .background(backgroundColor, shape = MaterialTheme.shapes.medium)
-//            .padding(horizontal = 12.dp, vertical = 8.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Icon(imageVector = icon, contentDescription = text, tint = textColor, modifier = Modifier.size(24.dp))
-//        Spacer(modifier = Modifier.width(12.dp))
-//        Text(text = text, color = textColor, fontSize = 14.sp)
-//    }
-//}
-//
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun Avatar(fallbackText: String, imagePath: String) {
-//    Box(modifier = Modifier.size(40.dp)) {
-//        Image(
-//            painter = rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-//            contentDescription = "User Avatar",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier.fillMaxSize().clip(CircleShape)
-//        )
-//        if (imagePath.isEmpty()) {
-//            Text(text = fallbackText, modifier = Modifier.align(Alignment.Center))
-//        }
-//    }
-//}
-//
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun FeaturedCard(title: String, description: String, imagePath: String) {
-//    Card(modifier = Modifier) {
-//        Box(modifier = Modifier.fillMaxWidth()) {
-//            Image(
-//                rememberAsyncImagePainter(imagePath),
-//                contentDescription = "Featured Image",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier.fillMaxWidth().height(200.dp)
-//            )
-//            Column(
-//                modifier = Modifier
-//                    .align(Alignment.BottomStart)
-//                    .padding(16.dp)
-//            ) {
-//                Text(text = title, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-//                Text(text = description, color = Color.White.copy(alpha = 0.8f), fontSize = 14.sp)
-//                Button(onClick = { }, modifier = Modifier.padding(top = 8.dp)) {
-//                    Text("Play Now")
-//                }
-//            }
-//        }
-//    }
-//}
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun RecentlyPlayedCard() {
-//    Card {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(text = "Recently Played", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
-//            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-//                List(3) { it + 1 }.forEach { index ->
-//                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-//                        Image(
-//                            rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-//                            contentDescription = "Track $index",
-//                            modifier = Modifier.size(48.dp).clip(MaterialTheme.shapes.medium),
-//                            contentScale = ContentScale.Crop
-//                        )
-//                        Column {
-//                            Text(text = "Track Title $index", fontWeight = FontWeight.Medium)
-//                            Text(text = "Artist Name", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun TopArtistsCard() {
-//    Card {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(text = "Your Top Artists", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
-//            Row(horizontalArrangement = Arrangement.SpaceBetween) {
-//                List(3) { it + 1 }.forEach { index ->
-//                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                        Image(
-//                            rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-//                            contentDescription = "Artist $index",
-//                            modifier = Modifier.size(64.dp).clip(CircleShape),
-//                            contentScale = ContentScale.Crop
-//                        )
-//                        Text(text = "Artist $index", fontSize = 12.sp, fontWeight = FontWeight.Medium)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun MadeForYouCard(index: Int) {
-//    Card {
-//        Box(modifier = Modifier.fillMaxWidth()) {
-//            Image(
-//                rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-//                contentDescription = "Playlist $index",
-//                modifier = Modifier.aspectRatio(1f),
-//                contentScale = ContentScale.Crop
-//            )
-//            IconButton(onClick = { }, modifier = Modifier.align(Alignment.BottomEnd)) {
-//                Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
-//            }
-//        }
-//        Column(modifier = Modifier.padding(8.dp)) {
-//            Text(text = "Playlist $index", fontWeight = FontWeight.Medium)
-//            Text(text = "By Melodify", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-//        }
-//    }
-//}
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun NewReleaseCard(index: Int) {
-//    Card(modifier = Modifier.width(180.dp)) {
-//        Box(modifier = Modifier.fillMaxWidth()) {
-//            Image(
-//                rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-//                contentDescription = "New Release $index",
-//                modifier = Modifier.aspectRatio(1f),
-//                contentScale = ContentScale.Crop
-//            )
-//        }
-//        Column(modifier = Modifier.padding(8.dp)) {
-//            Text(text = "New Album $index", fontWeight = FontWeight.Medium)
-//            Text(text = "Artist Name", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-//        }
-//    }
-//}
-//
-//@OptIn(ExperimentalResourceApi::class)
-//@Composable
-//fun PlayerControls(
-//    isPlaying: Boolean,
-//    onPlayPauseToggle: () -> Unit,
-//    sliderValue: Float,
-//    onSliderValueChange: (Float) -> Unit,
-//    volumeSliderValue: Float,
-//    onVolumeSliderValueChange: (Float) -> Unit
-//) {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .background(MaterialTheme.colors.surface)
-//            .padding(16.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-//                Image(
-//                    rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-//                    contentDescription = "Now Playing",
-//                    modifier = Modifier.size(56.dp).clip(MaterialTheme.shapes.medium),
-//                    contentScale = ContentScale.Crop
-//                )
-//                Column {
-//                    Text(text = "Current Track", fontWeight = FontWeight.Medium)
-//                    Text(text = "Current Artist", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-//                }
-//                IconButton(onClick = { }) {
-//                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Like")
-//                }
-//            }
-//            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-//                IconButton(onClick = { }) { Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Shuffle") }
-//                IconButton(onClick = { }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Skip Back") }
-//                IconButton(onClick = onPlayPauseToggle) {
-//                    Icon(imageVector = if (isPlaying) Icons.Filled.KeyboardArrowDown else Icons.Filled.PlayArrow, contentDescription = "Play/Pause")
-//                }
-//                IconButton(onClick = { }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Skip Forward") }
-//                IconButton(onClick = { }) { Icon(imageVector = Icons.Filled.Star, contentDescription = "Repeat") }
-//            }
-//            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-//                Icon(imageVector = Icons.Filled.Star, contentDescription = "Volume")
-//                Slider(value = volumeSliderValue, onValueChange = onVolumeSliderValueChange)
-//            }
-//        }
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ){
-//            Text(text = "1:23", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-//            Slider(value = sliderValue, onValueChange = onSliderValueChange, modifier = Modifier.weight(1f))
-//            Text(text = "3:45", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
-//        }
-//    }
-//}
-//
-//
+
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun DatosScreen() {
+    var isPlaying by remember { mutableStateOf(false) }
+    var sliderValue by remember { mutableStateOf(33f) }
+    var volumeSliderValue by remember { mutableStateOf(80f) }
+
+
+    MaterialTheme(colors = MyColors) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            // Sidebar
+            Column(
+                modifier = Modifier
+                    .width(256.dp)
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colors.surface)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Alespotify",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.primary,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true)
+                    NavigationLink(icon = Icons.Filled.Search, text = "Search")
+                    NavigationLink(icon = Icons.Filled.KeyboardArrowUp, text = "Your Library")
+                }
+
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Your Playlists",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos")
+                    NavigationLink(icon = Icons.Filled.Settings, text = "Recently Played")
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Column(modifier = Modifier.padding(16.dp)) {
+                    NavigationLink(icon = Icons.Filled.AccountBox, text = "Perfil")
+                    NavigationLink(icon = Icons.Filled.Settings, text = "Ajustes")
+                }
+            }
+
+            // Main Content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .background(MaterialTheme.colors.background)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Good afternoon", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Avatar("JD", "placeholder.svg")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        FeaturedCard("Weekly Discoveries", "Fresh music curated just for you", "placeholder.svg")
+                        Column(modifier = Modifier.weight(1f)) {
+                            RecentlyPlayedCard()
+                            Spacer(modifier = Modifier.height(16.dp))
+                            TopArtistsCard()
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(text = "Made For You", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(List(6) { it + 1 }) { index ->
+                            MadeForYouCard(index)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(text = "New Releases", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(List(8) { it + 1 }) { index ->
+                            NewReleaseCard(index)
+                        }
+                    }
+                }
+
+                // Player
+                PlayerControls(
+                    isPlaying = isPlaying,
+                    onPlayPauseToggle = { isPlaying = !isPlaying },
+                    sliderValue = sliderValue,
+                    onSliderValueChange = { sliderValue = it },
+                    volumeSliderValue = volumeSliderValue,
+                    onVolumeSliderValueChange = { volumeSliderValue = it }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
+    val backgroundColor = if (selected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
+    val textColor = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }
+            .background(backgroundColor, shape = MaterialTheme.shapes.medium)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = icon, contentDescription = text, tint = textColor, modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(text = text, color = textColor, fontSize = 14.sp)
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun Avatar(fallbackText: String, imagePath: String) {
+    Box(modifier = Modifier.size(40.dp)) {
+        Image(
+            painter = rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+            contentDescription = "User Avatar",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize().clip(CircleShape)
+        )
+        if (imagePath.isEmpty()) {
+            Text(text = fallbackText, modifier = Modifier.align(Alignment.Center))
+        }
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun FeaturedCard(title: String, description: String, imagePath: String) {
+    Card(modifier = Modifier) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Image(
+                rememberAsyncImagePainter(imagePath),
+                contentDescription = "Featured Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth().height(200.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            ) {
+                Text(text = title, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(text = description, color = Color.White.copy(alpha = 0.8f), fontSize = 14.sp)
+                Button(onClick = { }, modifier = Modifier.padding(top = 8.dp)) {
+                    Text("Play Now")
+                }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun RecentlyPlayedCard() {
+    Card {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "Recently Played", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                List(3) { it + 1 }.forEach { index ->
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Image(
+                            rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+                            contentDescription = "Track $index",
+                            modifier = Modifier.size(48.dp).clip(MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.Crop
+                        )
+                        Column {
+                            Text(text = "Track Title $index", fontWeight = FontWeight.Medium)
+                            Text(text = "Artist Name", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun TopArtistsCard() {
+    Card {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "Your Top Artists", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+            Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                List(3) { it + 1 }.forEach { index ->
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(
+                            rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+                            contentDescription = "Artist $index",
+                            modifier = Modifier.size(64.dp).clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                        Text(text = "Artist $index", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                    }
+                }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun MadeForYouCard(index: Int) {
+    Card {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Image(
+                rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+                contentDescription = "Playlist $index",
+                modifier = Modifier.aspectRatio(1f),
+                contentScale = ContentScale.Crop
+            )
+            IconButton(onClick = { }, modifier = Modifier.align(Alignment.BottomEnd)) {
+                Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
+            }
+        }
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(text = "Playlist $index", fontWeight = FontWeight.Medium)
+            Text(text = "By Melodify", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+        }
+    }
+}
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun NewReleaseCard(index: Int) {
+    Card(modifier = Modifier.width(180.dp)) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Image(
+                rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+                contentDescription = "New Release $index",
+                modifier = Modifier.aspectRatio(1f),
+                contentScale = ContentScale.Crop
+            )
+        }
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(text = "New Album $index", fontWeight = FontWeight.Medium)
+            Text(text = "Artist Name", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+        }
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun PlayerControls(
+    isPlaying: Boolean,
+    onPlayPauseToggle: () -> Unit,
+    sliderValue: Float,
+    onSliderValueChange: (Float) -> Unit,
+    volumeSliderValue: Float,
+    onVolumeSliderValueChange: (Float) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.surface)
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Image(
+                    rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+                    contentDescription = "Now Playing",
+                    modifier = Modifier.size(56.dp).clip(MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop
+                )
+                Column {
+                    Text(text = "Current Track", fontWeight = FontWeight.Medium)
+                    Text(text = "Current Artist", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+                }
+                IconButton(onClick = { }) {
+                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Like")
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                IconButton(onClick = { }) { Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Shuffle") }
+                IconButton(onClick = { }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Skip Back") }
+                IconButton(onClick = onPlayPauseToggle) {
+                    Icon(imageVector = if (isPlaying) Icons.Filled.KeyboardArrowDown else Icons.Filled.PlayArrow, contentDescription = "Play/Pause")
+                }
+                IconButton(onClick = { }) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Skip Forward") }
+                IconButton(onClick = { }) { Icon(imageVector = Icons.Filled.Star, contentDescription = "Repeat") }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Icon(imageVector = Icons.Filled.Star, contentDescription = "Volume")
+                Slider(value = volumeSliderValue, onValueChange = onVolumeSliderValueChange)
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(text = "1:23", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+            Slider(value = sliderValue, onValueChange = onSliderValueChange, modifier = Modifier.weight(1f))
+            Text(text = "3:45", fontSize = 12.sp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f))
+        }
+    }
+}
+
 
 
 
@@ -492,7 +490,7 @@ fun PlayScreen(song: Cancion, user: User) {
                 NavigationButton(icon = {
                     Icon(Icons.Filled.Home, "home")
                 }, text = "Home")
-                NavigationButton(icon = {}, text = "Search")
+                NavigationButton(icon = {}, text = "Buscar")
                 NavigationButton(icon = {}, text = "Library")
                 NavigationButton(icon = {
                     Icon(Icons.Filled.Person, "person")
