@@ -1,6 +1,6 @@
 package com.alespotify.main.service;
 
-import com.alespotify.main.models.Playlist;
+import com.alespotify.main.models.entities.Playlist;
 
 import java.util.List;
 

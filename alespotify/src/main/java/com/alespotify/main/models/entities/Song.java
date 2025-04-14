@@ -1,11 +1,6 @@
-package com.alespotify.main.models;
+package com.alespotify.main.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.ArrayList;
@@ -15,7 +10,7 @@ import java.util.ArrayList;
 public class Song {
     // @Id
     @MongoId(FieldType.OBJECT_ID)
-    private ObjectId id;
+    private String id;
 
     @Field(name = "song_artists")
     @DocumentReference
@@ -44,8 +39,9 @@ public class Song {
     public Song() {
     }
 
-    public Song(int addedToPlaylists, int timesPlayed, ArrayList<String> genres, String thumbImage, String source, int length, String title, ArrayList<Artist> artists) {
-        this.id = new ObjectId();
+    public Song(String id, int addedToPlaylists, int timesPlayed, ArrayList<String> genres, String thumbImage, String source, int length, String title, ArrayList<Artist> artists) {
+        // this.id = new ObjectId();
+        this.id = id;
         this.addedToPlaylists = addedToPlaylists;
         this.timesPlayed = timesPlayed;
         this.genres = genres;

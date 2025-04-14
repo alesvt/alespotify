@@ -47,47 +47,44 @@ import org.jetbrains.compose.resources.painterResource
 
 // Assuming you have a LoginForm Composable ready. If not, create it.
 @Composable
-fun LoginForm( navController: NavHostController) {
+fun LoginForm(navController: NavHostController) {
     // Replace with your actual login form implementation
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedTextField(
-            value = "", onValueChange = {},
-            modifier = Modifier.fillMaxWidth()
-            , label = { Text("Email") })
+            value = "",
+            onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Email") })
         OutlinedTextField(
-            value = "", onValueChange = {},
-            modifier = Modifier.fillMaxWidth()
-                .background(Color(0xFF3311ff)),
+            value = "",
+            onValueChange = {},
+            modifier = Modifier.fillMaxWidth().background(Color(0xFF3311ff)),
             label = { Text("Contraseña") })
         Button(
             onClick = {
-            navController.navigate(DestinosNavegacion.login.route)
-            /* Handle login */ },
+                navController.navigate(DestinosNavegacion.login.route)/* Handle login */
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.primary)
-        )
-        {
+        ) {
             Text("Iniciar sesión", color = Color.White)
         }
+
     }
 }
 
 @Composable
 fun LoginScreen(
     navController: NavHostController
-    //navController: NavHostController //If using navigation for signup
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().background(MyColors.background)
-            .padding(top = 50.dp)
+        modifier = Modifier.fillMaxSize().background(MyColors.background).padding(top = 50.dp)
     ) {
-        // Left side - Login Form
+
         Column(
-            modifier = Modifier
-                .fillMaxWidth() // Usa todo el ancho en móviles
+            modifier = Modifier.fillMaxWidth() // Usa todo el ancho en móviles
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -100,11 +97,8 @@ fun LoginScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(MyColors.primary),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.size(40.dp).clip(CircleShape)
+                            .background(MyColors.primary), contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
@@ -146,9 +140,8 @@ fun LoginScreen(
                     text = "No tienes cuenta? Regístrate",
                     color = MyColors.onSurface.copy(alpha = 0.6f),
                     modifier = Modifier.clickable {
-                        //navController.navigate("signup") //If using navigation for signup
-                    }
-                )
+                        //navController.navigate("registro")
+                    })
             }
         }
     }

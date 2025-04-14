@@ -1,6 +1,6 @@
 package com.alespotify.main.service;
 
-import com.alespotify.main.models.Playlist;
+import com.alespotify.main.models.entities.Playlist;
 import com.alespotify.main.repository.PlaylistRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

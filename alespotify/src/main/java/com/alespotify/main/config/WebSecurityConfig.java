@@ -32,25 +32,37 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        String[] staticResources = {
+                "/css/**",
+                "/images/**",
+                "/fonts/**",
+                "/js/**"
+        };
+
         http.csrf(AbstractHttpConfigurer::disable)
-                // esto para definir las rutas que los usuarios pueden ver sin estar autenticados
-                .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                                "/",
-                                "/index",
-                                "/register",
-                                "/info",
-                                "/api/**",
-                                "/api/songs",
-                                "/api/songs/**"
-                        ).permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests((requests) -> {
+                    requests.requestMatchers(
+                            "/",
+                            "/index",
+                            "/register",
+                            "/info",
+                            "/api/**",
+                            "/api/songs",
+                            "/api/songs/**"
+                    ).permitAll();
+                    // Agrega los recursos estáticos individualmente
+                    for (String resource : staticResources) {
+                        requests.requestMatchers(resource).permitAll();
+                    }
+                    requests.anyRequest().authenticated();
+                })
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        // aqui puedo cambiar los parámetros según el "name" del elemento del formulario
                         .usernameParameter("email")
                         .permitAll()
                         .defaultSuccessUrl("/app", true))
                 .logout(LogoutConfigurer::permitAll);
+
         return http.build();
     }
 /*

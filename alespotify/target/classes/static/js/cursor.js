@@ -1,4 +1,4 @@
-let cursor = document.getElementById("cursor");
+ // let cursor = document.getElementById("cursor");
 
 document.addEventListener("mousemove", function (e) {
 

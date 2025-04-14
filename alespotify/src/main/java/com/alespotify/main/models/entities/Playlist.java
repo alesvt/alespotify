@@ -1,7 +1,6 @@
-package com.alespotify.main.models;
+package com.alespotify.main.models.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.*;

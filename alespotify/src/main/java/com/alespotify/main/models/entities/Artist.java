@@ -1,14 +1,10 @@
-package com.alespotify.main.models;
+package com.alespotify.main.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.*;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 
@@ -19,7 +15,7 @@ public class Artist {
     // @Id
     @MongoId(FieldType.OBJECT_ID)
 
-    private ObjectId id;
+    private String id;
 
     @Field(name = "artist_name")
     private String name;
@@ -40,12 +36,13 @@ public class Artist {
     public Artist() {
     }
 
-    public Artist(String name, String image, String description, ArrayList<Song> songs) {
-        this.id = new ObjectId();
+    public Artist(String id, String name, String image, String description, ArrayList<Song> songs, ArrayList<Album> albums, ArrayList<Artist> artists) {
+        //this.id = new ObjectId();
+        this.id = id;
         this.name = name;
         this.image = image;
         this.description = description;
-        // this.albums = albums;
+        this.albums = albums;
         this.songs = songs;
     }
 

@@ -33,16 +33,27 @@ class ApiClient {
     setBody(Customer(3, "Jet", "Brains"))
 }
      */
-//    suspend fun obtenerCanciones(): List<Cancion> {
-//        try {
-//            return httpClient.get("http://192.168.0.113:8080/api/songs").body()
-//        } catch (e: Exception) {
-//            println("Error: ${e.message}")
-//        } finally {
-//            httpClient.close();
-//        }
-//        return emptyList()
-//    }
+    suspend fun obtenerCanciones(): List<Cancion> {
+        try {
+            return httpClient.get("https://picsum.photos/450/320").body()
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        } finally {
+            httpClient.close();
+        }
+        return emptyList()
+    }
+
+    suspend fun fotoRandom(): Any {
+        try{
+            return httpClient.get("https://picsum.photos/450/320").body()
+        } catch (e :Exception){
+            println("Error: ${e.message}")
+        } finally {
+            httpClient.close();
+        }
+        return "no"
+    }
 
 
     fun login() {

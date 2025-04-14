@@ -1,4 +1,4 @@
-package com.alespotify.main.models;
+package com.alespotify.main.models.entities;
 
 import lombok.Data;
 import org.bson.types.ObjectId;

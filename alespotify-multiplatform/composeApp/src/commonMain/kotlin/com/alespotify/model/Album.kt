@@ -1,14 +1,18 @@
 package com.alespotify.model
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import org.mongodb.kbson.ObjectId
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+import org.mongodb.kbson.BsonObjectId as ObjectId
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
+@JsonIgnoreUnknownKeys
 data class Album(
-    val id: ObjectId,
-    val album_songs: List<Cancion>,
-    val album_image: String,
-    val album_release_date : String,
-    val album_artist: Artist,
-    val album_name: String,
+    val id: String,
+    val albumSongs: List<Cancion>,
+    val albumImage: String,
+    val albumReleaseDate : String,
+    val albumArtist: Artist,
+    val albumName: String,
 )

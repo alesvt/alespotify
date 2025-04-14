@@ -1,11 +1,16 @@
 package com.alespotify.model
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import org.mongodb.kbson.ObjectId
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+import org.mongodb.kbson.BsonObjectId as ObjectId
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
+@JsonIgnoreUnknownKeys
 data class Cancion(
-    val id: ObjectId,
+    val id: String,
     val title: String, // Cambiado de song_title a title
     val artists: List<Artist>, // Cambiado de song_artists a artists
     val album: Album?, // Cambiado de song_album a album
@@ -16,5 +21,6 @@ data class Cancion(
     val timesPlayed: Int, // Cambiado de times_played a timesPlayed
     val addedToPlaylists: Int
 )
+
 
 

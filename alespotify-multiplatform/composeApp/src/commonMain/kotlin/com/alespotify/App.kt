@@ -21,15 +21,16 @@ fun App() {
     val apiClient = ApiClient()
     var canciones by remember { mutableStateOf<List<Cancion>>(emptyList()) }
     val scope = rememberCoroutineScope()
-    val navController  = rememberNavController()
+    val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute =
         currentBackStackEntry?.destination?.route ?: DestinosNavegacion.LoginScreen.route
 
     LaunchedEffect(Unit) {
         scope.launch {
-           // canciones = apiClient.obtenerCanciones()
-
+            canciones = apiClient.obtenerCanciones()
+            print(canciones)
+            print("pepe")
         }
     }
 

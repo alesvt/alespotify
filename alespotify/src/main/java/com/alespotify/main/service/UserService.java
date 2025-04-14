@@ -1,6 +1,6 @@
 package com.alespotify.main.service;
 
-import com.alespotify.main.models.User;
+import com.alespotify.main.models.entities.User;
 import com.alespotify.main.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

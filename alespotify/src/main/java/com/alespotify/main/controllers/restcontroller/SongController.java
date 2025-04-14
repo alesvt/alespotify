@@ -1,16 +1,18 @@
 package com.alespotify.main.controllers.restcontroller;
 
 
-import com.alespotify.main.models.Artist;
-import com.alespotify.main.models.Song;
-import com.alespotify.main.models.User;
+import com.alespotify.main.models.dto.SongSoloArtistNamesDTO;
+import com.alespotify.main.models.dto.SongDTO;
+import com.alespotify.main.models.entities.Song;
 import com.alespotify.main.repository.ArtistRepository;
 import com.alespotify.main.repository.SongRepository;
 import com.alespotify.main.repository.UserRepository;
+import com.alespotify.main.util.SongMapper;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -30,18 +32,25 @@ public class SongController {
 
 
     @GetMapping
-    public List<Song> findAllSongs() {
-        return songRepository.findAll();
+    public List<SongSoloArtistNamesDTO> findAllSongs() {
+        return songRepository.findAll()
+                .stream()
+                .map(SongMapper::toSoloArtistNamesDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Song findSong(@PathVariable String id) {
-        return songRepository.findById(id).orElse(null);
+    public SongSoloArtistNamesDTO findSong(@PathVariable String id) {
+        Song song = songRepository.findById(id).orElse(null);
+        if(song != null) {
+            return SongMapper.toSoloArtistNamesDTO(song);
+        }
+        return null;
     }
+
 
     @PostMapping(consumes = "application/json")
     public Song createSong(@RequestBody Song song) {
-
         return songRepository.save(song);
     }
 }

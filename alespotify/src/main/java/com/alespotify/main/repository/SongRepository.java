@@ -1,8 +1,7 @@
 package com.alespotify.main.repository;
 
 
-import com.alespotify.main.models.Song;
-import org.bson.types.ObjectId;
+import com.alespotify.main.models.entities.Song;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

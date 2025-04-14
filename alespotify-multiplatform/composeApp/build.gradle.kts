@@ -55,6 +55,7 @@ kotlin {
 
             // añadidas por mi
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
@@ -72,6 +73,7 @@ kotlin {
             implementation(libs.navigation.compose)
 
             implementation(compose.components.resources)
+            implementation("androidx.compose.ui:ui-graphics:1.7.8")
 
         }
         desktopMain.dependencies {
@@ -116,6 +118,7 @@ android {
 dependencies {
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.ui.graphics.android)
     debugImplementation(compose.uiTooling)
 }
 

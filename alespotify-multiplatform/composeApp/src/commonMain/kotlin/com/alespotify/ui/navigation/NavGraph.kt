@@ -10,6 +10,7 @@ import com.alespotify.model.Artist
 import com.alespotify.model.Cancion
 import com.alespotify.model.User
 import com.alespotify.ui.screens.DatosScreen
+import com.alespotify.ui.screens.ImagenDesdeApiScreen
 // import com.alespotify.ui.screens.DatosScreen
 import com.alespotify.ui.screens.LoginScreen
 import com.alespotify.ui.screens.MainView
@@ -33,7 +34,8 @@ fun NavGraph(navController: NavHostController) {
             // hago la petición de login
             // si recibo codigo 200, paso el usuario (ahora paso cancion para probar)
             //Login()
-            DatosScreen()
+            ImagenDesdeApiScreen()
+           // DatosScreen()
             /*
 //            PlayScreen(user = User(
 //                ObjectId(),

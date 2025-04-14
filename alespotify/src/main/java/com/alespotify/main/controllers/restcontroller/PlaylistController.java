@@ -1,13 +1,12 @@
 package com.alespotify.main.controllers.restcontroller;
 
 
-import com.alespotify.main.models.Playlist;
+import com.alespotify.main.models.entities.Playlist;
 import com.alespotify.main.repository.ArtistRepository;
 import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.SongRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

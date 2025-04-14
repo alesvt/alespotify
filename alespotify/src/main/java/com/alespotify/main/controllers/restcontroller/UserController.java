@@ -1,6 +1,6 @@
 package com.alespotify.main.controllers.restcontroller;
 
-import com.alespotify.main.models.User;
+import com.alespotify.main.models.entities.User;
 import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

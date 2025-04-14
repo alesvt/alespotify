@@ -1,10 +1,11 @@
 package com.alespotify.main.controllers.webcontroller;
 
 
-import com.alespotify.main.models.Artist;
-import com.alespotify.main.models.Playlist;
-import com.alespotify.main.models.Song;
-import com.alespotify.main.models.User;
+import com.alespotify.main.models.dto.ArtistSoloSongNamesDTO;
+import com.alespotify.main.models.entities.Artist;
+import com.alespotify.main.models.entities.Playlist;
+import com.alespotify.main.models.entities.Song;
+import com.alespotify.main.models.entities.User;
 import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.service.ArtistServiceImpl;
 import com.alespotify.main.service.PlaylistServiceImpl;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -49,7 +49,7 @@ public class WebController {
     @GetMapping("/app")
     public String app(Model model, User user) {
         List<Song> songs = songService.getAllSongs();
-        List<Artist> artists = artistService.getAllArtists();
+        List<ArtistSoloSongNamesDTO> artists = artistService.getAllArtistsSoloSongName();
         List<Playlist> playlists = playlistService.getAllPlaylists();
         model.addAttribute("user", user);
         model.addAttribute("artists", artists);
