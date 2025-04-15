@@ -67,6 +67,7 @@ material = { module = "androidx.compose.material:material", version.ref = "mater
 mongodb-driver-kotlin-coroutine = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodbDriverKotlinCoroutine" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
+ui-util = { module = "org.jetbrains.compose.ui:ui-util" }
 
 
 [plugins]

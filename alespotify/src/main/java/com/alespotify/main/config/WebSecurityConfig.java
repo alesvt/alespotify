@@ -43,6 +43,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> {
                     requests.requestMatchers(
                             "/",
+                            "/404",
                             "/index",
                             "/register",
                             "/info",

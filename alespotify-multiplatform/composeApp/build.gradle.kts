@@ -37,11 +37,14 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            // add
+            // yo
             implementation(libs.ktor.client.android)
-            implementation(libs.androidx.ui) // Reemplaza con la versión más reciente
+            implementation(libs.androidx.ui)
             implementation(libs.material)
             implementation(libs.androidx.ui.tooling.preview)
+
+            implementation("androidx.compose.ui:ui-graphics:1.7.8")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -73,7 +76,7 @@ kotlin {
             implementation(libs.navigation.compose)
 
             implementation(compose.components.resources)
-            implementation("androidx.compose.ui:ui-graphics:1.7.8")
+            implementation(libs.ui.util)
 
         }
         desktopMain.dependencies {
