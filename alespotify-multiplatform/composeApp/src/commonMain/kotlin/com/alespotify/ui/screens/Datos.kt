@@ -531,7 +531,7 @@ fun PlayScreen(song: Cancion, user: User) {
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
-                Text(song.artists[0].name, fontSize = 14.sp, color = Color.Gray)
+                Text(song.id, fontSize = 14.sp, color = Color.Gray)
             }
 
             // Album art

@@ -44,17 +44,6 @@ class ApiClient {
         return emptyList()
     }
 
-    suspend fun fotoRandom(): Any {
-        try{
-            return httpClient.get("https://picsum.photos/450/320").body()
-        } catch (e :Exception){
-            println("Error: ${e.message}")
-        } finally {
-            httpClient.close();
-        }
-        return "no"
-    }
-
 
     fun login() {
         val uri = "mongodb://admin:root@localhost:27017/";

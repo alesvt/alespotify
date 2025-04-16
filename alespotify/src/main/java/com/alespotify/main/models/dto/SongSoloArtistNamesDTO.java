@@ -15,6 +15,8 @@ public class SongSoloArtistNamesDTO {
     private int timesPlayed;
     private ArrayList<String> genres;
     private int length;
-    private ArrayList<Map<String, String>> artists; // lista de mapas (id, nombre artista)
+    private ArrayList<ArtistSoloName> artists; // lista de mapas (id, nombre artista)
     private String nombreAlbum;
 }
+
+

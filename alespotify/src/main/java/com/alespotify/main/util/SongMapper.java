@@ -1,5 +1,6 @@
 package com.alespotify.main.util;
 
+import com.alespotify.main.models.dto.ArtistSoloName;
 import com.alespotify.main.models.dto.SongSoloArtistNamesDTO;
 import com.alespotify.main.models.dto.SongDTO;
 import com.alespotify.main.models.entities.Artist;
@@ -43,12 +44,16 @@ public class SongMapper {
         if (song.getAlbum() != null) {
             dto.setNombreAlbum(song.getAlbum().getName());
         }
-        Map<String, String> mapaArtistas = new HashMap<>();
-        ArrayList<Map<String, String>> artistas = new ArrayList<>();
+
+        ArrayList<ArtistSoloName> artistas = new ArrayList<>();
         if (song.getArtists() != null) {
             for (Artist artist : song.getArtists()) {
-                mapaArtistas.put(artist.getId(), artist.getName());
-                artistas.add(mapaArtistas);
+                ArtistSoloName artistSoloName = new ArtistSoloName(
+                        artist.getId(), artist.getName()
+                );
+                artist.setId(artist.getId());
+                artist.setName(artist.getName());
+                artistas.add(artistSoloName);
             }
             dto.setArtists(artistas);
         }

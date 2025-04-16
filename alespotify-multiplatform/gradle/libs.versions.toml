@@ -30,6 +30,7 @@ runtimeAndroid = "1.7.8"
 foundationAndroid = "1.7.8"
 uiToolingPreview = "1.7.8"
 uiGraphicsAndroid = "1.7.8"
+uiAndroid = "1.7.8"
 
 [libraries]
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "uiToolingPreview" }
@@ -68,6 +69,7 @@ mongodb-driver-kotlin-coroutine = { module = "org.mongodb:mongodb-driver-kotlin-
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 ui-util = { module = "org.jetbrains.compose.ui:ui-util" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 
 
 [plugins]

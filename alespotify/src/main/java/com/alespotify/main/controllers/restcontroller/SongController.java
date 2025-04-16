@@ -40,10 +40,10 @@ public class SongController {
     }
 
     @GetMapping("/{id}")
-    public SongSoloArtistNamesDTO findSong(@PathVariable String id) {
+    public SongDTO findSong(@PathVariable String id) {
         Song song = songRepository.findById(id).orElse(null);
         if(song != null) {
-            return SongMapper.toSoloArtistNamesDTO(song);
+            return SongMapper.toSongDTO(song);
         }
         return null;
     }
