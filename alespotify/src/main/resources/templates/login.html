@@ -1,19 +1,107 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<!doctype html>
+<html lang="es">
 <head>
-    <title>Spring Security Example </title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/forms.css}">
+
+    <title>Document</title>
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-content">
+            <div class="auth-form-container">
+                <div class="auth-header">
+                    <a href="/" class="logo">
+                        <div class="logo-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
+                        </div>
+                        <span class="logo-text">Alespotify</span>
+                    </a>
+                </div>
+
+                <div class="auth-welcome">
+                    <h1>Hola!</h1>
+                    <p>Introduce tus credenciales para iniciar sesión</p>
+                </div>
+
+                <form th:action="@{/login}" method="post" class="auth-form" id="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input id="email" name="email" type="email" class="form-input" placeholder="usuario@correo.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <label for="password" class="form-label">Contraseña</label>
+                        </div>
+                        <div class="password-input-wrapper">
+                            <input id="password" name="password" type="password" class="form-input"
+                                   placeholder="••••••••" required>
+                            <button type="button" class="password-toggle-button" id="password-toggle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="password-toggle-icon">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button primary full-width">Inicia sesión</button>
+
+
+                </form>
+
+                <div class="auth-alt-action">
+                    <p>
+                        ¿No tienes cuenta?
+                        <a href="register" class="auth-link">Regístrate</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right side - Image -->
+            <div class="auth-image-container">
+                <div class="auth-image-overlay"></div>
+                <img src="https://placehold.co/1920x1080/8b5cf6/FFFFFF/png?text=Music" alt="Music visualization"
+                     class="auth-image">
+                <div class="auth-image-content">
+                    <div class="auth-image-text">
+                        <h2>Descubre canciones nuevas</h2>
+                        <p>Escucha tus canciones favoritas, descubre nuevos mundos musicales y crea listas de
+                            reproducción perfectas para cada momento.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label> Email: <input type="text" name="email"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+
+<script>
+    let pass_input = document.getElementById("password-toggle")
+    let pass = document.getElementById("password")
+    let a = true
+    pass_input.addEventListener("click", function () {
+        if (a) {
+            pass.type = "text";
+        } else {
+            pass.type = "password";
+        }
+        a = !a
+        console.log(a)
+    })
+</script>
 </body>
 </html>

@@ -61,3 +61,40 @@ const toggleDarkMode = document.getElementById('toggle-dark-mode');
 toggleDarkMode.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 });
+
+
+let songPlayer = document.getElementById("player")
+let repro = songPlayer.getElementsByTagName("audio")[0]
+
+let cancion = fetch('http://localhost:8080/api/songs/67d9331e22be08aece99c041')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Datos recibidos:', data);
+    })
+    .catch(error => {
+        console.error('Hubo un error al llamar a la API:', error);
+    });
+
+repro.src = cancion.source;
+document.getElementById("current_track").innerText = cancion.title
+
+
+// todo
+async function getSong(id) {
+    try {
+        const response = await fetch('http://127.0.0.1:8080/api/songs/' + id);
+        if (!response.ok) {
+            throw new Error('Error en la solicitud: ' + response.status);
+        }
+        const data = await response.json();
+        console.log(data);
+        // play(data)
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

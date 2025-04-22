@@ -13,7 +13,7 @@
 <body class="dark-mode">
 
 <div class="sidebar">
-    <button id="toggle-dark-mode">Cambiar modo</button>
+
     <div class="sidebar-content">
         <h2>Alespotify</h2>
         <nav>
@@ -23,7 +23,7 @@
                     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                Home
+                Inicio
             </a>
             <a href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -31,7 +31,8 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                Search
+                Búsqueda
+                <!-- TODO dynamic search ?? -->
             </a>
             <a href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -40,20 +41,20 @@
                     <line x1="8" y1="21" x2="16" y2="21"></line>
                     <line x1="12" y1="17" x2="12" y2="21"></line>
                 </svg>
-                Your Library
+                Biblioteca
             </a>
         </nav>
     </div>
     <div class="separator"></div>
     <div class="sidebar-content">
-        <h3>Your Playlists</h3>
+        <h3>Tus listas de reproducción</h3>
         <nav>
             <a href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.23l-1.06-.62a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
-                Liked Songs
+               Canciones que te gustan
             </a>
             <a href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -61,19 +62,7 @@
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                Recently Played
-            </a>
-            <a href="#">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <list xmlns="http://www.w3.org/2000/svg">
-                        <desc>List of music tracks</desc>
-                        <item><title>Music track 1</title></item>
-                        <item><title>Music track 2</title></item>
-                        <item><title>Music track 3</title></item>
-                    </list>
-                </svg>
-                Your Episodes
+                Canciones recientes
             </a>
         </nav>
     </div>
@@ -85,24 +74,25 @@
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                Profile
+                Perfil
             </a>
-            <a href="#">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0-.33 1.82l-.06.06a2 2 0 0 1-2.83 0 1.65 1.65 0 0 0-2.94-2.41 2 2 0 0 1-2.83 0 1.65 1.65 0 0 0-2.94 2.41 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-.33-1.82"></path>
-                </svg>
-                Settings
-            </a>
-            <a href="#">
+            <a id="toggle-dark-mode">
+                <svg stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     fill="none" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19,9a7,7,0,0,1-4,6.32V18H9V15.32A7,7,0,1,1,19,9Z"></path><line x1="9" y1="22" x2="15" y2="22"></line>
+                     </svg>
+                Cambiar modo</a>
+
+            <a href="/logout">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                Log out
+                Cerrar sesión
             </a>
         </nav>
     </div>
@@ -110,8 +100,10 @@
 <div class="main-content">
     <main>
         <div class="main-header">
-            <h1>Good afternoon</h1>
-            <div class="avatar">JD</div>
+            <h1 th:text="'Bienvenido, ' + ${user.getUsername()}"></h1>
+            <div class="avatar">
+                <img th:src="${user.getImage()}" th:alt="${user.getUsername()}">
+            </div>
         </div>
         <div class="bento-grid">
             <div class="card featured">
@@ -194,6 +186,7 @@
         </div>
     </main>
     <div id="player" class="player">
+        <audio src=""></audio>
         <div class="player-content">
             <div class="player-track">
                 <img src="placeholder.svg?height=56&width=56" alt="Now Playing">

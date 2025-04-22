@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     kotlin("plugin.serialization") version "2.1.10"
+    id("com.google.gms.google-services")
 }
 
 kotlin {
@@ -45,6 +46,11 @@ kotlin {
 
             implementation("androidx.compose.ui:ui-graphics:1.7.8")
 
+
+            // firebase
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.12.0"))
+            implementation("com.google.firebase:firebase-analytics")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -77,6 +83,14 @@ kotlin {
 
             implementation(compose.components.resources)
             implementation(libs.ui.util)
+
+
+
+
+            // multiplatform
+            implementation("dev.gitlive:firebase-analytics:2.1.0")
+            implementation("dev.gitlive:firebase-auth:2.1.0")
+
 
         }
         desktopMain.dependencies {

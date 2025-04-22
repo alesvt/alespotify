@@ -27,6 +27,8 @@ public class User {
     @Field(name = "user_email")
     private String email;
 
+    @Field(name= "user_image")
+    private String image;
 
     @JsonIgnore
     @DocumentReference
