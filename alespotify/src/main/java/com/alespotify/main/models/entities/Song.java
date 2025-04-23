@@ -1,9 +1,14 @@
 package com.alespotify.main.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Document(collection = "songs")
@@ -12,9 +17,12 @@ public class Song {
     @MongoId(FieldType.OBJECT_ID)
     private String id;
 
+
+
     @Field(name = "song_artists")
-    @DocumentReference
-    private ArrayList<Artist> artists;
+    @DocumentReference(lazy = true)
+    @JsonManagedReference
+    private List<Artist> artists;
 
     @Field(name = "song_title")
     private String title;
@@ -29,7 +37,7 @@ public class Song {
     @Field(name = "song_thumb_image")
     private String thumbImage;
     @Field(name = "song_genre")
-    private ArrayList<String> genres;
+    private List<String> genres;
     @Field(name = "times_played")
     private int timesPlayed;
 
@@ -39,7 +47,7 @@ public class Song {
     public Song() {
     }
 
-    public Song(String id, int addedToPlaylists, int timesPlayed, ArrayList<String> genres, String thumbImage, String source, int length, String title, ArrayList<Artist> artists) {
+    public Song(String id, int addedToPlaylists, int timesPlayed, ArrayList<String> genres, String thumbImage, String source, int length, String title) {
         // this.id = new ObjectId();
         this.id = id;
         this.addedToPlaylists = addedToPlaylists;

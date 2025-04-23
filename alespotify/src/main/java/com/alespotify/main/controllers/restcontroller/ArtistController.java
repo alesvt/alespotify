@@ -1,9 +1,11 @@
 package com.alespotify.main.controllers.restcontroller;
 
 
+import com.alespotify.main.models.dto.SongArtistDTO;
 import com.alespotify.main.models.dto.ArtistSoloSongNamesDTO;
 import com.alespotify.main.models.entities.Artist;
 import com.alespotify.main.repository.ArtistRepository;
+import com.alespotify.main.service.ArtistServiceImpl;
 import com.alespotify.main.util.ArtistMapper;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,26 +18,24 @@ import java.util.stream.Collectors;
 public class ArtistController {
 
     private final ArtistRepository artistRepository;
+    private final ArtistServiceImpl artistService;
 
-    public ArtistController(ArtistRepository artistRepository) {
+
+    public ArtistController(ArtistRepository artistRepository, ArtistServiceImpl artistService) {
         this.artistRepository = artistRepository;
+        this.artistService = artistService;
     }
 
 
     @GetMapping
-    public List<ArtistSoloSongNamesDTO> findAll() {
-        return artistRepository.findAll().stream()
-                .map(ArtistMapper::toArtistSoloSongNamesDTO)
-                .collect(Collectors.toList());
+    public List<SongArtistDTO> findAll() {
+        return artistService.getAllArtistsDTO();
     }
 
     @GetMapping("/{id}")
-    public ArtistSoloSongNamesDTO findById(@PathVariable String id) {
-        Artist artist = artistRepository.findById(id).orElse(null);
-        if (artist != null) {
-            return ArtistMapper.toArtistSoloSongNamesDTO(artist);
-        }
-        return null;
+    public Artist findById(@PathVariable String id) {
+
+        return artistRepository.findById(id).orElse(null);
     }
 
 }

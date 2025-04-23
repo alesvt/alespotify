@@ -1,5 +1,6 @@
 package com.alespotify.main.service;
 
+import com.alespotify.main.models.dto.SongArtistDTO;
 import com.alespotify.main.models.dto.ArtistSoloSongNamesDTO;
 import com.alespotify.main.models.entities.Artist;
 import com.alespotify.main.repository.ArtistRepository;
@@ -21,12 +22,12 @@ public class ArtistServiceImpl implements IArtistService {
         return artistRepository.findAll();
     }
 
+
     @Override
-    public List<ArtistSoloSongNamesDTO> getAllArtistsSoloSongName() {
+    public List<SongArtistDTO> getAllArtistsDTO() {
         List<Artist> artists = artistRepository.findAll();
-        return artists
-                .stream()
-                .map(ArtistMapper::toArtistSoloSongNamesDTO)
+        return artists.stream()
+                .map(ArtistMapper::toSongArtistDTO)
                 .collect(Collectors.toList());
     }
 }

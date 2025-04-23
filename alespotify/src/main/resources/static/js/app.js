@@ -37,24 +37,6 @@
 //
 // }
 //
-// function secsToMMSS(secs) {
-//
-//     dateObj = new Date(secs * 1000);
-//     minutes = dateObj.getUTCMinutes();
-//     seconds = dateObj.getSeconds();
-//     console.log(seconds.size)
-//     if (seconds.length <= 1) seconds = "0".concat(seconds);
-//     console.log(seconds)
-//     return `${minutes}:${seconds}`;
-// }
-//
-//
-// let tTotal = document.getElementById("tTotal")
-// player.addEventListener('timeupdate', () => {
-//     const progress = (player.currentTime / player.duration) * 100;
-//     progressBar.style.width = `${progress}%`;
-//
-// });
 
 
 const toggleDarkMode = document.getElementById('toggle-dark-mode');
@@ -63,38 +45,86 @@ toggleDarkMode.addEventListener('click', () => {
 });
 
 
-let songPlayer = document.getElementById("player")
-let repro = songPlayer.getElementsByTagName("audio")[0]
-
-let cancion = fetch('http://localhost:8080/api/songs/67d9331e22be08aece99c041')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Datos recibidos:', data);
-    })
-    .catch(error => {
-        console.error('Hubo un error al llamar a la API:', error);
-    });
-
-repro.src = cancion.source;
-document.getElementById("current_track").innerText = cancion.title
-
-
 // todo
 async function getSong(id) {
+    console.log("works")
     try {
-        const response = await fetch('http://127.0.0.1:8080/api/songs/' + id);
+        const response = await fetch(`http://10.0.2.103:8080/api/songs/${id}`);
         if (!response.ok) {
-            throw new Error('Error en la solicitud: ' + response.status);
+            throw new Error(`Error en la solicitud: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
-        // play(data)
+        play(data); // Llamamos a play *después* de obtener los datos
     } catch (error) {
-        console.error('Error:', error);
+        console.error("Error al obtener la canción:", error);
     }
+}
+
+
+let elementos
+
+document.addEventListener("DOMContentLoaded", function () {
+    elementos = loadElements()
+    let reproductor = document.getElementById("player")
+
+    console.log(reproductor.querySelector("audio").src)
+    if (reproductor.querySelector("audio").src === "http://localhost:8080/app") {
+        elementos.songPlayer.style.display = "none";
+    } else {
+        elementos.songPlayer.style.display = "";
+
+    }
+})
+
+function loadElements() {
+    return {
+        songPlayer: document.getElementById("player"),
+        repro: document.getElementsByTagName("audio")[0],
+        imagen_cancion: document.getElementById("player_track_song"),
+        titulo_cancion: document.getElementById("current_track"),
+        artist_cancion: document.getElementById("current_artist"),
+        liked: document.getElementById("liked"),
+        trackbar: document.getElementById("trackbar"),
+        volume: document.getElementById("volume"),
+        controls: document.getElementById("controls")
+    }
+
+}
+
+
+function play(song) {
+    elementos = loadElements()
+    console.log(song)
+    elementos.songPlayer.style.display = "block";
+
+
+    elementos.repro.src = song.source;
+
+    elementos.titulo_cancion.innerText = song.title
+    elementos.imagen_cancion.src = song.thumbImage
+    elementos.artist_cancion.innerText = song.artists[0].name
+    elementos.trackbar.children[2].innerText = secsToMMSS(song.length)
+    elementos.repro.play()
+}
+
+
+function secsToMMSS(secs) {
+    let dateObj = new Date(secs * 1000);
+    let minutes = dateObj.getUTCMinutes();
+    let seconds = dateObj.getSeconds();
+    if (seconds <= 9) {
+        return `${minutes}:0${seconds}`;
+    } else {
+        return `${minutes}:${seconds}`;
+    }
+}
+
+console.log(elementos.repro)
+if (elementos) {
+    elementos.repro.addEventListener("timeupdate", function () {
+        console.log("pe")
+        const progress = (elementos.songPlayer.currentTime / elementos.songPlayer.duration) * 100;
+        elementos.trackbar.children[1].value = `${progress}`
+        elementos.trackbar.children[0].innerText = `${progress}`
+    });
 }

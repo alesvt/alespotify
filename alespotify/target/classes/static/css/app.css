@@ -112,7 +112,7 @@ main {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #cccccc;
+    background-color: var(--text-muted-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -255,12 +255,13 @@ main {
 }
 
 .made-for-you-grid .card {
-    padding-bottom: 16px;
+    padding-bottom: 5px;
 }
 
 .made-for-you-grid .card img {
     aspect-ratio: 1/1;
-    object-fit: cover;
+    height: 75%;
+    object-fit: contain;
 }
 
 .made-for-you-grid .card div:last-child {
@@ -388,6 +389,24 @@ main {
 
 .bg-gradient-to-t {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+}
+
+.like-song {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+}
+
+.like-song.liked {
+    fill: var(--primary-color);
+    color: var(--primary-color);
+}
+.like-song.liked svg{
+    fill: var(--primary-color);
 }
 
 /* Modo oscuro */

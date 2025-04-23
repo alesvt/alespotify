@@ -1,20 +1,27 @@
 package com.alespotify.main.models.entities;
 
 
+import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-@Document
+@AllArgsConstructor
 @Data
+@Document(collection = "playlists")
 public class Playlist {
 
 
     @MongoId(FieldType.OBJECT_ID)
-    private ObjectId id;
+    private String id;
 
     @Field(name = "playlist_name")
     private String name;
@@ -23,33 +30,27 @@ public class Playlist {
     private String image;
 
     @Field("playlist_creation_date")
-    private Date creationDate;
+    private String creationDate;
 
     @Field("playlist_update_date")
-    private Date updateDate;
+    private String updateDate;
 
     @Field("public")
     private boolean publicPlaylist;
 
-    @DocumentReference
+
+
     @Field(name = "playlist_songs")
-    private ArrayList<Song> songs;
-
-
-    @Field(name = "playlist_user")
     @DocumentReference
+    private List<Song> songs;
+
+    @Field(name = "user")
+    @DocumentReference
+    @JsonBackReference
     private User user;
 
+
     public Playlist() {
-    }
-
-    public Playlist(String name, String image, Date creationDate, ArrayList<Song> songs, User user) {
-        this.name = name;
-        this.image = image;
-        this.creationDate = creationDate;
-        this.songs = songs;
-        this.user = user;
-
     }
 
 }

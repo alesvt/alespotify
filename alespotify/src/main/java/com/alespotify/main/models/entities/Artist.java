@@ -1,11 +1,12 @@
 package com.alespotify.main.models.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Document(collection = "artists")
@@ -26,17 +27,19 @@ public class Artist {
 
     @DocumentReference
     @Field(name = "artist_albums")
-    private ArrayList<Album> albums;
+    private List<Album> albums;
 
-    @DocumentReference
+
+
+    @DocumentReference(lazy = true)
+    @JsonBackReference
     @Field(name = "artist_songs")
-    private ArrayList<Song> songs;
-
+    private List<Song> songs;
 
     public Artist() {
     }
 
-    public Artist(String id, String name, String image, String description, ArrayList<Song> songs, ArrayList<Album> albums, ArrayList<Artist> artists) {
+    public Artist(String id, String name, String image, String description, ArrayList<Song> songs, ArrayList<Album> albums) {
         //this.id = new ObjectId();
         this.id = id;
         this.name = name;

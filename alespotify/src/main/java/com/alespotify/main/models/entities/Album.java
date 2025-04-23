@@ -6,10 +6,12 @@ import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "albums")
 @Data
 public class Album {
+
     @MongoId(FieldType.OBJECT_ID)
     private ObjectId id;
     @Field(name = "album_name")
@@ -19,7 +21,7 @@ public class Album {
 
     @DocumentReference
     @Field(name = "album_songs")
-    private ArrayList<Song> songs;
+    private List<Song> songs;
 
 
     @DocumentReference
@@ -31,7 +33,7 @@ public class Album {
     public Album() {
     }
 
-    public Album(String name, String image, ArrayList<Song> songs, Artist artist, Date fecha) {
+    public Album(String name, String image, List<Song> songs, Artist artist, Date fecha) {
         this.name = name;
         this.image = image;
         this.songs = songs;

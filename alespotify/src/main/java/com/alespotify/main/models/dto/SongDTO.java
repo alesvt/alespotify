@@ -4,7 +4,7 @@ import com.alespotify.main.models.entities.Album;
 import com.alespotify.main.models.entities.Artist;
 import lombok.Data;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -15,9 +15,9 @@ public class SongDTO {
     private String source;
     private int addedToPlaylists;
     private int timesPlayed;
-    private ArrayList<String> genres;
+    private List<String> genres;
     private int length;
-    private ArrayList<Artist> artists;
+    private List<Artist> artists;
     private Album album;
 }
 

@@ -1,14 +1,15 @@
 package com.alespotify.main.models.dto;
 
-import com.alespotify.main.models.entities.Song;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ArtistDTO {
+public class SongArtistDTO {
     private String id;
     private String name;
-   // private List<NoArtistSongs> songs;
+    private String image;
+    private List<SongArtistInfoFromSongDTO> songs;
+
 }
 

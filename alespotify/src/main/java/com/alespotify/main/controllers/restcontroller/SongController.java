@@ -1,7 +1,9 @@
 package com.alespotify.main.controllers.restcontroller;
 
 
-import com.alespotify.main.models.dto.SongSoloArtistNamesDTO;
+import com.alespotify.main.models.dto.CancionConArtistasReducido;
+import com.alespotify.main.models.dto.SongArtistDTO;
+import com.alespotify.main.models.dto.SongArtistInfoFromSongDTO;
 import com.alespotify.main.models.dto.SongDTO;
 import com.alespotify.main.models.entities.Song;
 import com.alespotify.main.repository.ArtistRepository;
@@ -32,17 +34,18 @@ public class SongController {
 
 
     @GetMapping
-    public List<SongSoloArtistNamesDTO> findAllSongs() {
-        return songRepository.findAll()
-                .stream()
-                .map(SongMapper::toSoloArtistNamesDTO)
-                .collect(Collectors.toList());
+    public List<Song> findAllSongs() {
+        return songRepository.findAll();
+//        return songRepository.findAll()
+//                .stream()
+//                .map(SongMapper::toCancionConArtistasReducido)
+//                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public SongDTO findSong(@PathVariable String id) {
         Song song = songRepository.findById(id).orElse(null);
-        if(song != null) {
+        if (song != null) {
             return SongMapper.toSongDTO(song);
         }
         return null;

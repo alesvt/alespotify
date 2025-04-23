@@ -85,7 +85,9 @@
                      </svg>
                 Cambiar modo</a>
 
-            <a href="/logout">
+            <a
+                    href="/logout"
+                    onclick="if (!confirm('Deseas cerrar sesión?')) return false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -100,9 +102,9 @@
 <div class="main-content">
     <main>
         <div class="main-header">
-            <h1 th:text="'Bienvenido, ' + ${user.getUsername()}"></h1>
+            <h1 th:text="'Bienvenido, ' + ${user.getName()}"></h1>
             <div class="avatar">
-                <img th:src="${user.getImage()}" th:alt="${user.getUsername()}">
+                <img th:src="${user.getImage()}" height="38" th:alt="${user.getName()}">
             </div>
         </div>
         <div class="bento-grid">
@@ -164,7 +166,7 @@
                     <img th:src="${playlist.image}" th:alt="${playlist.name}">
                     <div>
                         <p th:text="${playlist.name}"></p>
-                        <p th:text="${playlist.user}"></p>
+                        <p th:text="${playlist.songs.size()} + ' canciones'" ></p>
                     </div>
                 </div>
             </div>
@@ -172,13 +174,13 @@
         <!-- FOREACH songs -->
         <div class="new-releases">
             <div class="new-releases-scroll">
-                <h2>New Releases</h2>
+                <h2>Nuevas entradas</h2>
 
                 <div class="card" th:each="song : ${songs}" th:data-id="${song.id}"
                      th:onclick="getSong(this.getAttribute('data-id'))">
                     <img th:src="${song.thumbImage}" th:alt="${song.title}">
                     <div>
-                        <p th:text="${song.album}"></p>
+                        <p th:text="${song.title}"></p>
                         <p th:text="${song.artists.first.name}"></p>
                     </div>
                 </div>
@@ -189,19 +191,19 @@
         <audio src=""></audio>
         <div class="player-content">
             <div class="player-track">
-                <img src="placeholder.svg?height=56&width=56" alt="Now Playing">
+                <img id="player_track_song" src="placeholder.svg?height=56&width=56" alt="Now Playing">
                 <div>
                     <p id="current_track"></p>
                     <p id="current_artist"></p>
                 </div>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                <button id="liked" class="like-song">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.23l-1.06-.62a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                     </svg>
                 </button>
             </div>
-            <div class="player-controls">
+            <div class="player-controls" id="controls">
                 <div class="player-controls-buttons">
                     <button>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -239,10 +241,10 @@
                         </svg>
                     </button>
                 </div>
-                <div class="player-progress">
-                    <span>1:23</span>
+                <div id="trackbar" class="player-progress">
+                    <span></span>
                     <input type="range" min="0" max="100" value="33">
-                    <span>3:45</span>
+                    <span></span>
                 </div>
             </div>
             <div class="player-volume">
@@ -252,7 +254,7 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     <path d="M19.07 4.93a9 9 0 0 1 0 14.14"></path>
                 </svg>
-                <input type="range" min="0" max="100" value="80">
+                <input id="volume" type="range" min="0" max="100" value="50">
             </div>
         </div>
     </div>
