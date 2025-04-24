@@ -1,6 +1,8 @@
 package com.alespotify.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
@@ -11,6 +13,7 @@ import com.alespotify.model.Cancion
 import com.alespotify.model.User
 import com.alespotify.ui.screens.DatosScreen
 import com.alespotify.ui.screens.ImagenDesdeApiScreen
+import com.alespotify.ui.screens.LoadingDataScreen
 // import com.alespotify.ui.screens.DatosScreen
 import com.alespotify.ui.screens.LoginScreen
 import com.alespotify.ui.screens.MainView
@@ -20,13 +23,38 @@ import org.mongodb.kbson.ObjectId
 
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, loginViewModel: LoginViewModel, appViewModel: AppViewModel) {
     NavHost(
         navController = navController,
         startDestination = DestinosNavegacion.LoginScreen.route,
     ) {
-        composable(DestinosNavegacion.LoginScreen.route) { LoginScreen(navController) }
-        composable(DestinosNavegacion.app.route) { /*APP(TODOS LOS PARAMETROS QUE LLEVE)*/ }
+        composable(DestinosNavegacion.LoginScreen.route) {
+            LoginScreen(
+                navController = navController,
+                loginViewModel = loginViewModel,
+                onLoginSuccess = { user ->
+                    println("Login exitoso en NavGraph, usuario: $user")
+                    navController.navigate(DestinosNavegacion.load.route) { // Navega a la pantalla de carga
+                        popUpTo(DestinosNavegacion.LoginScreen.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(DestinosNavegacion.load.route) {
+            LoadingDataScreen(navController = navController, appViewModel = appViewModel)
+        }
+        composable(DestinosNavegacion.app.route) { // DatosScreen se muestra en esta ruta
+            val songs by appViewModel.songs.collectAsState()
+            val artists by appViewModel.artists.collectAsState()
+            val playlists by appViewModel.playlists.collectAsState()
+
+            DatosScreen(
+                navController = navController,
+                songs = songs,
+                artists = artists,
+                playlists = playlists
+            )
+        }
         composable(DestinosNavegacion.login.route) { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email") ?: ""
             val password = backStackEntry.arguments?.getString("password") ?: ""
@@ -34,39 +62,14 @@ fun NavGraph(navController: NavHostController) {
             // hago la petición de login
             // si recibo codigo 200, paso el usuario (ahora paso cancion para probar)
             //Login()
+
             ImagenDesdeApiScreen()
-           // DatosScreen()
-            /*
-//            PlayScreen(user = User(
-//                ObjectId(),
-//                "",
-//                "",
-//                "ales"),
-//                song =
-//                Cancion(ObjectId(),
-//                    "",
-//                    listOf(
-//                        Artist(
-//                            ObjectId(),
-//                            "maiquel yacson",
-//                            "imagen",
-//                            "descrip",
-//                            emptyList(),
-//                            emptyList()
-//                        )
-//                    ),
-//                    null,
-//                    emptyList<String>(),
-//                    250, "",
-//                    "https://img.freepik.com/vector-gratis/casa-encantadora-ilustracion-arbol_1308-176337.jpg?semt=ais_country_boost&w=740",
-//                    20, 1)
-//
-//                )
-*/
+            // DatosScreen()
+
             /* login funcion (llamada api y tal) */
         }
         composable(DestinosNavegacion.android.route) {
-           //s DatosAndroid()
+            //s DatosAndroid()
         }
 
     }

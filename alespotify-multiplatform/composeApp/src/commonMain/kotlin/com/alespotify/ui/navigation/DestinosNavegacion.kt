@@ -4,13 +4,14 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
-sealed class DestinosNavegacion(
+open class DestinosNavegacion(
     val route: String,
     val title: String,
     arguments: List<NamedNavArgument> = listOf()
 ) {
     object LoginScreen : DestinosNavegacion("loginScreen", "loginScreen")
     object app : DestinosNavegacion("app", "app")
+
     object login : DestinosNavegacion(
         "login/{email}/{password}",
         "login",
@@ -19,5 +20,8 @@ sealed class DestinosNavegacion(
             navArgument("password") { type = NavType.StringType }
         )
     )
+
+    object load : DestinosNavegacion("load", "load")
+
     object android : DestinosNavegacion("android", "DatosAndroid")
 }

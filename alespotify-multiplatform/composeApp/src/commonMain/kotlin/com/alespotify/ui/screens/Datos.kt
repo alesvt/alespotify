@@ -38,14 +38,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.alespotify.model.Artist
 import com.alespotify.model.Cancion
+import com.alespotify.model.Playlist
 import com.alespotify.model.User
 import com.alespotify.ui.MyColors
+import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.DestinosNavegacion
 
 expect fun getPlatformName(): String
@@ -66,13 +70,66 @@ fun MainView() {
     }
 }
 
+@Composable
+fun DatosScreen(
+    navController: NavHostController,
+    songs: List<Cancion>?,
+    artists: List<Artist>?,
+    playlists: List<Playlist>?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Datos de la Aplicación")
+        Spacer(modifier = Modifier.padding(8.dp))
 
+        Text(text = "Canciones:")
+        if (songs.isNullOrEmpty()) {
+            Text(text = "No hay canciones disponibles.")
+        } else {
+            songs.forEach { cancion ->
+                Text(text = "- ${cancion.title}")
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        Text(text = "Artistas:")
+        if (artists.isNullOrEmpty()) {
+            Text(text = "No hay artistas disponibles.")
+        } else {
+            artists.forEach { artista ->
+                Text(text = "- ${artista.name}")
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        Text(text = "Playlists:")
+        if (playlists.isNullOrEmpty()) {
+            Text(text = "No hay playlists disponibles.")
+        } else {
+            playlists.forEach { playlist ->
+                Text(text = "- ${playlist.name}")
+            }
+        }
+    }
+}
+
+/*
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun DatosScreen() {
+fun DatosScreen(
+    navController: NavHostController,
+    appViewModel: AppViewModel
+) {
     var isPlaying by remember { mutableStateOf(false) }
     var sliderValue by remember { mutableStateOf(33f) }
     var volumeSliderValue by remember { mutableStateOf(80f) }
+    val canciones by remember { mutableStateOf(emptyList<Cancion>()) }
+    val isLoading by remember { mutableStateOf(false) }
+    val errorMessage by remember { mutableStateOf("") }
 
 
     MaterialTheme(colors = MyColors) {
@@ -107,7 +164,7 @@ fun DatosScreen() {
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos")
-                    NavigationLink(icon = Icons.Filled.Settings, text = "Recently Played")
+                    NavigationLink(icon = Icons.Filled.Timer, text = "Recently Played")
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -199,7 +256,7 @@ fun DatosScreen() {
         }
     }
 }
-
+*/
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
@@ -442,7 +499,7 @@ fun PlayerControls(
             ) {
                 IconButton(onClick = { }) {
                     Icon(
-                        imageVector = Icons.Filled.DateRange,
+                        imageVector = Icons.Filled.Shuffle,
                         contentDescription = "Shuffle"
                     )
                 }
@@ -454,7 +511,7 @@ fun PlayerControls(
                 }
                 IconButton(onClick = onPlayPauseToggle) {
                     Icon(
-                        imageVector = if (isPlaying) Icons.Filled.KeyboardArrowDown else Icons.Filled.PlayArrow,
+                        imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                         contentDescription = "Play/Pause"
                     )
                 }
@@ -466,7 +523,7 @@ fun PlayerControls(
                 }
                 IconButton(onClick = { }) {
                     Icon(
-                        imageVector = Icons.Filled.Star,
+                        imageVector = Icons.Filled.Repeat,
                         contentDescription = "Repeat"
                     )
                 }
@@ -475,7 +532,10 @@ fun PlayerControls(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(imageVector = Icons.Filled.Star, contentDescription = "Volume")
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                    contentDescription = "Volume"
+                )
                 Slider(value = volumeSliderValue, onValueChange = onVolumeSliderValueChange)
             }
         }

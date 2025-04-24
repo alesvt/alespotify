@@ -7,10 +7,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.alespotify.model.Cancion
 import com.alespotify.ui.ApiClient
-import com.alespotify.ui.ListaCanciones
+import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.DestinosNavegacion
+import com.alespotify.ui.navigation.LoginViewModel
 import com.alespotify.ui.navigation.NavGraph
-import com.alespotify.ui.screens.LoginScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -25,18 +25,17 @@ fun App() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute =
         currentBackStackEntry?.destination?.route ?: DestinosNavegacion.LoginScreen.route
-
+    val loginViewModel = LoginViewModel()
+    val appViewModel = AppViewModel()
     LaunchedEffect(Unit) {
         scope.launch {
-            canciones = apiClient.obtenerCanciones()
-            print(canciones)
-            print("pepe")
+
         }
     }
 
     MaterialTheme {
         Surface {
-            NavGraph(navController)
+            NavGraph(navController, loginViewModel, appViewModel )
         }
     }
 }

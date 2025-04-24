@@ -7,6 +7,8 @@ import com.alespotify.main.models.entities.Artist;
 import com.alespotify.main.repository.ArtistRepository;
 import com.alespotify.main.service.ArtistServiceImpl;
 import com.alespotify.main.util.ArtistMapper;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class ArtistController {
 
 
     @GetMapping
-    public List<SongArtistDTO> findAll() {
-        return artistService.getAllArtistsDTO();
+    public ResponseEntity<List<SongArtistDTO>> findAll() {
+        return ResponseEntity.ok(artistService.getAllArtistsDTO());
     }
 
     @GetMapping("/{id}")

@@ -25,51 +25,99 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.darkColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
+import com.alespotify.model.User
 import com.alespotify.ui.MyColors
+import com.alespotify.ui.navigation.LoginViewModel
 import org.jetbrains.compose.resources.painterResource
 
 
-//import androidx.navigation.NavHostController //If using navigation for signup
-//import androidx.navigation.compose.rememberNavController //If using navigation for signup
 
 // Assuming you have a LoginForm Composable ready. If not, create it.
 @Composable
-fun LoginForm(navController: NavHostController) {
-    // Replace with your actual login form implementation
+fun LoginForm(loginViewModel: LoginViewModel, onLoginSuccess : (User) -> Unit) {
+    var email by remember { mutableStateOf(("")) }
+    var password by remember { mutableStateOf(("")) }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = email,
+            singleLine = true,
+            onValueChange = { email = it },
             modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = MyColors.secondary
+            ),
             label = { Text("Email") })
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth().background(Color(0xFF3311ff)),
-            label = { Text("Contraseña") })
+            value = password,
+            singleLine = true,
+            onValueChange = { password = it },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = MyColors.secondary
+            ),
+
+            label = { Text("Contraseña") },
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    Icons.Filled.Visibility
+                else Icons.Filled.VisibilityOff
+
+                val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+
+                IconButton(onClick = {passwordVisible = !passwordVisible}){
+                    Icon(imageVector  = image, description)
+                }
+            }
+        )
         Button(
             onClick = {
-                navController.navigate(DestinosNavegacion.login.route)/* Handle login */
+                loginViewModel.login(email, password)
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.primary)
         ) {
             Text("Iniciar sesión", color = Color.White)
+        }
+        if (loginViewModel.isLoading) {
+            Spacer(modifier = Modifier.height(8.dp))
+            CircularProgressIndicator()
+        }
+
+        loginViewModel.errorMessage?.let { error ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(error, color = MaterialTheme.colors.error)
+        }
+
+        loginViewModel.loginResult?.let { user ->
+            LaunchedEffect(user) {
+                onLoginSuccess(user) // Llama a una función para manejar el éxito del login
+            }
         }
 
     }
@@ -77,14 +125,16 @@ fun LoginForm(navController: NavHostController) {
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    onLoginSuccess: (User) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize().background(MyColors.background).padding(top = 50.dp)
     ) {
 
         Column(
-            modifier = Modifier.fillMaxWidth() // Usa todo el ancho en móviles
+            modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -132,7 +182,8 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                LoginForm(navController)
+                // este es el formulario (los inputs)
+                LoginForm(loginViewModel, onLoginSuccess)
 
                 Spacer(modifier = Modifier.height(24.dp))
 

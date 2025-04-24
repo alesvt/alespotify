@@ -45,8 +45,5 @@ class ApiClient {
     }
 
 
-    fun login() {
-        val uri = "mongodb://admin:root@localhost:27017/";
-        //  val mongoClient = MongoClient.create(uri);
-    }
+
 }

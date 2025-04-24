@@ -79,9 +79,9 @@ kotlin {
 
             implementation(compose.components.resources)
             implementation(libs.ui.util)
+            implementation(libs.ktor.client.logging)
 
-
-
+            implementation(compose.materialIconsExtended)
 
 
 
@@ -90,6 +90,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation("io.ktor:ktor-client-apache5:3.1.0")
             implementation(libs.kotlinx.coroutines.swing)
+
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")

@@ -12,7 +12,5 @@ data class Artist(
     val id: String,
     val name: String ? = null,
     val image: String ? = null,
-    val description: String? = null,
-    val albums: List<Album>? = null,
     val songs: List<Cancion>? = null
 )

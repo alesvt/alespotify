@@ -28,9 +28,7 @@ public class UserService implements UserDetailsService, IUserService {
     private PasswordEncoder passwordEncoder;
 
     public User registerUser(User user) {
-        // System.out.println("ha pasado");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         return userRepository.save(user);
     }
 
@@ -59,15 +57,12 @@ public class UserService implements UserDetailsService, IUserService {
         Map<String, Object> m = pars.parseMap(credentials);
         String email = (String) m.get("email");
         String password = (String) m.get("password");
-        System.out.println(email + " +" + password);
         User user = userRepository.findByEmail(email);
         if (passwordEncoder.matches(password, user.getPassword())) {
             return user;
         } else {
-            // todo excepciones de contraseña incorrecta
             return null;
         }
     }
-
 
 }

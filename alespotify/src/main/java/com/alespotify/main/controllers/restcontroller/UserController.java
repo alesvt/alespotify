@@ -1,11 +1,17 @@
 package com.alespotify.main.controllers.restcontroller;
 
+import com.alespotify.main.models.dto.UserAndroid;
 import com.alespotify.main.models.entities.Playlist;
 import com.alespotify.main.models.entities.User;
 import com.alespotify.main.repository.PlaylistRepository;
+import com.alespotify.main.repository.SongRepository;
 import com.alespotify.main.repository.UserRepository;
 import com.alespotify.main.service.UserService;
+import com.alespotify.main.util.UserMapper;
 import org.bson.types.ObjectId;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +27,15 @@ public class UserController {
     private final PlaylistRepository playlistRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final SongRepository songRepository;
 
-    public UserController(UserRepository userRepository, PlaylistRepository playlistRepository, PasswordEncoder passwordEncoder, UserService userService) {
+    public UserController(UserRepository userRepository, PlaylistRepository playlistRepository, PasswordEncoder passwordEncoder, UserService userService, SongRepository songRepository
+    ) {
         this.userRepository = userRepository;
         this.playlistRepository = playlistRepository;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.songRepository = songRepository;
     }
 
     @GetMapping
@@ -45,14 +54,20 @@ public class UserController {
     // todo login method
 
     /**
-     *
      * @param credentials
-     * @return the authenticated user
+     * @return ResponseEntity with the authorised user
      */
-    @GetMapping("/{credentials}")
-    public User getUser(@RequestBody String credentials) {
-         return userService.login(credentials);
-        //return userRepository.findByEmail(credentials);
+    @GetMapping("/login")
+    public ResponseEntity<User> getUser(@RequestBody String credentials) {
+        if (userService.login(credentials) != null) {
+            User user = userService.login(credentials);
+
+            // usuario correcto
+            System.out.println("Login successful");
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
 }

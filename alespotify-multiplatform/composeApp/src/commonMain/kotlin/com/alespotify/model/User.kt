@@ -5,8 +5,11 @@ import org.mongodb.kbson.ObjectId
 
 @Serializable
 data class User(
-    val id: ObjectId,
+    val id: String,
     val email: String,
-    val password: String,
-    val name: String
+  //  val password: String,
+    val name: String,
+    val image : String,
+    val playlists: List<Playlist>?,
+    val favourites: Playlist?
 )

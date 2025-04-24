@@ -10,6 +10,7 @@ import com.alespotify.main.repository.ArtistRepository;
 import com.alespotify.main.repository.SongRepository;
 import com.alespotify.main.repository.UserRepository;
 import com.alespotify.main.util.SongMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -34,8 +35,8 @@ public class SongController {
 
 
     @GetMapping
-    public List<Song> findAllSongs() {
-        return songRepository.findAll();
+    public ResponseEntity<List<Song>> findAllSongs() {
+        return ResponseEntity.ok(songRepository.findAll());
 //        return songRepository.findAll()
 //                .stream()
 //                .map(SongMapper::toCancionConArtistasReducido)
