@@ -36,6 +36,7 @@ public class SongController {
 
     @GetMapping
     public ResponseEntity<List<Song>> findAllSongs() {
+        System.out.println("saca canciones");
         return ResponseEntity.ok(songRepository.findAll());
 //        return songRepository.findAll()
 //                .stream()

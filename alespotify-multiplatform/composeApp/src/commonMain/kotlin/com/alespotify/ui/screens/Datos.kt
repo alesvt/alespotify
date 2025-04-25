@@ -33,24 +33,24 @@ import androidx.compose.material.icons.automirrored.filled.*
 import coil3.compose.rememberAsyncImagePainter
 
 import org.jetbrains.compose.resources.*
-import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import com.alespotify.model.Artist
 import com.alespotify.model.Cancion
-import com.alespotify.model.Playlist
 import com.alespotify.model.User
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
+import com.alespotify.ui.navigation.ArtistDataState
 import com.alespotify.ui.navigation.DestinosNavegacion
+import com.alespotify.ui.navigation.LoginState
+import com.alespotify.ui.navigation.LoginViewModel
+import com.alespotify.ui.navigation.PlaylistDataState
+import com.alespotify.ui.navigation.SongDataState
+import kotlinx.coroutines.flow.StateFlow
+import kotlin.math.log
 
 expect fun getPlatformName(): String
 
@@ -70,67 +70,39 @@ fun MainView() {
     }
 }
 
-@Composable
-fun DatosScreen(
-    navController: NavHostController,
-    songs: List<Cancion>?,
-    artists: List<Artist>?,
-    playlists: List<Playlist>?
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Datos de la Aplicación")
-        Spacer(modifier = Modifier.padding(8.dp))
 
-        Text(text = "Canciones:")
-        if (songs.isNullOrEmpty()) {
-            Text(text = "No hay canciones disponibles.")
-        } else {
-            songs.forEach { cancion ->
-                Text(text = "- ${cancion.title}")
-            }
-        }
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Text(text = "Artistas:")
-        if (artists.isNullOrEmpty()) {
-            Text(text = "No hay artistas disponibles.")
-        } else {
-            artists.forEach { artista ->
-                Text(text = "- ${artista.name}")
-            }
-        }
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Text(text = "Playlists:")
-        if (playlists.isNullOrEmpty()) {
-            Text(text = "No hay playlists disponibles.")
-        } else {
-            playlists.forEach { playlist ->
-                Text(text = "- ${playlist.name}")
-            }
-        }
-    }
-}
-
-/*
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DatosScreen(
     navController: NavHostController,
-    appViewModel: AppViewModel
-) {
-    var isPlaying by remember { mutableStateOf(false) }
-    var sliderValue by remember { mutableStateOf(33f) }
-    var volumeSliderValue by remember { mutableStateOf(80f) }
-    val canciones by remember { mutableStateOf(emptyList<Cancion>()) }
-    val isLoading by remember { mutableStateOf(false) }
-    val errorMessage by remember { mutableStateOf("") }
+    appViewModel: AppViewModel,
+    loginViewModel: LoginViewModel
 
+) {
+
+    var sliderValue by remember { mutableStateOf(33f) }
+    var isPlaying by remember { mutableStateOf(false) }
+    var volumeSliderValue by remember { mutableStateOf(80f) }
+
+    val songDataState by appViewModel.songDataState
+    val artistDataState by appViewModel.artistDataState
+    val playlistDataState by appViewModel.playlistDataState
+
+    // Obtener los datos del usuario desde LoginViewModel
+    val user by loginViewModel.loginState
+
+    var usuario  = loginViewModel.loginState.value
+    // Comprobar si los datos están siendo cargados, si es necesario, se recargan
+    LaunchedEffect(Unit) {
+        if (songDataState is SongDataState.Loading || artistDataState is ArtistDataState.Loading || playlistDataState is PlaylistDataState.Loading) {
+            appViewModel.loadSongs()
+        }
+        if (user is LoginState.Success) run {
+            usuario = (user as LoginState.Success).user
+        } else {
+
+        }
+    }
 
     MaterialTheme(colors = MyColors) {
         Row(modifier = Modifier.fillMaxSize()) {
@@ -151,25 +123,26 @@ fun DatosScreen(
                     )
                     NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true)
                     NavigationLink(icon = Icons.Filled.Search, text = "Search")
-                    NavigationLink(icon = Icons.Filled.KeyboardArrowUp, text = "Your Library")
+                    NavigationLink(icon = Icons.Filled.LibraryMusic, text = "Tu música")
                 }
 
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
 
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Your Playlists",
+                        text = "Tus Playlists",
                         fontSize = 14.sp,
                         color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos")
-                    NavigationLink(icon = Icons.Filled.Timer, text = "Recently Played")
+                    NavigationLink(icon = Icons.Filled.History, text = "Canciones recientes")
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 Column(modifier = Modifier.padding(16.dp)) {
+                    print(usuario)
                     NavigationLink(icon = Icons.Filled.AccountBox, text = "Perfil")
                     NavigationLink(icon = Icons.Filled.Settings, text = "Ajustes")
                 }
@@ -237,7 +210,7 @@ fun DatosScreen(
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(List(8) { it + 1 }) { index ->
+                        items(List(2) { it + 1 }) { index ->
                             NewReleaseCard(index)
                         }
                     }
@@ -256,7 +229,7 @@ fun DatosScreen(
         }
     }
 }
-*/
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
@@ -634,7 +607,7 @@ fun PlayScreen(song: Cancion, user: User) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text("lo que lleve", fontSize = 12.sp, color = Color.Gray)
-                    Text(secondsToMMSS(song.length), fontSize = 12.sp, color = Color.Gray)
+                    Text(secondsToMMSS(song.length!!), fontSize = 12.sp, color = Color.Gray)
                 }
 
                 // Control buttons

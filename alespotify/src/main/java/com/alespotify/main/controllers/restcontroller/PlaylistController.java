@@ -7,6 +7,7 @@ import com.alespotify.main.repository.ArtistRepository;
 import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.SongRepository;
 import com.alespotify.main.service.PlaylistServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +30,9 @@ public class PlaylistController {
     }
 
     @GetMapping()
-    public List<PlaylistDTO> getPlaylists() {
-        return playlistService.getAllPlaylistsDTO();
+    public ResponseEntity<List<PlaylistDTO>> getPlaylists() {
+        System.out.println("saca playlists");
+        return ResponseEntity.ok(playlistService.getAllPlaylistsDTO());
     }
 
     @GetMapping("/{id}")

@@ -17,6 +17,7 @@ public class ArtistMapper {
     public static SongArtistDTO toSongArtistDTO(Artist artist) {
         SongArtistDTO artistDTO = new SongArtistDTO();
         artistDTO.setId(artist.getId());
+        artistDTO.setDescription(artist.getDescription());
         artistDTO.setName(artist.getName());
         artistDTO.setImage(artist.getImage());
         ArrayList<SongArtistInfoFromSongDTO> songs = new ArrayList<>();

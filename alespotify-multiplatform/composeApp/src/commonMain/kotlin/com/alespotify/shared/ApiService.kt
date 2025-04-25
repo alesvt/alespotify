@@ -33,6 +33,7 @@ class ApiService {
         }
         if (response.status == HttpStatusCode.OK) {
             // tendria que poner la ruta de main y cargar con otra llamada tal y tal
+            println(response.body() as User)
             // println("Login correcto: ${response.body<User>()}")
             return response.body() as User
         }
@@ -41,18 +42,26 @@ class ApiService {
     }
 
     suspend fun getSongs(): List<Cancion>? {
-        val response = httpClient.get("$BASE_URL/songs")
-        if (response.status == HttpStatusCode.OK) {
-            return response.body()
+        try {
+            val response = httpClient.get("$BASE_URL/songs")
+            if (response.status == HttpStatusCode.OK) {
+                val songs = response.body<List<Cancion>>()
+                return songs
+            }
+            println("Error al obtener canciones: ${response.status}")
+            return null
+        } catch (e: Exception) {
+            println("Excepción al obtener canciones: ${e.message}")
+            return null
         }
-        println("Error al obtener canciones: ${response.status}")
-        return null
     }
+
+
 
     suspend fun getArtists(): List<Artist>? {
         val response = httpClient.get("$BASE_URL/artists")
         if (response.status == HttpStatusCode.OK) {
-            return response.body()
+            return response.body() as List<Artist>
         } else {
             println("Error al obtener artistas: ${response.status}")
             return null
@@ -62,9 +71,8 @@ class ApiService {
     suspend fun getPlaylists(): List<Playlist>? {
         val response = httpClient.get("$BASE_URL/playlists")
         if (response.status == HttpStatusCode.OK) {
-            return response.body()
+            return response.body() as List<Playlist>
         } else {
-            Logger.DEFAULT.log("NO VA")
             println("Error al obtener playlists: ${response.status}")
             return null
         }

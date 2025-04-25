@@ -12,6 +12,7 @@ import io.ktor.client.plugins.logging.Logging
 val json = Json {
     ignoreUnknownKeys = true
     isLenient = true
+    encodeDefaults = true
 }
 
 fun createHttpClient(config: HttpClientConfig<*>.() -> Unit = {}): HttpClient {

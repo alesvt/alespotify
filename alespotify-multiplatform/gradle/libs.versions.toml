@@ -23,18 +23,15 @@ kotlinxSerializationJson = "1.8.0"
 ktorClientCore = "3.1.1"
 ktorClientIos = "3.0.0"
 
-material = "1.7.8"
+material = "1.8.0"
 mongodbDriverKotlinCoroutine = "5.4.0"
 navigationCompose = "2.8.0-alpha10"
-runtimeAndroid = "1.7.8"
-foundationAndroid = "1.7.8"
-uiToolingPreview = "1.7.8"
-uiGraphicsAndroid = "1.7.8"
-uiAndroid = "1.7.8"
+runtimeAndroid = "1.8.0"
+
 
 [libraries]
-androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "uiToolingPreview" }
-androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
+androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "runtimeAndroid" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "runtimeAndroid" }
 
 bson-kotlinx = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodbDriverKotlinCoroutine" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilCompose" }
@@ -54,7 +51,7 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
-androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "runtimeAndroid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientCore" }
@@ -69,9 +66,9 @@ logback-classic = { module = "ch.qos.logback:logback-classic" }
 material = { module = "androidx.compose.material:material", version.ref = "material" }
 mongodb-driver-kotlin-coroutine = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodbDriverKotlinCoroutine" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
+androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "runtimeAndroid" }
 ui-util = { module = "org.jetbrains.compose.ui:ui-util" }
-androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "runtimeAndroid" }
 
 
 [plugins]

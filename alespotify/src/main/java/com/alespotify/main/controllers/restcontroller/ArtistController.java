@@ -31,6 +31,7 @@ public class ArtistController {
 
     @GetMapping
     public ResponseEntity<List<SongArtistDTO>> findAll() {
+        System.out.println("saca artistas");
         return ResponseEntity.ok(artistService.getAllArtistsDTO());
     }
 

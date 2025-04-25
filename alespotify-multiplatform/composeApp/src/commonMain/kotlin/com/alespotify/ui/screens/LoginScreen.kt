@@ -48,28 +48,43 @@ import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.alespotify.model.User
 import com.alespotify.ui.MyColors
+import com.alespotify.ui.navigation.AppViewModel
+import com.alespotify.ui.navigation.LoginState
 import com.alespotify.ui.navigation.LoginViewModel
 import org.jetbrains.compose.resources.painterResource
 
 
 
-// Assuming you have a LoginForm Composable ready. If not, create it.
 @Composable
-fun LoginForm(loginViewModel: LoginViewModel, onLoginSuccess : (User) -> Unit) {
-    var email by remember { mutableStateOf(("")) }
-    var password by remember { mutableStateOf(("")) }
+fun LoginForm(
+    loginViewModel: LoginViewModel,
+    onLoginSuccess: (User) -> Unit,
+    appViewModel: AppViewModel
+) {
+    when (val loginState = loginViewModel.loginState.value) {
+        is LoginState.Loading -> Text("Cargando...")
+        is LoginState.Success -> {
+            val user = loginState.user
+            // Llamar al DataViewModel para cargar los datos
+            appViewModel.loadSongs()
+            onLoginSuccess(user)
+        }
+        is LoginState.Error -> {
+            Text("Error: ${loginState.mensaje}")
+        }
+    }
+
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    Column(
-        modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             value = email,
             singleLine = true,
             onValueChange = { email = it },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = MyColors.secondary
-            ),
+            colors = TextFieldDefaults.textFieldColors(textColor = MyColors.secondary),
             label = { Text("Email") })
         OutlinedTextField(
             value = password,
@@ -78,64 +93,39 @@ fun LoginForm(loginViewModel: LoginViewModel, onLoginSuccess : (User) -> Unit) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = MyColors.secondary
-            ),
-
+            colors = TextFieldDefaults.textFieldColors(textColor = MyColors.secondary),
             label = { Text("Contraseña") },
             trailingIcon = {
-                val image = if (passwordVisible)
-                    Icons.Filled.Visibility
-                else Icons.Filled.VisibilityOff
-
+                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
-
-                IconButton(onClick = {passwordVisible = !passwordVisible}){
-                    Icon(imageVector  = image, description)
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, description)
                 }
             }
         )
         Button(
-            onClick = {
-                loginViewModel.login(email, password)
-            },
+            onClick = { loginViewModel.login(email, password) },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.primary)
         ) {
             Text("Iniciar sesión", color = Color.White)
         }
-        if (loginViewModel.isLoading) {
-            Spacer(modifier = Modifier.height(8.dp))
-            CircularProgressIndicator()
-        }
-
-        loginViewModel.errorMessage?.let { error ->
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(error, color = MaterialTheme.colors.error)
-        }
-
-        loginViewModel.loginResult?.let { user ->
-            LaunchedEffect(user) {
-                onLoginSuccess(user) // Llama a una función para manejar el éxito del login
-            }
-        }
-
     }
 }
+
 
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
+    appViewModel: AppViewModel,
     onLoginSuccess: (User) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize().background(MyColors.background).padding(top = 50.dp)
     ) {
-
         Column(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -147,8 +137,8 @@ fun LoginScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = Modifier.size(40.dp).clip(CircleShape)
-                            .background(MyColors.primary), contentAlignment = Alignment.Center
+                        modifier = Modifier.size(40.dp).clip(CircleShape).background(MyColors.primary),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
@@ -182,17 +172,8 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // este es el formulario (los inputs)
-                LoginForm(loginViewModel, onLoginSuccess)
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "No tienes cuenta? Regístrate",
-                    color = MyColors.onSurface.copy(alpha = 0.6f),
-                    modifier = Modifier.clickable {
-                        //navController.navigate("registro")
-                    })
+                // Formulario de Login
+                LoginForm(loginViewModel, onLoginSuccess, appViewModel)
             }
         }
     }

@@ -142,6 +142,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.alespotify"
             packageVersion = "1.0.0"
+
         }
     }
 }

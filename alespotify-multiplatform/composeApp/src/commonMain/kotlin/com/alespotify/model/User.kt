@@ -12,4 +12,5 @@ data class User(
     val image : String,
     val playlists: List<Playlist>?,
     val favourites: Playlist?
+
 )

@@ -7,19 +7,11 @@ import androidx.navigation.navArgument
 open class DestinosNavegacion(
     val route: String,
     val title: String,
-    arguments: List<NamedNavArgument> = listOf()
 ) {
+
     object LoginScreen : DestinosNavegacion("loginScreen", "loginScreen")
     object app : DestinosNavegacion("app", "app")
 
-    object login : DestinosNavegacion(
-        "login/{email}/{password}",
-        "login",
-        arguments = listOf(
-            navArgument("email") { type = NavType.StringType },
-            navArgument("password") { type = NavType.StringType }
-        )
-    )
 
     object load : DestinosNavegacion("load", "load")
 

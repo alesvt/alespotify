@@ -1,7 +1,7 @@
 package com.alespotify.model
 
 import kotlinx.serialization.Serializable
-import org.mongodb.kbson.ObjectId
+
 
 @Serializable
 data class Playlist(
@@ -9,7 +9,8 @@ data class Playlist(
     val songs: List<Cancion>?,
     val image: String,
     val name: String,
-    val creationDate: String,
-    val updateDate: String,
-    val publicPlaylist :Boolean
+    val user: User ? = null ,
+    val creationDate: String ? = null,
+    val updateDate: String ? = null,
+    val publicPlaylist: Boolean
 )
