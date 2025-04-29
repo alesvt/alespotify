@@ -43,14 +43,11 @@ import com.alespotify.model.Cancion
 import com.alespotify.model.User
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
-import com.alespotify.ui.navigation.ArtistDataState
 import com.alespotify.ui.navigation.DestinosNavegacion
-import com.alespotify.ui.navigation.LoginState
 import com.alespotify.ui.navigation.LoginViewModel
-import com.alespotify.ui.navigation.PlaylistDataState
-import com.alespotify.ui.navigation.SongDataState
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.math.log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 expect fun getPlatformName(): String
 
@@ -60,7 +57,7 @@ fun MainView() {
     val navController = rememberNavController()
     Button(onClick = {
         if (platformName == "Android") {
-            println("Jamon de york")
+
             navController.navigate(DestinosNavegacion.android.route)
         } else {
             navController.navigate("ios")
@@ -84,151 +81,144 @@ fun DatosScreen(
     var isPlaying by remember { mutableStateOf(false) }
     var volumeSliderValue by remember { mutableStateOf(80f) }
 
-    val songDataState by appViewModel.songDataState
-    val artistDataState by appViewModel.artistDataState
-    val playlistDataState by appViewModel.playlistDataState
+    val songs by appViewModel.songs.collectAsState()
+    val artists by appViewModel.artists.collectAsState()
+    val playlists by appViewModel.playlists.collectAsState()
 
     // Obtener los datos del usuario desde LoginViewModel
-    val user by loginViewModel.loginState
+    val user by loginViewModel.usuario.collectAsState()
 
-    var usuario  = loginViewModel.loginState.value
-    // Comprobar si los datos están siendo cargados, si es necesario, se recargan
-    LaunchedEffect(Unit) {
-        if (songDataState is SongDataState.Loading || artistDataState is ArtistDataState.Loading || playlistDataState is PlaylistDataState.Loading) {
-            appViewModel.loadSongs()
-        }
-        if (user is LoginState.Success) run {
-            usuario = (user as LoginState.Success).user
-        } else {
+    println(songs?.size)
+    println(artists?.size)
+    println(playlists?.size)
+    if (user != null) {
 
-        }
-    }
-
-    MaterialTheme(colors = MyColors) {
-        Row(modifier = Modifier.fillMaxSize()) {
-            // Sidebar
-            Column(
-                modifier = Modifier
-                    .width(256.dp)
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colors.surface)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Alespotify",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true)
-                    NavigationLink(icon = Icons.Filled.Search, text = "Search")
-                    NavigationLink(icon = Icons.Filled.LibraryMusic, text = "Tu música")
-                }
-
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
-
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Tus Playlists",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos")
-                    NavigationLink(icon = Icons.Filled.History, text = "Canciones recientes")
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Column(modifier = Modifier.padding(16.dp)) {
-                    print(usuario)
-                    NavigationLink(icon = Icons.Filled.AccountBox, text = "Perfil")
-                    NavigationLink(icon = Icons.Filled.Settings, text = "Ajustes")
-                }
-            }
-
-            // Main Content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .background(MaterialTheme.colors.background)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+        MaterialTheme(colors = MyColors) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                // Sidebar
+                Column(
+                    modifier = Modifier
+                        .width(256.dp)
+                        .fillMaxHeight()
+                        .background(MaterialTheme.colors.surface)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Good afternoon",
+                            text = "Alespotify",
                             fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.primary,
+                            modifier = Modifier.padding(bottom = 16.dp)
                         )
-                        Avatar("JD", "placeholder.svg")
+                        NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true)
+                        NavigationLink(icon = Icons.Filled.Search, text = "Search")
+                        NavigationLink(icon = Icons.Filled.LibraryMusic, text = "Tu música")
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Divider(modifier = Modifier.padding(vertical = 16.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        FeaturedCard(
-                            "Weekly Discoveries",
-                            "Fresh music curated just for you",
-                            "placeholder.svg"
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Tus Playlists",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                            modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        Column(modifier = Modifier.weight(1f)) {
-                            RecentlyPlayedCard()
-                            Spacer(modifier = Modifier.height(16.dp))
-                            TopArtistsCard()
-                        }
+                        NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos")
+                        NavigationLink(icon = Icons.Filled.History, text = "Canciones recientes")
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.weight(1f))
 
-                    Text(
-                        text = "Made For You",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(List(6) { it + 1 }) { index ->
-                            MadeForYouCard(index)
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = "New Releases",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(List(2) { it + 1 }) { index ->
-                            NewReleaseCard(index)
-                        }
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        NavigationLink(icon = Icons.Filled.AccountBox, text = user!!.name)
+                        NavigationLink(icon = Icons.Filled.Settings, text = "Ajustes")
                     }
                 }
 
-                // Player
-                PlayerControls(
-                    isPlaying = isPlaying,
-                    onPlayPauseToggle = { isPlaying = !isPlaying },
-                    sliderValue = sliderValue,
-                    onSliderValueChange = { sliderValue = it },
-                    volumeSliderValue = volumeSliderValue,
-                    onVolumeSliderValueChange = { volumeSliderValue = it }
-                )
+                // Main Content
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .background(MaterialTheme.colors.background)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Good afternoon",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Avatar("JD", "placeholder.svg")
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            FeaturedCard(
+                                "Weekly Discoveries",
+                                "Fresh music curated just for you",
+                                "placeholder.svg"
+                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                RecentlyPlayedCard()
+                                Spacer(modifier = Modifier.height(16.dp))
+                                TopArtistsCard()
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "Made For You",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            items(List(6) { it + 1 }) { index ->
+                                MadeForYouCard(index)
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "New Releases",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            items(List(2) { it + 1 }) { index ->
+                                NewReleaseCard(index)
+                            }
+                        }
+                    }
+
+                    // Player
+                    PlayerControls(
+                        isPlaying = isPlaying,
+                        onPlayPauseToggle = { isPlaying = !isPlaying },
+                        sliderValue = sliderValue,
+                        onSliderValueChange = { sliderValue = it },
+                        volumeSliderValue = volumeSliderValue,
+                        onVolumeSliderValueChange = { volumeSliderValue = it }
+                    )
+                }
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

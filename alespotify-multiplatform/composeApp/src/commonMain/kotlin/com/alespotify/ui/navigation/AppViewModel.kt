@@ -15,18 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-sealed class SongDataState {
-    object Loading : SongDataState()
-    data class Success(val items: List<Cancion>) : SongDataState()
-    data class Error(val mensaje: String) : SongDataState()
-}
-
-sealed class ArtistDataState {
-    object Loading : ArtistDataState()
-    data class Success(val items: List<Artist>) : ArtistDataState()
-    data class Error(val mensaje: String) : ArtistDataState()
-}
-
 
 class AppViewModel : ViewModel() {
 
@@ -46,46 +34,55 @@ class AppViewModel : ViewModel() {
     val isLoadingArtists: StateFlow<Boolean> = _isLoadingArtists
     private val _artistsLoaded = MutableStateFlow(false)
     val artistsLoaded: StateFlow<Boolean> = _artistsLoaded
+
+    // playlists
     private val _playlists = MutableStateFlow<List<Playlist>?>(null)
     val playlists: StateFlow<List<Playlist>?> = _playlists
     private val _isLoadingPlaylists = MutableStateFlow(false)
     val isLoadingPlaylists: StateFlow<Boolean> = _isLoadingPlaylists
     private val _playlistsLoaded = MutableStateFlow(false)
     val playlistsLoaded: StateFlow<Boolean> = _playlistsLoaded
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage: StateFlow<String> = _errorMessage
+
 
     fun loadSongs() {
         viewModelScope.launch {
             try {
-
                 // Cargar las tres listas
                 val fetchedSongs = apiService.getSongs()
                 val fetchedArtists = apiService.getArtists()
                 val fetchedPlaylists = apiService.getPlaylists()
-// FIXME cambiar a stateflow
-                _songs.value = fetchedSongs
                 // Imprimir resultados para debug
                 println("Canciones cargadas: ${fetchedSongs?.size}")
                 println("Artistas cargados: ${fetchedArtists?.size}")
                 println("Playlists cargadas: ${fetchedPlaylists?.size}")
                 if (fetchedSongs != null) {
                     // Actualizar los estados con los resultados
-                    _songDataState.value = SongDataState.Success(fetchedSongs)
+                    _songs.value = fetchedSongs
+                    _songsLoaded.value = true
+                    _songs.emit(fetchedSongs)
                 }
                 if (fetchedArtists != null) {
-                    _artistDataState.value = ArtistDataState.Success(fetchedArtists)
-
+                    _artists.value = fetchedArtists
+                    _artistsLoaded.value = true
+                    _artists.emit(fetchedArtists)
                 }
                 if (fetchedPlaylists != null) {
-                    _playlistDataState.value = PlaylistDataState.Success(fetchedPlaylists)
+                    _playlists.value = fetchedPlaylists
+                    _playlistsLoaded.value = true
+                    _playlists.emit(fetchedPlaylists)
                 }
 
 
             } catch (e: Exception) {
                 // todo mas errores
-                errorMessage = "Error al cargar artistas" + e.message
-                _songDataState.value = SongDataState.Error("error al cargar datos " + e.message)
+                _errorMessage.value = "Error al cargar artistas" + e.message
+
             } finally {
-                isLoading = false
+                _isLoadingSongs.value = false
+                _isLoadingArtists.value = false
+                _isLoadingPlaylists.value = false
             }
         }
     }

@@ -49,10 +49,8 @@ import coil3.compose.rememberAsyncImagePainter
 import com.alespotify.model.User
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
-import com.alespotify.ui.navigation.LoginState
 import com.alespotify.ui.navigation.LoginViewModel
 import org.jetbrains.compose.resources.painterResource
-
 
 
 @Composable
@@ -61,6 +59,7 @@ fun LoginForm(
     onLoginSuccess: (User) -> Unit,
     appViewModel: AppViewModel
 ) {
+    /*
     when (val loginState = loginViewModel.loginState.value) {
         is LoginState.Loading -> Text("Cargando...")
         is LoginState.Success -> {
@@ -73,6 +72,7 @@ fun LoginForm(
             Text("Error: ${loginState.mensaje}")
         }
     }
+*/
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -84,7 +84,11 @@ fun LoginForm(
             singleLine = true,
             onValueChange = { email = it },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(textColor = MyColors.secondary),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.White,
+                focusedIndicatorColor = Color.White,
+                focusedLabelColor = Color.White
+            ),
             label = { Text("Email") })
         OutlinedTextField(
             value = password,
@@ -93,13 +97,19 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(textColor = MyColors.secondary),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.White,
+                focusedIndicatorColor = Color.White,
+                focusedLabelColor = Color.White
+            ),
             label = { Text("Contraseña") },
             trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                val image =
+                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val description =
+                    if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, description)
+                    Icon(imageVector = image, description, tint = Color.White)
                 }
             }
         )
@@ -109,6 +119,21 @@ fun LoginForm(
             colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.primary)
         ) {
             Text("Iniciar sesión", color = Color.White)
+        }
+        if (loginViewModel.isLoading) {
+            Spacer(modifier = Modifier.height(8.dp))
+            CircularProgressIndicator()
+        }
+
+        loginViewModel.errorMessage?.let { error ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(error, color = MaterialTheme.colors.error)
+        }
+
+        loginViewModel.loginResult?.let { user ->
+            LaunchedEffect(user) {
+                onLoginSuccess(user) // Llama a una función para manejar el éxito del login
+            }
         }
     }
 }
@@ -137,7 +162,8 @@ fun LoginScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = Modifier.size(40.dp).clip(CircleShape).background(MyColors.primary),
+                        modifier = Modifier.size(40.dp).clip(CircleShape)
+                            .background(MyColors.primary),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
