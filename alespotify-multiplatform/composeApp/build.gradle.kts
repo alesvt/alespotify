@@ -18,13 +18,15 @@ kotlin {
         }
     }
 
+
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "Alespotify"
             isStatic = true
         }
     }
@@ -139,10 +141,19 @@ compose.desktop {
         mainClass = "com.alespotify.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.alespotify"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "Alespotify"
             packageVersion = "1.0.0"
+            description = "Aplicación para el módulo de proyecto final de Desarrollo de Aplicaciones Multiplataforma"
+            copyright = "© 2025 alesvolta. Todos los derechos reservados"
+            windows {
+                iconFile.set(project.file("/logo/Windows/applogo.ico"))
+                menuGroup = "Alespotify"
+                shortcut
+                vendor = "Alesvolta"
 
+            }
         }
+
     }
 }
