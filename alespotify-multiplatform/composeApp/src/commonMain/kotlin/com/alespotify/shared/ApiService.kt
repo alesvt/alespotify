@@ -27,7 +27,7 @@ class ApiService {
         createHttpClient() // Obtiene el HttpClient con la configuración común y el motor específico
 
     suspend fun login(email: String, password: String): User? {
-        val response = httpClient.get("$BASE_URL/users/login") {
+        val response = httpClient.post("$BASE_URL/users/login") {
             contentType(ContentType.Application.Json)
             setBody(Credentials(email, password))
         }

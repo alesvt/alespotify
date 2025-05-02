@@ -29,18 +29,17 @@ fun NavGraph(
         startDestination = DestinosNavegacion.LoginScreen.route,
     ) {
         composable(DestinosNavegacion.LoginScreen.route) {
-            DatosScreen(navController, appViewModel, loginViewModel)
 
-            /*            LoginScreen(
-                            navController = navController,
-                            loginViewModel = loginViewModel,
-                            appViewModel,
-                            onLoginSuccess = {
-                                navController.navigate(DestinosNavegacion.load.route)
-                            }
-                        )
+            LoginScreen(
+                navController = navController,
+                loginViewModel = loginViewModel,
+                appViewModel,
+                onLoginSuccess = {
+                    navController.navigate(DestinosNavegacion.load.route)
+                }
+            )
 
-             */
+
         }
         composable(DestinosNavegacion.load.route) {
             LoadingDataScreen(

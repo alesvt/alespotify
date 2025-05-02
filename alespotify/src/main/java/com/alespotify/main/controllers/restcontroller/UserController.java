@@ -57,7 +57,7 @@ public class UserController {
      * @param credentials
      * @return ResponseEntity with the authorised user
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<User> getUser(@RequestBody String credentials) {
         if (userService.login(credentials) != null) {
             User user = userService.login(credentials);
