@@ -162,18 +162,7 @@ fun HomeScreen(
     sliderState: LazyListState
 ) {
 
-    LazyRow(
-        state = sliderState,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
-    ) {
-        items(featuredPlaylists.size) { index ->
-            FeaturedPlaylistItem(
-                playlist = featuredPlaylists[index],
-                onItemClick = { onSlideChange(index) }
-            )
-        }
-    }
+
     LaunchedEffect(currentSlideIndex) {
         sliderState.animateScrollToItem(currentSlideIndex)
     }
