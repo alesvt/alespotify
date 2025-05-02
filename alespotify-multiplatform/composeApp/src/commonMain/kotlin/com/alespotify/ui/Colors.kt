@@ -14,7 +14,7 @@ val MyColors = darkColors(
     background = black210,
     secondaryVariant = textMuted,
     secondary = secondary,
-    primaryVariant = textColor
+    primaryVariant = textColor,
 
 
 )

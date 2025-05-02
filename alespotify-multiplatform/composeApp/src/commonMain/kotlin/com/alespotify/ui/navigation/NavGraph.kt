@@ -14,6 +14,7 @@ import com.alespotify.ui.screens.DatosScreen
 import com.alespotify.ui.screens.LoadingDataScreen
 // import com.alespotify.ui.screens.DatosScreen
 import com.alespotify.ui.screens.LoginScreen
+import com.alespotify.ui.screens.Player
 import kotlin.math.log
 
 
@@ -28,14 +29,18 @@ fun NavGraph(
         startDestination = DestinosNavegacion.LoginScreen.route,
     ) {
         composable(DestinosNavegacion.LoginScreen.route) {
-            LoginScreen(
-                navController = navController,
-                loginViewModel = loginViewModel,
-                appViewModel,
-                onLoginSuccess = {
-                    navController.navigate(DestinosNavegacion.load.route)
-                }
-            )
+            DatosScreen(navController, appViewModel, loginViewModel)
+
+            /*            LoginScreen(
+                            navController = navController,
+                            loginViewModel = loginViewModel,
+                            appViewModel,
+                            onLoginSuccess = {
+                                navController.navigate(DestinosNavegacion.load.route)
+                            }
+                        )
+
+             */
         }
         composable(DestinosNavegacion.load.route) {
             LoadingDataScreen(

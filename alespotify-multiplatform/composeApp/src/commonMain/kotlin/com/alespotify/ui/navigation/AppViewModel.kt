@@ -46,6 +46,9 @@ class AppViewModel : ViewModel() {
     val errorMessage: StateFlow<String> = _errorMessage
 
 
+    private val _currentSong = MutableStateFlow<Cancion?>(null)
+    val currentSong: StateFlow<Cancion?> = _currentSong
+
     fun loadSongs() {
         viewModelScope.launch {
             try {

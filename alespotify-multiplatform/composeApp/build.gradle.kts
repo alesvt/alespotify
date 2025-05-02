@@ -76,6 +76,7 @@ kotlin {
              // implementation("")
             implementation(libs.coil.compose)
             implementation(libs.coil)
+            implementation(libs.coil.network.ktor)
             // Kotlin coroutine dependency
             implementation(libs.navigation.compose)
 
@@ -133,6 +134,7 @@ dependencies {
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.ui.graphics.android)
     implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
 }
 
