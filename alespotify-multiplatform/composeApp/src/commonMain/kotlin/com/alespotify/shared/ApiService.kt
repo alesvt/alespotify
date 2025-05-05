@@ -16,7 +16,7 @@ import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
 
-const val BASE_URL = "http://172.18.80.1:8080/api"
+const val BASE_URL = "http://172.24.128.1:8080/api"
 
 @Serializable
 data class Credentials(val email: String, val password: String)
