@@ -493,6 +493,9 @@ section.main-content {
 
 .logos-grid .logo {
     filter: grayscale(1);
+    object-fit: cover;
+    height: 130px;
+    width: 130px;
 }
 
 @media (min-width: 768px) {
@@ -617,13 +620,12 @@ section.main-content {
 .app-showcase-image {
     position: relative;
     margin: 0 auto;
-    max-width: 20rem;
+    max-width: 15rem;
 }
 
 .phone-mockup {
     border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
 }
 
 .now-playing-badge {
@@ -639,7 +641,7 @@ section.main-content {
 }
 
 .pulse {
-    width: 0.75rem;
+    width: 1.75rem;
     height: 0.75rem;
     background-color: var(--primary-color);
     border-radius: 50%;

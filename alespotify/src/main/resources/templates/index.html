@@ -6,6 +6,9 @@
     <title>Alespotify - Inicio</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/landing.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
 <header class="site-header" id="siteHeader">
@@ -47,7 +50,6 @@
             y disfruta de tu música donde sea y como sea.</p>
     </div>
     <div class="hero-content">
-<p>Hola que tal</p>
     </div>
     <div class="button-group">
         <a class="button primary" href="/login">Empieza gratis</a>
@@ -56,19 +58,19 @@
         <div class="avatar-group">
             <div class="avatar">
                 <img src="data:image/png;base64,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"
-                     class="author-avatar" height="225"/>
+                     class="author-avatar" height="225" alt=""/>
             </div>
             <div class="avatar">
                 <img src="data:image/png;base64,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"
-                     class="author-avatar" height="225"/>
+                     class="author-avatar" height="225" alt=""/>
             </div>
             <div class="avatar">
                 <img src="data:image/png;base64,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"
-                     class="author-avatar" height="225"/>
+                     class="author-avatar" height="225" alt=""/>
             </div>
             <div class="avatar">
                 <img src="data:image/png;base64,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"
-                     class="author-avatar" height="225"/>
+                     class="author-avatar" height="225" alt=""/>
             </div>
         </div>
         <div>
@@ -80,22 +82,22 @@
     <p class="logos-title">Más de 100 artistas confían en nosotros</p>
     <div class="logos-grid">
         <img class="logo" height="20"
-             src="https://media.istockphoto.com/id/1455799854/es/vector/icono-de-l%C3%ADnea-de-nota-musical-dise%C3%B1o-de-boceto-p%C3%ADxel-perfecto-trazo-editable-m%C3%BAsica.jpg?s=612x612&w=0&k=20&c=E068x5cs3yBD3yZUmhuhvaFB0PQOe804dIOmW7gbGPc="
+             src="https://i.scdn.co/image/ab6761610000e5ebc980bd8bd9e043a6f13052be"
              alt="">
         <img class="logo" height="20"
-             src="https://media.istockphoto.com/id/1455799854/es/vector/icono-de-l%C3%ADnea-de-nota-musical-dise%C3%B1o-de-boceto-p%C3%ADxel-perfecto-trazo-editable-m%C3%BAsica.jpg?s=612x612&w=0&k=20&c=E068x5cs3yBD3yZUmhuhvaFB0PQOe804dIOmW7gbGPc="
+             src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRHRCRS_2ohp42DCcQ0K0RgcNnA5YZwCnMTNlvi5PVFTJ6G4a7y3tncZPTrP8RR6d33umw5pO2Pop-JW8k5pWTqiQ"
              alt="">
         <img class="logo" height="20"
-             src="https://media.istockphoto.com/id/1455799854/es/vector/icono-de-l%C3%ADnea-de-nota-musical-dise%C3%B1o-de-boceto-p%C3%ADxel-perfecto-trazo-editable-m%C3%BAsica.jpg?s=612x612&w=0&k=20&c=E068x5cs3yBD3yZUmhuhvaFB0PQOe804dIOmW7gbGPc="
+             src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQDkAhKfgjUt8EfCxJw7XL3r3bo9Ac4TRamL5eWVnMK3CyTCfxUXEhk57RG4Memk9jy-cClg4S-vK7ngacDtDYw_Q"
              alt="">
         <img class="logo" height="20"
-             src="https://media.istockphoto.com/id/1455799854/es/vector/icono-de-l%C3%ADnea-de-nota-musical-dise%C3%B1o-de-boceto-p%C3%ADxel-perfecto-trazo-editable-m%C3%BAsica.jpg?s=612x612&w=0&k=20&c=E068x5cs3yBD3yZUmhuhvaFB0PQOe804dIOmW7gbGPc="
+             src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQiYbHNHd0VmYEL1JmpTgvhJRFzfT3wJ9BMGWPTqzSX_qBEYtVJocfmM-oo14aRB1y48qrYRT9raFfspicNMSnx8iwzMS8oPyWTttKRWAbPXwG7qqB4PZoYLCyXHLqlHet5NkNVkl4o"
              alt="">
         <img class="logo" height="20"
-             src="https://media.istockphoto.com/id/1455799854/es/vector/icono-de-l%C3%ADnea-de-nota-musical-dise%C3%B1o-de-boceto-p%C3%ADxel-perfecto-trazo-editable-m%C3%BAsica.jpg?s=612x612&w=0&k=20&c=E068x5cs3yBD3yZUmhuhvaFB0PQOe804dIOmW7gbGPc="
+             src="https://i.scdn.co/image/ab67616d00001e02bf7109c1aa11ba17a43c36f2"
              alt="">
         <img class="logo" height="20"
-             src="https://media.istockphoto.com/id/1455799854/es/vector/icono-de-l%C3%ADnea-de-nota-musical-dise%C3%B1o-de-boceto-p%C3%ADxel-perfecto-trazo-editable-m%C3%BAsica.jpg?s=612x612&w=0&k=20&c=E068x5cs3yBD3yZUmhuhvaFB0PQOe804dIOmW7gbGPc="
+             src="https://pbs.twimg.com/media/GHaJ62HWYAA7pqn.jpg"
              alt="">
     </div>
 </section>
@@ -108,45 +110,53 @@
     <div class="features-grid">
         <div class="feature-card">
             <div class="feature-icon-wrapper">
-                <img class="feature-icon" src="" alt="">
+
+                <img class="feature-icon" src="https://www.svgrepo.com/show/132491/music-album.svg" alt="">
             </div>
             <h3>Multitud de canciones</h3>
             <p>Accede a una gran variedad de contenido de todos los géneros y artistas</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon-wrapper">
-                <img class="feature-icon" src="" alt="">
+                <img class="feature-icon" src="https://static.thenounproject.com/png/88987-200.png" alt="">
             </div>
             <h3>Audio a la mejor calidad</h3>
             <p>Reproduce tus canciones favoritas a la mejor calidad sin pérdidas</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon-wrapper">
-                <img class="feature-icon" src="" alt="">
+                <img class="feature-icon"
+                     src="https://cdn1.iconfinder.com/data/icons/content-10/24/dialog-recommendations-512.png" alt="">
             </div>
             <h3>Recomendaciones personalizadas</h3>
             <p>Reproduce tus canciones favoritas a la mejor calidad sin pérdidas</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon-wrapper">
-                <img class="feature-icon" src="" alt="">
+                <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/6291/6291325.png" alt="">
             </div>
-            <h3>Recomendaciones personalizadas</h3>
-            <p>Reproduce tus canciones favoritas a la mejor calidad sin pérdidas</p>
+            <h3>Escucha Alespotify en todos tus dispositivos</h3>
+            <p>Smartphones, tablets, ordenadores y altavoces inteligentes. Disfruta de una experiencia fluida y
+                sincronizada en cualquier plataforma.</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon-wrapper">
-                <img class="feature-icon" src="" alt="">
+                <img class="feature-icon" src="https://www.svgrepo.com/show/308081/sing-artist-singer-entertainer.svg"
+                     alt="">
             </div>
-            <h3>Recomendaciones personalizadas</h3>
-            <p>Reproduce tus canciones favoritas a la mejor calidad sin pérdidas</p>
+            <h3>Perfiles de Artista Detallados</h3>
+            <p>Explora la discografía completa de tus artistas preferidos, incluyendo álbumes, sencillos, vídeos
+                musicales y biografías</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon-wrapper">
-                <img class="feature-icon" src="" alt="">
+                <img class="feature-icon"
+                     src="https://cdn2.iconfinder.com/data/icons/orion-mix-i/24/dollar_no_money_free_gratis_loss-512.png"
+                     alt="">
             </div>
-            <h3>Interfaz moderna y personalizable</h3>
-            <p>Reproduce tus canciones favoritas a la mejor calidad sin pérdidas</p>
+            <h3>Experiencia sin Anuncios</h3>
+            <p>Disfruta de una escucha ininterrumpida con nuestra suscripción premium sin anuncios. Concéntrate solo en
+                la música</p>
         </div>
     </div>
 </section>
@@ -180,9 +190,9 @@
         </div>
         <div class="app-showcase-image">
             <div class="phone-mockup">
-                <img src="placeholder-phone.jpg" alt="Mobile app interface">
+                <img src="https://publitronic.es/wp-content/uploads/2025/05/now-playing.png" alt="Mobile app interface">
                 <div class="now-playing-badge">
-                    <svg viewBox="0 0 24 24" fill="white">
+                    <svg viewBox="0 0 24 24" fill="red">
                         <path d="M8 5v14l11-7z"/>
                     </svg>
                     Now Playing <span class="pulse"></span>
@@ -224,14 +234,14 @@
                                   d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63L2 9.24l5.46 4.73L5.82 21z"/>
                         </svg>
                     </div>
-                    <p class="quote">"Melodify has completely transformed the way I listen to music. The
-                        personalized playlists are spot-on, and the sound quality is fantastic!"</p>
+                    <p class="quote">"¡Wow con la calidad de sonido! Por fin un streaming que entiende mi gusto musical
+                        con sus listas personalizadas. Además, descargar canciones para el viaje es un puntazo."</p>
                 </div>
                 <div class="testimonial-author">
-                    <div class="author-avatar">JD</div>
+                    <div class="author-avatar"><img height="20" alt="user-avatar" src="https://images.icon-icons.com/2468/PNG/512/user_kids_avatar_user_profile_icon_149314.png"></div>
                     <div class="author-info">
-                        <span class="author-name">John Doe</span>
-                        <span class="author-title">Music Enthusiast</span>
+                        <span class="author-name">MusicLover1203</span>
+                        <span class="author-title">Reproductor casual</span>
                     </div>
                 </div>
             </div>
@@ -259,14 +269,15 @@
                                   d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63L2 9.24l5.46 4.73L5.82 21z"/>
                         </svg>
                     </div>
-                    <p class="quote">"I love the offline listening feature! It's perfect for my commute, and
-                        I never have to worry about using up my data."</p>
+                    <p class="quote">"He probado muchos, pero Alespotify es lo mejor. Facilísimo de usar, tienen de
+                        todo, se conecta genial a mis altavoces y la radio personalizada siempre me sorprende con
+                        temazos."</p>
                 </div>
                 <div class="testimonial-author">
-                    <div class="author-avatar">AS</div>
+                    <div class="author-avatar"><img height="20" alt="user-avatar" src="https://images.icon-icons.com/2468/PNG/512/user_icon_149333.png"></div>
                     <div class="author-info">
-                        <span class="author-name">Alice Smith</span>
-                        <span class="author-title">Frequent Traveler</span>
+                        <span class="author-name">Sound Guru</span>
+                        <span class="author-title">Fan de Lady Gaga</span>
                     </div>
                 </div>
             </div>
@@ -298,7 +309,7 @@
                         muchos artistas nuevos y géneros que no podría haber descubierto nunca."</p>
                 </div>
                 <div class="testimonial-author">
-                    <div class="author-avatar">PB</div>
+                    <div class="author-avatar"><img height="20" alt="user-avatar" src="https://images.icon-icons.com/2468/PNG/512/user_kids_avatar_icon_149313.png"></div>
                     <div class="author-info">
                         <span class="author-name">Paula Brotons</span>
                         <span class="author-title">Desde 29/04/2025</span>
@@ -337,10 +348,10 @@
                 Descubre, reproduce y comparte contenido musical de artistas de todas partes del mundo.
             </p>
             <div class="social-links">
-                <a href="" class="social-link">ln</a>
-                <a href="" class="social-link">yt</a>
-                <a href="" class="social-link">ig</a>
-                <a href="" class="social-link">x</a>
+                <a href="" class="social-link"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="" class="social-link"><i class="fa-brands fa-youtube"></i></a>
+                <a href="" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                <a href="" class="social-link"><i class="fa-solid fa-xmark"></i></a>
 
             </div>
         </div>
