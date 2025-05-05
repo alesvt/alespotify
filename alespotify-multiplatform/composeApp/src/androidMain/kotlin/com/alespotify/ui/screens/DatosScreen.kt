@@ -52,6 +52,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.navigation.NavHostController
 import coil3.Image
 import coil3.compose.rememberAsyncImagePainter
+import com.alespotify.model.Cancion
+import com.alespotify.model.Playlist
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
@@ -62,8 +64,6 @@ import io.ktor.http.ContentType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
-data class Playlist(val titulo: String, val desc: String)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,14 +78,18 @@ actual fun DatosScreen(
     val expandPlayer = remember { mutableStateOf(false) }
     val currentSlideIndex = remember { mutableStateOf(0) }
     val sliderState = rememberLazyListState()
-    val featuredPlaylists = remember {
-        listOf(
-            Playlist("Weekly Discoveries", "Fresh music curated just for you"),
-            Playlist("Summer Vibes", "Perfect playlist for sunny days"),
-            Playlist("Chill Evening", "Relax with these smooth tracks")
-        )
-    }
+    val featuredPlaylists = appViewModel.playlists.collectAsState()
+    val songs = appViewModel.songs.collectAsState()
+    val artists = appViewModel.artists.collectAsState()
+    println(loginViewModel.loginResult)
+    println(featuredPlaylists.value)
+    println(songs.value?.get(0)?.id)
+    println(artists)
     val coroutineScope = rememberCoroutineScope()
+
+    var canciones: List<Cancion>
+    val songsState by appViewModel.songs.collectAsState()
+
 
     // Function to handle tab changes
     val onTabSelected = { tab: String ->
@@ -156,7 +160,7 @@ actual fun DatosScreen(
 
 @Composable
 fun HomeScreen(
-    featuredPlaylists: List<Playlist>,
+    featuredPlaylists: State<List<Playlist>?>,
     currentSlideIndex: Int,
     onSlideChange: (Int) -> Unit,
     sliderState: LazyListState
@@ -192,12 +196,17 @@ fun HomeScreen(
 
 @Composable
 fun FeaturedCarousel(
-    playlists: List<Playlist>,
+    playlists: State<List<Playlist>?>,
     currentSlideIndex: Int,
     onSlideChange: (Int) -> Unit
 ) {
-    val pageCount = playlists.size
-    val pagerState = rememberPagerState(pageCount = { pageCount })
+    val pageCount = playlists.value?.size
+    var pagerState = rememberPagerState { 3 }
+    if (pageCount != null) {
+        pagerState = rememberPagerState(pageCount = { pageCount })
+    } else {
+        pagerState = rememberPagerState { 3 }
+    }
 
 
     LaunchedEffect(currentSlideIndex) {
@@ -205,22 +214,26 @@ fun FeaturedCarousel(
     }
 
     HorizontalPager(state = pagerState) { page ->
-        FeaturedPlaylistItem(playlist = playlists[page], onItemClick = { onSlideChange(page) })
+        playlists.value?.get(page)
+            ?.let { FeaturedPlaylistItem(playlist = it, onItemClick = { onSlideChange(page) }) }
     }
 
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        repeat(pageCount) { iteration ->
-            val color = if (pagerState.currentPage == iteration) MyColors.primary else Color.Gray
-            Box(
-                modifier = Modifier
-                    .padding(3.dp)
-                    .clip(CircleShape)
-                    .background(color)
-                    .size(10.dp)
-            )
+        if (pageCount != null) {
+            repeat(pageCount) { iteration ->
+                val color =
+                    if (pagerState.currentPage == iteration) MyColors.primary else Color.Gray
+                Box(
+                    modifier = Modifier
+                        .padding(3.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(10.dp)
+                )
+            }
         }
     }
 
@@ -236,7 +249,7 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
     ) {
         Image(
             painter = rememberAsyncImagePainter("https://via.placeholder.com/400"),
-            contentDescription = playlist.titulo,
+            contentDescription = playlist.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -250,12 +263,7 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
         ) {
-            Text(playlist.titulo, style = MaterialTheme.typography.h5, color = Color.White)
-            Text(
-                playlist.desc,
-                style = MaterialTheme.typography.body2,
-                color = Color.White.copy(alpha = 0.8f)
-            )
+            Text(playlist.name, style = MaterialTheme.typography.h5, color = Color.White)
             Button(onClick = {}, modifier = Modifier.padding(top = 8.dp)) {
                 Text("Play Now")
             }

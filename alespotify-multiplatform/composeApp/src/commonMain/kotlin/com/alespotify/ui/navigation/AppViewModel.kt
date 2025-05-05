@@ -13,6 +13,7 @@ import com.alespotify.model.User
 import com.alespotify.shared.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -21,7 +22,7 @@ class AppViewModel : ViewModel() {
     private val apiService = ApiService()
 
     private val _songs = MutableStateFlow<List<Cancion>?>(null)
-    val songs: StateFlow<List<Cancion>?> = _songs
+    val songs = _songs.asStateFlow()
     private val _isLoadingSongs = MutableStateFlow(false)
     val isLoadingSongs: StateFlow<Boolean> = _isLoadingSongs
     private val _songsLoaded = MutableStateFlow(false)
@@ -60,6 +61,7 @@ class AppViewModel : ViewModel() {
                 println("Canciones cargadas: ${fetchedSongs?.size}")
                 println("Artistas cargados: ${fetchedArtists?.size}")
                 println("Playlists cargadas: ${fetchedPlaylists?.size}")
+
                 if (fetchedSongs != null) {
                     // Actualizar los estados con los resultados
                     _songs.value = fetchedSongs
@@ -83,9 +85,7 @@ class AppViewModel : ViewModel() {
                 _errorMessage.value = "Error al cargar artistas" + e.message
 
             } finally {
-                _isLoadingSongs.value = false
-                _isLoadingArtists.value = false
-                _isLoadingPlaylists.value = false
+
             }
         }
     }
