@@ -6,7 +6,9 @@
   "user_email": "user_email@email.com",
   "user_password": "hashed_password",
   "playlists": [],
-  "favourites": []
+  "favourites": {
+    "$oid": "67eba257e37e77b1be90f17b"
+  }
 },
 {
   "_id": {
@@ -15,5 +17,39 @@
   "user_name": "alesv",
   "user_password": "$2a$10$/IrpKAZK/0U9N8BAa0sxDuPiW4Lfcbv6BL3VT.oKv.rYYBUUPsPNC",
   "user_email": "a@b.c",
+  "_class": "com.alespotify.main.models.User",
+  "user_image": "https://cdn-icons-png.flaticon.com/512/219/219986.png",
+  "playlists": [
+    {
+      "$oid": "67d1ba3785c59abe9bf5e454"
+    }
+  ],
+  "favourites": {
+    "$oid": "67d1ba3785c59abe9bf5e454"
+  }
+},
+{
+  "_id": {
+    "$oid": "67efaca4d618e11fa3bf89bf"
+  },
+  "user_name": "unodos",
+  "user_password": "$2a$10$kbckqnT3WEVjnDwRNYOwxe7tZCKcvMPpCJK1ceURdflGkirIfpgT.",
+  "user_email": "1@2.c",
   "_class": "com.alespotify.main.models.User"
+},
+{
+  "_id": {
+    "$oid": "6808d089b29e8a29ff6bee37"
+  },
+  "user_password": "$2a$10$qDqewUqaR7Me3dgUrP4a9.U.ThnXnHgGneYGlcmi4aYPo1jK3EjwC",
+  "user_email": "ales.volivares@gmail.com",
+  "_class": "com.alespotify.main.models.entities.User"
+},
+{
+  "_id": {
+    "$oid": "6808d0f5b29e8a29ff6bee3a"
+  },
+  "user_password": "$2a$10$q1pdreoiqsa/vF5Bs8WyK.da1Or7LkqplL/fuaNtcfGkej9DjrO5C",
+  "user_email": "fotos.v0lt4@gmail.com",
+  "_class": "com.alespotify.main.models.entities.User"
 }]

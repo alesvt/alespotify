@@ -78,7 +78,7 @@ actual fun Player(
 
 // fondo
         Image(
-            painter = rememberAsyncImagePainter("https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png"),
+            painter = rememberAsyncImagePainter("https://img2.rtve.es/i/?h=800&i=1375287599788.jpg&crop=yes"),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alpha = 0.3f,
@@ -107,7 +107,7 @@ actual fun Player(
                         .aspectRatio(1f)
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter("https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png"), // Usando una URL de placeholder
+                        painter = rememberAsyncImagePainter("https://img2.rtve.es/i/?h=800&i=1375287599788.jpg&crop=yes"), // Usando una URL de placeholder
                         contentDescription = "Album cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
@@ -123,14 +123,14 @@ actual fun Player(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "Blinding Lights",
+                    text = "Puntos suspensivos",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "The Weeknd",
+                    text = "Robe",
                     fontSize = 12.sp,
                     color = Color.Gray
                 )

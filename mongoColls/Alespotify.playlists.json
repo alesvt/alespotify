@@ -2,13 +2,17 @@
   "_id": {
     "$oid": "67d1ba3785c59abe9bf5e454"
   },
-  "playlist_songs": [],
+  "playlist_songs": [
+    {
+      "$oid": "67d9331e22be08aece99c041"
+    }
+  ],
   "playlist_name": "playlist name",
-  "playlist_image": "playlistimage.png",
+  "playlist_image": "https://ayuda.consum.es/hc/article_attachments/5785998494226/2022_Mis_Favoritos_E.png",
   "playlist_creation_date": "creation date",
   "playlist_update_date": "update date",
   "public": true,
-  "user_id": {
-    "$oid": "67d1b71f85c59abe9bf5e43e"
+  "user": {
+    "$oid": "67d8177c930f217cecdba6dc"
   }
 }]
