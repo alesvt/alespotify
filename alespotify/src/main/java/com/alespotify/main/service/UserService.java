@@ -1,6 +1,8 @@
 package com.alespotify.main.service;
 
+import com.alespotify.main.models.entities.Playlist;
 import com.alespotify.main.models.entities.User;
+import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.bson.types.ObjectId;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class UserService implements UserDetailsService, IUserService {
 
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setName(user.getName());
+        System.out.println(user);
         return userRepository.save(user);
     }
 

@@ -42,6 +42,7 @@ public class PlaylistController {
 
     @PostMapping(consumes = "application/json")
     public Playlist createPlaylist(@RequestBody Playlist playlist) {
+        System.out.println(playlist);
 //        if(playlist.getUser().getId() != null) {
 //            System.out.println("Usuario: " + playlist.getUser().getName());
 //        }

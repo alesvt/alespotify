@@ -736,6 +736,7 @@ section.main-content {
     border-radius: 50%;
     overflow: hidden;
     margin-right: 0.75rem;
+    object-fit: contain;
 }
 
 .author-name {

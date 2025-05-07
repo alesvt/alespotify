@@ -137,7 +137,7 @@ main {
     border-radius: 8px;
     box-shadow: var(--card-shadow);
     overflow: hidden;
-    position: relative;
+    /*position: relative;*/
 }
 
 .card.featured {
@@ -303,6 +303,8 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 95%;
+    margin: 0 auto;
 }
 
 .player-track {
@@ -361,16 +363,12 @@ main {
     display: flex;
     align-items: center;
     gap: 8px;
-    width: 128px;
 }
 
 .player-volume input[type="range"] {
     flex: 1;
 }
 
-.absolute {
-    position: absolute;
-}
 
 .inset-0 {
     top: 0;
@@ -380,7 +378,7 @@ main {
 }
 
 .z-10 {
-    z-index: 10;
+    z-index: 2;
 }
 
 .z-20 {
@@ -405,7 +403,8 @@ main {
     fill: var(--primary-color);
     color: var(--primary-color);
 }
-.like-song.liked svg{
+
+.like-song.liked svg {
     fill: var(--primary-color);
 }
 
@@ -417,4 +416,28 @@ body.dark-mode {
     --text-muted-color: #b3b3b3;
     --border-color: #333;
     --card-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+
+#modal-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#modal-content {
+    background-color: var(--card-color);
+    box-shadow: var(--card-shadow);
+    padding: 20px;
+    border-radius: 5px;
+    height: 300px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }

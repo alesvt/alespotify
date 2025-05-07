@@ -45,20 +45,19 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     public User createUser(@RequestBody User user) {
+        System.out.println(user);
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-
+        user.setName(user.getName());
         return userRepository.save(user);
     }
-
-    // todo login method
 
     /**
      * @param credentials
      * @return ResponseEntity with the authorised user
      */
     @PostMapping("/login")
-    public ResponseEntity<User> getUser(@RequestBody String credentials) {
+    public ResponseEntity<User> getUserByCredentials(@RequestBody String credentials) {
         if (userService.login(credentials) != null) {
             User user = userService.login(credentials);
 
@@ -67,6 +66,16 @@ public class UserController {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable String id) {
+        if (userRepository.findById(id).isPresent()) {
+            User user = userRepository.findById(id).get();
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
