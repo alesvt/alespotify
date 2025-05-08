@@ -26,7 +26,7 @@ public class Genero implements Serializable {
     @Column(name = "nombre", nullable = false, length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "genero")
+    @OneToMany(mappedBy = "genre")
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

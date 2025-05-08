@@ -2,6 +2,7 @@ package com.alespotify.main.models.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serial;
@@ -38,10 +39,11 @@ public class Usuario implements Serializable {
     @Column(name = "fecha_creacion")
     private Instant creationDate;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "user")
     private Set<Playlist> playlists = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "usuario")
-    private Favorito favoritos =  new Favorito();
+    @OneToOne(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Favorito favoritos = new Favorito();
 
 }

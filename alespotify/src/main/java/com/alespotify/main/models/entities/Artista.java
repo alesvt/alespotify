@@ -39,10 +39,10 @@ public class Artista implements Serializable {
     @Column(name = "fecha_creacion")
     private Instant creationDate;
 
-    @OneToMany(mappedBy = "artista")
+    @OneToMany
     private Set<Album> albums = new LinkedHashSet<>();
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "artists")
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

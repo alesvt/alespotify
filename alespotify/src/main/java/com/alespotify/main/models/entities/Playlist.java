@@ -50,10 +50,9 @@ public class Playlist implements Serializable {
     @Column(name = "fecha_edicion")
     private Instant updateDate;
 
-    @ManyToMany
-    private Set<Usuario> users = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "playlist")
-    private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
+
+  //  @OneToMany(mappedBy = "playlist")
+ //   private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
 
 }

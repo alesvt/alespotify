@@ -48,10 +48,17 @@ public class Cancion implements Serializable {
     @JoinColumn(name = "album_id")
     private Album album;
 
-    @ManyToMany(mappedBy = "cancions")
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "cancion_artista",
+            joinColumns = @JoinColumn(name="cancion_id"),
+            inverseJoinColumns = @JoinColumn(name = "artista_id")
+    )
     private Set<Artista> artists = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "cancion")
-    private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
+    //@OneToMany(mappedBy = "cancion")
+   // private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
 
 }

@@ -33,4 +33,5 @@ public class Favorito implements Serializable {
     @JoinColumn(name = "playlist_id", nullable = false)
     private Playlist playlist;
 
+
 }

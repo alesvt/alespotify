@@ -1,5 +1,6 @@
 package com.alespotify.main.service;
 
+import com.alespotify.main.models.entities.Favorito;
 import com.alespotify.main.models.entities.Usuario;
 import com.alespotify.main.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class UserService implements UserDetailsService {
 
     public Usuario registerUser(Usuario user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setFavoritos(new Favorito());
         user.setName(user.getName());
         System.out.println(user);
         return userRepository.save(user);
