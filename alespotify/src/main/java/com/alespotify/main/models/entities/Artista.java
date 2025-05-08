@@ -2,10 +2,11 @@ package com.alespotify.main.models.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,10 +16,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "album")
-public class Album implements Serializable {
+@Table(name = "artista")
+public class Artista implements Serializable {
     @Serial
-    private static final long serialVersionUID = -7539159829410047692L;
+    private static final long serialVersionUID = 2051355511924143684L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -27,17 +28,21 @@ public class Album implements Serializable {
     @Column(name = "nombre", nullable = false)
     private String name;
 
+    @Lob
+    @Column(name = "descripcion")
+    private String description;
+
     @Column(name = "imagen")
     private String image;
 
-    @Column(name = "fecha_salida")
-    private LocalDate releaseDate;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "fecha_creacion")
+    private Instant creationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "artista_id")
-    private Artista artist;
+    @OneToMany(mappedBy = "artista")
+    private Set<Album> albums = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "album")
+    @ManyToMany
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,29 +14,19 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "album")
-public class Album implements Serializable {
+@Table(name = "genero")
+public class Genero implements Serializable {
     @Serial
-    private static final long serialVersionUID = -7539159829410047692L;
+    private static final long serialVersionUID = 7415058655048759735L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "nombre", nullable = false)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "imagen")
-    private String image;
-
-    @Column(name = "fecha_salida")
-    private LocalDate releaseDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "artista_id")
-    private Artista artist;
-
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "genero")
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

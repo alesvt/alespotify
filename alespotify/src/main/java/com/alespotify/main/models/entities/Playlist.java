@@ -1,56 +1,59 @@
 package com.alespotify.main.models.entities;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.data.mongodb.core.mapping.*;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+@Builder
 @AllArgsConstructor
-@Data
-@Document(collection = "playlists")
-public class Playlist {
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "playlist")
+public class Playlist implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5504186715903122670L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
 
-    @MongoId(FieldType.OBJECT_ID)
-    private String id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "usuario_id")
+    private Usuario user;
 
-    @Field(name = "playlist_name")
-    private String name;
+    @ColumnDefault("0")
+    @Column(name = "publica")
+    private Boolean isPublic;
 
-    @Field("playlist_image")
+    @Column(name = "imagen")
     private String image;
 
-    @Field("playlist_creation_date")
-    private String creationDate;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "fecha_creacion")
+    private Instant creationDate;
 
-    @Field("playlist_update_date")
-    private String updateDate;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "fecha_edicion")
+    private Instant updateDate;
 
-    @Field("public")
-    private boolean publicPlaylist;
+    @ManyToMany
+    private Set<Usuario> users = new LinkedHashSet<>();
 
-
-
-    @Field(name = "playlist_songs")
-    @DocumentReference
-    private List<Song> songs;
-
-    @Field(name = "user")
-    @DocumentReference
-    @JsonBackReference
-    private User user;
-
-
-    public Playlist() {
-    }
+    @OneToMany(mappedBy = "playlist")
+    private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
 
 }

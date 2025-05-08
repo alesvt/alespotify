@@ -1,11 +1,12 @@
 package com.alespotify.main.repository;
 
-import com.alespotify.main.models.entities.User;
+import com.alespotify.main.models.entities.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.Optional;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
-    User findByEmail(String email);
-
+public interface UserRepository extends JpaRepository<Usuario, Long> {
+    Optional<Usuario> findByEmail(String email);
 }
