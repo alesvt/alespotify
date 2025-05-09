@@ -1,5 +1,6 @@
 package com.alespotify.main.models.entities;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -40,11 +41,12 @@ public class Cancion implements Serializable {
     @Column(name = "veces_reproducido", columnDefinition = "int UNSIGNED")
     private Long timesPlayed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "genero_id")
+    @JsonIgnoreProperties("songs")
     private Genero genre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
 
@@ -58,7 +60,12 @@ public class Cancion implements Serializable {
     )
     private Set<Artista> artists = new LinkedHashSet<>();
 
-    //@OneToMany(mappedBy = "cancion")
-   // private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "playlist_cancion",
+            joinColumns = @JoinColumn(name = "cancion_id"),
+            inverseJoinColumns = @JoinColumn(name = "playlist_id")
+    )
+    private Set<Playlist> playlists = new LinkedHashSet<>();
 
 }

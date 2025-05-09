@@ -1,8 +1,12 @@
 package com.alespotify.main.service;
 
 import com.alespotify.main.models.entities.Favorito;
+import com.alespotify.main.models.entities.Playlist;
 import com.alespotify.main.models.entities.Usuario;
+import com.alespotify.main.repository.FavoritoRepository;
+import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
@@ -13,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -21,36 +26,65 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
 
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PlaylistRepository playlistRepository;
+    private final FavoritoRepository favoritoRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PlaylistRepository playlistRepository,
+                       FavoritoRepository favoritoRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.playlistRepository = playlistRepository;
+        this.favoritoRepository = favoritoRepository;
     }
 
+    @Transactional
     public Usuario registerUser(Usuario user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setFavoritos(new Favorito());
-        user.setName(user.getName());
+        user = userRepository.save(user);
+        user.setCreationDate(Instant.now());
+        System.out.println(user.getPassword() + ", " + user.getName() + ", " + user.getId());
+
+        System.out.println(user.getId());
+        // System.out.println(user);
+
+        Playlist playlist = crearPlaylist(user);
+        playlist = playlistRepository.save(playlist);
+
+        Favorito favorito = new Favorito();
+        favorito.setUser(user);
+        favorito.setPlaylist(playlist);
+        favorito = favoritoRepository.save(favorito);
+
+        user.setFavoritos(favorito);
         System.out.println(user);
-        return userRepository.save(user);
+        return user;
     }
 
+    public Playlist crearPlaylist(Usuario user) {
+        Playlist playlist = new Playlist();
+        playlist.setNombre("Favoritos de " + user.getName());
+        playlist.setImage("https://placehold.co/200?text=Mis%20favoritos");
+        playlist.setIsPublic(false);
+        playlist.setCreationDate(Instant.now());
+        playlist.setUpdateDate(playlist.getCreationDate());
+        playlist.setUser(user);
+        return playlist;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Usuario> user = userRepository.findByEmail(email);
+        System.out.println(user);
         if (user.isPresent()) {
-            throw new UsernameNotFoundException("User not found with email : " + email);
-        } else {
-
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.get().getEmail())
                     .password(user.get().getPassword())
                     .authorities(Collections.emptyList())
                     .build();
+        } else {
+            throw new UsernameNotFoundException("User not found with email : " + email);
         }
     }
 

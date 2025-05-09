@@ -1,5 +1,6 @@
 package com.alespotify.main.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
@@ -35,15 +36,19 @@ public class Usuario implements Serializable {
     @Column(name = "contrasena", nullable = false)
     private String password;
 
+    @Column(name = "imagen")
+    private String imagen;
+
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "fecha_creacion")
     private Instant creationDate;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Playlist> playlists = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "user")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Favorito favoritos = new Favorito();
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Favorito favoritos;
 
 }

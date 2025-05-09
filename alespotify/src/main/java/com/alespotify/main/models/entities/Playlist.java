@@ -1,5 +1,6 @@
 package com.alespotify.main.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -30,9 +31,9 @@ public class Playlist implements Serializable {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario user;
 
     @ColumnDefault("0")
@@ -51,8 +52,11 @@ public class Playlist implements Serializable {
     private Instant updateDate;
 
 
+    @OneToOne(mappedBy = "playlist")
+    @JsonIgnore
+    private Favorito favoritos;
 
-  //  @OneToMany(mappedBy = "playlist")
- //   private Set<PlaylistCancion> playlistSongs = new LinkedHashSet<>();
+    @ManyToMany(mappedBy = "playlists")
+    private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

@@ -1,5 +1,9 @@
 package com.alespotify.main.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +30,8 @@ public class Genero implements Serializable {
     @Column(name = "nombre", nullable = false, length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "genre")
+    @OneToMany(mappedBy = "genre", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"genre"})
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div th:id="${user.getId()}" th:email="${user.getEmail()}" th:image="${user.getImage()}" th:name="${user.getName()}" style="display: none" id="user-data"></div>
+<div th:id="${user.getId()}" th:email="${user.getEmail()}" th:image="${user.getImagen()}" th:name="${user.getName()}" style="display: none" id="user-data"></div>
 <div class="sidebar">
 
     <div class="sidebar-content">
@@ -118,7 +118,7 @@
         <div class="main-header">
             <h1 th:text="'Bienvenido, ' + ${user.getName()}"></h1>
             <div class="avatar">
-                <img th:src="${user.getImage()}" height="38" th:alt="${user.getName()}">
+                <img th:src="${user.getImagen()}" height="38" th:alt="${user.getName()}">
             </div>
         </div>
         <div class="bento-grid">
@@ -135,7 +135,7 @@
                 <div class="card-header">
                     <h2>Recently Played</h2>
                 </div>
-                <div class="card-content">
+                <div class="card-content" >
                     <div class="track-item">
                         <img src="placeholder.svg?height=48&width=48&text=1" alt="Track 1">
                         <div>
@@ -165,9 +165,9 @@
                 </div>
                 <div class="card-content top-artists" th:each="artist : ${artists}">
                     <div class="avatar">
-                        <img th:src="${artist.image}" th:alt="${artist.name}">
+                        <img th:src="${artist.getImage()}" th:alt="${artist.getName()}">
                     </div>
-                    <p th:text="${artist.name}"></p>
+                    <p th:text="${artist.getName()}"></p>
                 </div>
 
             </div>
@@ -177,9 +177,9 @@
             <!-- playlists-->
             <div class="made-for-you-grid">
                 <div class="card" th:each="playlist : ${playlists}">
-                    <img th:src="${playlist.image}" th:alt="${playlist.name}">
+                    <img th:src="${playlist.image}" th:alt="${playlist.nombre}">
                     <div>
-                        <p th:text="${playlist.name}"></p>
+                        <p th:text="${playlist.nombre}"></p>
                         <p th:text="${playlist.songs.size()} + ' canciones'" ></p>
                     </div>
                 </div>
@@ -190,12 +190,12 @@
             <div class="new-releases-scroll">
                 <h2>Nuevas entradas</h2>
 
-                <div class="card" th:each="song : ${songs}" th:data-id="${song.id}"
+                <div class="card" th:each="song : ${songs}" th:data-id="${song.getId()}"
                      th:onclick="getSong(this.getAttribute('data-id'))">
-                    <img th:src="${song.thumbImage}" th:alt="${song.title}">
+                    <img th:src="${song.getImage()}" th:alt="${song.name}">
                     <div>
-                        <p th:text="${song.title}"></p>
-                        <p th:text="${song.artists.first.name}"></p>
+                        <p th:text="${song.name}"></p>
+                        <p th:text="${song.artists[0].name}"></p>
                     </div>
                 </div>
             </div>
