@@ -47,20 +47,22 @@ public class Cancion implements Serializable {
     private Genero genre;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "album_id")
     private Album album;
 
 
-
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnoreProperties({"canciones", "albums", "hibernateLazyInitializer", "handler"})
     @JoinTable(
             name = "cancion_artista",
-            joinColumns = @JoinColumn(name="cancion_id"),
+            joinColumns = @JoinColumn(name = "cancion_id"),
             inverseJoinColumns = @JoinColumn(name = "artista_id")
     )
     private Set<Artista> artists = new LinkedHashSet<>();
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "playlist_cancion",
             joinColumns = @JoinColumn(name = "cancion_id"),

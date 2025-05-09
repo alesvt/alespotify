@@ -6,6 +6,7 @@ import com.alespotify.main.models.entities.Favorito;
 import com.alespotify.main.models.entities.Usuario;
 import com.alespotify.main.repository.SongRepository;
 import com.alespotify.main.repository.UserRepository;
+import com.alespotify.main.service.SongService;
 import com.alespotify.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,11 @@ import java.util.Optional;
 public class CancionController {
 
     private final SongRepository songRepository;
+    private final SongService songService;
 
-    public CancionController(UserRepository userRepository, SongRepository songRepository) {
+    public CancionController(UserRepository userRepository, SongRepository songRepository, SongService songService) {
         this.songRepository = songRepository;
+        this.songService = songService;
     }
 
     @GetMapping
@@ -35,15 +38,15 @@ public class CancionController {
     public ResponseEntity<Cancion> buscarCancion(@PathVariable Long id) {
         Optional<Cancion> cancion = songRepository.findById(id);
         return cancion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
     }
 
     @PostMapping(value = "/new",
-    consumes = "application/json")
+            consumes = "application/json")
     public ResponseEntity<Cancion> crearCancion(@RequestBody Cancion cancion) {
-        System.out.println(cancion.getSource());
-        songRepository.save(cancion);
-        return ResponseEntity.ok(cancion);
+        Cancion nuevaCancion = songService.crearCancion(cancion);
+        Cancion cancionConRelaciones = songRepository.findById(Long.valueOf(nuevaCancion.getId()))
+                .orElseThrow(() -> new RuntimeException("Error"));
+        return ResponseEntity.ok(cancionConRelaciones);
     }
 
 }

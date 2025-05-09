@@ -52,7 +52,7 @@ let userData
 const modalContainer = document.getElementById('modal-container');
 const modalContent = document.getElementById("modal-content");
 
-
+console.log("pepe")
 // todo
 async function getSong(id) {
     console.log("works");
@@ -128,14 +128,14 @@ function play(song) {
         elementos.repro.load(); // Asegúrate de que el audio se cargue con la nueva fuente
     }
 
-    if (elementos.titulo_cancion) elementos.titulo_cancion.innerText = song.title;
-    if (elementos.imagen_cancion) elementos.imagen_cancion.src = song.thumbImage;
+    if (elementos.titulo_cancion) elementos.titulo_cancion.innerText = song.name;
+    if (elementos.imagen_cancion) elementos.imagen_cancion.src = song.image;
     if (song.artists && song.artists.length > 0 && elementos.artist_cancion) {
         elementos.artist_cancion.innerText = song.artists[0].name;
     }
-    document.title = song.title + " - " + song.artists[0].name
+    document.title = song.name + " - " + song.artists[0].name
     if (elementos.trackbar && elementos.trackbar.children.length >= 3) {
-        elementos.trackbar.children[2].innerText = secsToMMSS(song.length);
+        elementos.trackbar.children[2].innerText = secsToMMSS(song.duration);
     }
     if (elementos.repro) {
         elementos.repro.play();

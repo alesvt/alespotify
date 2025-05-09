@@ -1,5 +1,9 @@
 package com.alespotify.main.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -43,6 +47,8 @@ public class Artista implements Serializable {
     private Set<Album> albums = new LinkedHashSet<>();
 
     @ManyToMany(mappedBy = "artists")
+    @JsonIgnore
+    @JsonIgnoreProperties({"artists", "album", "playlists", "hibernateLazyInitializer", "handler"})
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }

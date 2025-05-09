@@ -195,7 +195,7 @@
                     <img th:src="${song.getImage()}" th:alt="${song.name}">
                     <div>
                         <p th:text="${song.name}"></p>
-                        <p th:text="${song.artists[0].name}"></p>
+                        <p th:text="${song.artists[0].getName()}"></p>
                     </div>
                 </div>
             </div>

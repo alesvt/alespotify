@@ -1,6 +1,7 @@
 package com.alespotify.main.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -56,7 +57,12 @@ public class Playlist implements Serializable {
     @JsonIgnore
     private Favorito favoritos;
 
-    @ManyToMany(mappedBy = "playlists")
+    @ManyToMany
+    @JoinTable(
+            name = "playlist_cancion",
+            joinColumns = @JoinColumn(name = "playlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "cancion_id")
+    )
     private Set<Cancion> songs = new LinkedHashSet<>();
 
 }
