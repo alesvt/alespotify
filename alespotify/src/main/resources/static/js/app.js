@@ -38,6 +38,7 @@
 // }
 //
 
+const APP_IP = "192.168.0.112:8080"
 const toggleDarkMode = document.getElementById('toggle-dark-mode');
 if (toggleDarkMode) {
     toggleDarkMode.addEventListener('click', () => {
@@ -52,36 +53,38 @@ let userData
 const modalContainer = document.getElementById('modal-container');
 const modalContent = document.getElementById("modal-content");
 
-console.log("pepe")
 // todo
 async function getSong(id) {
-    console.log("works");
     try {
-        const response = await fetch(`http://172.24.128.1:8080/api/songs/${id}`);
+        const response = await fetch(`http://${APP_IP}/api/songs/${id}`);
         if (!response.ok) {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
         const data = await response.json();
-        play(data); // Llamamos a play *después* de obtener los datos
+        console.log("of")
+        console.log(data)
+        play(data);
     } catch (error) {
         console.error("Error al obtener la canción:", error);
     }
 }
 
-async function getUser(id) {
+async function getPlaylist(id) {
     try {
-        const response = await fetch(`http://172.24.128.1:8080/api/users/${id}`);
+        const response = await fetch(`http://${APP_IP}/api/playlists/${id}`)
         if (!response.ok) {
-            throw new Error("error al recibir usuario");
+            throw new Error("Error en la solicitud")
         }
-        const data = await response.json();
-        return data; // Devolver los datos del usuario
+        const data = await response.json()
+        playqueue = data
+        colaOrdenada = playqueue
+        playFromQueue(0)
     } catch (error) {
-        console.error("Error al recibir usuario", error);
-        return null; // Es buena práctica devolver null o un valor indicativo de error
+        console.error(error)
     }
 }
 
+let colaOrdenada = []
 
 function loadElements() {
     const songPlayer = document.getElementById("player");
@@ -93,7 +96,10 @@ function loadElements() {
     const trackbar = document.getElementById("trackbar");
     const volume = document.getElementById("volume");
     const controls = document.getElementById("controls");
-
+    const userId = document.getElementById("user-data").getAttribute("userId");
+    const userName = document.getElementById("user-data").getAttribute("userName")
+    const userImage = document.getElementById("user-data").getAttribute("userImage")
+    const userEmail = document.getElementById("user-data").getAttribute("userEmail")
     return {
         songPlayer,
         repro,
@@ -103,10 +109,15 @@ function loadElements() {
         liked,
         trackbar,
         volume,
-        controls
+        controls,
+        userImage,
+        userId,
+        userName,
+        userEmail
     };
 }
-function loadUserData(){
+
+async function loadUserData() {
     return userDataDOM ? {
         nombre: userDataDOM.getAttribute("name"),
         email: userDataDOM.getAttribute("email"),
@@ -125,7 +136,8 @@ function play(song) {
 
     if (elementos.repro) {
         elementos.repro.src = song.source;
-        elementos.repro.load(); // Asegúrate de que el audio se cargue con la nueva fuente
+        elementos.repro.load();
+        elementos.repro.play();
     }
 
     if (elementos.titulo_cancion) elementos.titulo_cancion.innerText = song.name;
@@ -133,13 +145,25 @@ function play(song) {
     if (song.artists && song.artists.length > 0 && elementos.artist_cancion) {
         elementos.artist_cancion.innerText = song.artists[0].name;
     }
-    document.title = song.name + " - " + song.artists[0].name
+    document.title = song.nombre + " - " + song.artists[0].name
     if (elementos.trackbar && elementos.trackbar.children.length >= 3) {
         elementos.trackbar.children[2].innerText = secsToMMSS(song.duration);
     }
     if (elementos.repro) {
         elementos.repro.play();
     }
+
+    const playButton = document.querySelector('.player-controls-buttons button:nth-child(3)');
+    if (playButton) {
+        playButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+        `;
+    }
+    return song
 }
 
 
@@ -154,7 +178,6 @@ function secsToMMSS(secs) {
 
 document.addEventListener("DOMContentLoaded", function () {
     const userDataDOM = document.getElementById("user-data");
-    console.log(userDataDOM)
     userData = loadUserData()
     // Asegurarse de que userDataDOM existe antes de acceder a sus atributos
     elementos = loadElements();
@@ -165,11 +188,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevButton = reproductor ? reproductor.querySelector('.player-controls-buttons button:nth-child(2)') : null;
     const nextButton = reproductor ? reproductor.querySelector('.player-controls-buttons button:nth-child(4)') : null;
     const repeatButton = reproductor ? reproductor.querySelector('.player-controls-buttons button:nth-child(5)') : null;
+    const shuffleButton = reproductor ? reproductor.querySelector('.player-controls-buttons button:nth-child(1)') : null;
 
     const progressBar = reproductor ? reproductor.querySelector('#trackbar input[type="range"]') : null;
     const progressText = reproductor ? reproductor.querySelector('#trackbar span:first-child') : null;
 
-    if (audioPlayer && audioPlayer.src === "http://localhost:8080/app") {
+    if (audioPlayer) {
+        audioPlayer.addEventListener('ended', function () {
+            // Reproducir la siguiente canción en la cola automáticamente
+            playNext();
+        });
+    }
+
+    if (audioPlayer && audioPlayer.src === `http://localhost:8080/app`) {
         if (elementos && elementos.songPlayer) {
             elementos.songPlayer.style.display = "none";
         }
@@ -194,6 +225,26 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!isNaN(duration)) {
                 elementos.repro.currentTime = parseFloat(progressBar.value);
             }
+        });
+    }
+    if (prevButton) {
+        prevButton.addEventListener('click', function () {
+            console.log("Botón de Anterior clickeado");
+            if (currentSongIndex > 0) {
+                playFromQueue(currentSongIndex - 1);
+            } else {
+                console.log("Estás en la primera canción de la cola.");
+                // Opcional: Volver al inicio de la canción actual o no hacer nada
+                if (elementos && elementos.repro) {
+                    elementos.repro.currentTime = 0;
+                }
+            }
+        });
+    }
+    if (nextButton) {
+        nextButton.addEventListener('click', function () {
+            console.log("Botón de Siguiente clickeado");
+            playNext();
         });
     }
 
@@ -255,6 +306,19 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("Repetir:", elementos.repro.loop);
         });
     }
+    //todo shuffle playqueue
+    /*
+    if (shuffleButton && elementos && elementos.repro && playqueue) {
+        shuffleButton.addEventListener('click', function () {
+            if (!shuffleButton.classList.contains('checked')) {
+                shuffleButton.classList.add('checked')
+                randomizarCola(playqueue);
+            } else {
+                shuffleButton.classList.remove('checked')
+                playqueue = colaOrdenada
+            }
+        })
+    }*/
 
     const createPlaylistButton = document.getElementById('create-playlist-button');
     if (createPlaylistButton) {
@@ -278,6 +342,14 @@ function closeModal() {
     }
 }
 
+function randomizarCola(list) {
+    let currentIndex = list.length
+    while (currentIndex != 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex--
+        [list[currentIndex], list[randomIndex]] = [list[randomIndex], list[currentIndex]]
+    }
+}
 
 async function showModalInfo(modalType) {
     if (!modalContent) return;
@@ -292,6 +364,14 @@ async function showModalInfo(modalType) {
     switch (modalType) {
         case "profile":
             const title = document.createElement('h2');
+            let u = document.getElementById("user-data").getAttribute("userId");
+            let userData = await fetch(`http://${APP_IP}/api/users/${u}`)
+            if (userData.ok) {
+                console.log(userData)
+                let usuario = userData.json()
+                console.log(usuario)
+            }
+
             title.textContent = "Perfil de Usuario";
             const nameParagraph = document.createElement('p');
             nameParagraph.innerHTML = `<b>Nombre:</b> ${userData && userData.nombre ? userData.nombre : 'N/A'}`;
@@ -309,7 +389,7 @@ async function showModalInfo(modalType) {
                 imagen.alt = "No hay imagen de perfil";
             }
 
-
+            modalContainer.style.zIndex = "99";
             modalContent.appendChild(title);
             modalContent.appendChild(nameParagraph);
             modalContent.appendChild(emailParagraph);
@@ -319,6 +399,8 @@ async function showModalInfo(modalType) {
             break;
 
         case "create-playlist":
+            let userId = document.getElementById("create-playlist-button").getAttribute("userId")
+
             const formTitle = document.createElement('h2');
             formTitle.textContent = "Crear nueva lista de reproducción";
 
@@ -335,24 +417,23 @@ async function showModalInfo(modalType) {
             createButton.textContent = "Crear";
             createButton.addEventListener('click', async function () {
                 const playlistName = document.getElementById('playlist-name').value;
-                if (playlistName && userData && userData.id) {
+                if (playlistName && userId) {
                     try {
-                        const response = await fetch(`http://172.24.128.1:8080/api/users/${userData.id}/playlists`, {
+                        const response = await fetch(`http://${APP_IP}/api/playlists/new?nombre=${playlistName}&userId=${userId}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({name: playlistName}),
+                            }
                         });
 
                         if (response.ok) {
-                            const updatedUser = await response.json();
-                            if (updatedUser && updatedUser.playlists) {
-                                updatePlaylistsDOM(updatedUser.playlists);
+                            const createdPlaylist = await response.json();
+                            if (createdPlaylist) {
+                                updatePlaylistsDOM(userId);
                                 closeModal();
+                                location.reload()
                             } else {
                                 console.error("Error: No se recibieron las playlists actualizadas.");
-                                alert("Error al actualizar la lista de reproducción.");
                             }
                         } else {
                             const errorData = await response.json();
@@ -408,15 +489,17 @@ function addNewPlaylistToDOM(playlistName) {
     }
 }
 
-function updatePlaylistsDOM(playlists) {
+async function updatePlaylistsDOM(userId) {
     const playlistsNav = document.getElementById('playlists-nav');
     if (playlistsNav) {
         // Limpiar las listas existentes (manteniendo los dos primeros elementos si existen)
         while (playlistsNav.children.length > 2) {
             playlistsNav.removeChild(playlistsNav.lastChild);
         }
+        let playlists = await fetch(`http://${APP_IP}/api/playlists/user?userId=${userId}`)
+        await console.log(playlists)
         // Añadir las nuevas listas desde el array 'playlists'
-        playlists.forEach(playlist => {
+        await playlists.forEach(playlist => {
             const newPlaylistLink = document.createElement('a');
             newPlaylistLink.href = '#';
             newPlaylistLink.textContent = playlist.name;
@@ -444,4 +527,62 @@ function updatePlaylistsDOM(playlists) {
             }
         });
     }
+}
+
+
+let playqueue = []
+
+let currentSongIndex = 0
+let currentSongData = null;
+
+
+function addToQueue(songId) {
+    playqueue.push(songId)
+}
+
+async function playFromQueue(index) {
+    //console.log(playqueue)
+    if (index >= 0 && playqueue) {
+        console.log(index)
+        if (playqueue.songs) {
+            console.log("existe")
+            const songId = playqueue.songs[index].id
+            console.log(songId)
+            currentSongData = getSong(songId)
+        }
+    }
+}
+
+function playNext() {
+    if (currentSongIndex < playqueue.songs.length - 1) {
+        playFromQueue(currentSongIndex + 1);
+    } else {
+        console.log("Fin de la cola.");
+        // Aquí podrías implementar la lógica para repetir la cola o detener la reproducción
+        if (elementos && elementos.repro) {
+            elementos.repro.pause();
+            const playButton = document.querySelector('.player-controls-buttons button:nth-child(3)');
+            if (playButton) {
+                playButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                `;
+            }
+            document.title = "Alespotify - Inicio";
+        }
+    }
+}
+
+async function fetchPlaylist(id) {
+    try {
+        let pl = await fetch(`https://${APP_IP}/api/playlists/${id}`)
+        if (pl) {
+            console.log(pl)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+    console.log(id)
 }

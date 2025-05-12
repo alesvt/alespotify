@@ -36,6 +36,15 @@ body {
     padding: 16px;
 }
 
+.playlists-sidebar-container {
+    overflow: scroll;
+}
+
+.create-playlist-tab {
+    background-color: var(--primary-color);
+}
+
+
 .sidebar h2 {
     font-size: 24px;
     font-weight: bold;
@@ -63,6 +72,7 @@ body {
 .sidebar nav a:hover {
     background-color: rgba(var(--primary-color), 0.1);
     color: var(--primary-color);
+    cursor: pointer;
 }
 
 .sidebar nav a svg {
@@ -117,6 +127,7 @@ main {
     justify-content: center;
     align-items: center;
     font-weight: bold;
+    overflow: hidden;
 }
 
 .bento-grid {
@@ -126,9 +137,33 @@ main {
     margin-bottom: 24px;
 }
 
-@media (min-width: 768px) {
-    .bento-grid {
-        grid-template-columns: repeat(3, 1fr);
+@media (max-width: 768px) {
+    .player-content {
+        flex-direction: column;
+    }
+
+    .player {
+        padding: 0 !important;
+    }
+
+    .player-track {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .player-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    .player-volume {
+        display: none !important;
     }
 }
 
@@ -181,6 +216,10 @@ main {
     cursor: pointer;
 }
 
+.play-button svg {
+    fill: var(--bg-color);
+}
+
 .card-header {
     padding: 16px;
 }
@@ -207,6 +246,14 @@ main {
 
 .track-item div p:first-child {
     font-weight: 500;
+}
+
+button.checked {
+    color: var(--primary-color);
+}
+
+.track-item p, .top-artists p {
+    color: var(--text-muted-color);
 }
 
 .track-item div p:last-child {
@@ -246,6 +293,8 @@ main {
     .made-for-you-grid {
         grid-template-columns: repeat(4, 1fr);
     }
+
+
 }
 
 @media (min-width: 1024px) {
@@ -261,7 +310,6 @@ main {
 .made-for-you-grid .card img {
     aspect-ratio: 1/1;
     height: 75%;
-    object-fit: contain;
 }
 
 .made-for-you-grid .card div:last-child {
@@ -440,4 +488,287 @@ body.dark-mode {
     display: flex;
     justify-content: center;
     flex-direction: column;
+}
+
+.card.featured {
+    position: relative;
+    height: 200px;
+}
+
+.card.featured img {
+    z-index: 1;
+    position: absolute;
+    object-fit: cover;
+}
+
+.card-content.featured {
+    position: absolute;
+}
+
+.song-name, .song-artist {
+    padding-left: 12px;
+}
+
+.song-artist {
+    color: var(--text-muted-color);
+}
+
+
+/* custom */
+.player {
+    background-color: var(--card-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.player-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Track info section */
+.player-track {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.player-track img {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.player-track div {
+    flex: 1;
+}
+
+.player-track p:first-child {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.player-track p:last-child {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.like-song {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.like-song:hover {
+    color: #ff4081;
+}
+
+/* Controls section */
+.player-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.player-controls-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.player-controls-buttons button {
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted-color);
+    transition: transform 0.2s;
+}
+
+.player-controls-buttons button svg {
+    height: 20px;
+    width: 20px;
+}
+
+.player-controls-buttons button:hover {
+    transform: scale(1.1);
+}
+
+.player-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-progress input[type="range"] {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--text-muted-color);
+    border-radius: 2px;
+    outline: none;
+}
+
+.player-progress input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #333;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.player-progress span {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* Volume section */
+.player-volume {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-volume input[type="range"] {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #ddd;
+    border-radius: 2px;
+    outline: none;
+}
+
+.player-volume input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #333;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Media Queries */
+/* Large screens (default) */
+@media screen and (min-width: 1024px) {
+    .player-content {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .player-track {
+        width: 30%;
+    }
+
+    .player-controls {
+        width: 50%;
+    }
+
+    .player-volume {
+        width: 20%;
+        justify-content: flex-end;
+    }
+}
+
+/* Medium screens (tablets) */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .player-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .player-track {
+        width: 50%;
+    }
+
+    .player-controls {
+        width: 50%;
+        order: 3;
+        margin-top: 15px;
+    }
+
+    .player-volume {
+        width: 100%;
+        justify-content: flex-end;
+        order: 2;
+    }
+}
+
+/* Small screens (mobile) */
+@media screen and (max-width: 767px) {
+    .player-content {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .player-track {
+        flex-wrap: wrap;
+    }
+
+    .player-track div {
+        width: calc(100% - 90px);
+    }
+
+    .player-controls-buttons {
+        gap: 10px;
+    }
+
+    .player-controls-buttons button {
+        transform: scale(0.9);
+    }
+
+    .player-controls-buttons button:hover {
+        transform: scale(1);
+    }
+
+    .player-volume {
+        justify-content: space-between;
+    }
+
+    .player-volume input[type="range"] {
+        width: calc(100% - 40px);
+    }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 480px) {
+    .player-track img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .player-track div {
+        width: calc(100% - 80px);
+    }
+
+    .player-track p:first-child {
+        font-size: 0.9em;
+    }
+
+    .player-track p:last-child {
+        font-size: 0.8em;
+    }
+
+    .player-controls-buttons {
+        gap: 5px;
+    }
+
+    .player-controls-buttons button {
+        transform: scale(0.8);
+    }
+
+    .player-controls-buttons button:hover {
+        transform: scale(0.9);
+    }
+
+    .player-progress span {
+        display: none;
+    }
 }

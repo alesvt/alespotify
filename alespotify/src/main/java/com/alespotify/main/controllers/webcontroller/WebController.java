@@ -1,13 +1,7 @@
 package com.alespotify.main.controllers.webcontroller;
 
-import com.alespotify.main.models.entities.Artista;
-import com.alespotify.main.models.entities.Cancion;
-import com.alespotify.main.models.entities.Playlist;
-import com.alespotify.main.models.entities.Usuario;
-import com.alespotify.main.repository.ArtistRepository;
-import com.alespotify.main.repository.PlaylistRepository;
-import com.alespotify.main.repository.SongRepository;
-import com.alespotify.main.repository.UserRepository;
+import com.alespotify.main.models.entities.*;
+import com.alespotify.main.repository.*;
 import com.alespotify.main.service.SongService;
 import com.alespotify.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +17,23 @@ import java.util.Optional;
 @Controller
 public class WebController {
 
-    @Autowired
     private final UserService userService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SongService songService;
-    @Autowired
-    private SongRepository songRepository;
+    private final SongService songService;
+    private final SongRepository songRepository;
     private final ArtistRepository artistaRepository;
-    @Autowired
-    private PlaylistRepository playlistRepository;
+    private final PlaylistRepository playlistRepository;
+    private final AlbumRepository albumRepository;
+    private final FavoritoRepository favoritoRepository;
 
-
-    public WebController(UserService userService,
-            /*, SongServiceImpl songService, ArtistServiceImpl artistService, PlaylistRepository playlistRepository, PlaylistServiceImpl playlistService
-             */
-                         ArtistRepository artistaRepository) {
+    public WebController(AlbumRepository albumRepository, SongRepository songRepository, UserService userService,
+                         SongService songService, PlaylistRepository playlistRepository, ArtistRepository artistaRepository, FavoritoRepository favoritoRepository) {
         this.userService = userService;
-       /* this.songService = songService;
-        this.artistService = artistService;
-        this.playlistService = playlistService;
-        this.playlistRepository = playlistRepository;*/
+        this.songRepository = songRepository;
+        this.songService = songService;
+        this.playlistRepository = playlistRepository;
         this.artistaRepository = artistaRepository;
+        this.albumRepository = albumRepository;
+        this.favoritoRepository = favoritoRepository;
     }
 
     @GetMapping("/index")
@@ -64,18 +52,21 @@ public class WebController {
     public String app(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName(); // Obtiene el email del usuario
-        Optional<Usuario> user = userRepository.findByEmail(currentUserName); // Busca el usuario completo en la base de datos
+        Optional<Usuario> user = userService.findByEmail(currentUserName); // Busca el usuario completo en la base de datos
         if (user.isPresent()) {
             // todo cambiar para sacar solo unas cuantas
-            List<Cancion> songs = songRepository.findAll();
-            List<Artista> artists = artistaRepository.findAll();
-            List<Playlist> playlists = playlistRepository.findAll();
-
-            
+            List<Cancion> songs = songRepository.findByVecesReproducido();
+            List<Album> albumes = albumRepository.findNewestAlbums();
+            List<Artista> artists = artistaRepository.findTop3Artists();
+            Favorito favoritos = user.get().getFavoritos();
+            List<Playlist> playlists = playlistRepository.findPublicPlaylists();
+            List<Playlist> userPlaylists = playlistRepository.findByUserId(Long.valueOf(user.get().getId()));
+            model.addAttribute("userPlaylists", userPlaylists);
             model.addAttribute("user", user.get());
             model.addAttribute("artists", artists);
             model.addAttribute("playlists", playlists);
             model.addAttribute("songs", songs);
+            model.addAttribute("albums", albumes);
         }
 
         return "app";

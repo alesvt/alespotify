@@ -8,6 +8,7 @@ import com.alespotify.main.repository.SongRepository;
 import com.alespotify.main.repository.UserRepository;
 import com.alespotify.main.service.SongService;
 import com.alespotify.main.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,13 @@ public class CancionController {
     @GetMapping("/{id}")
     public ResponseEntity<Cancion> buscarCancion(@PathVariable Long id) {
         Optional<Cancion> cancion = songRepository.findById(id);
-        return cancion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (cancion.isPresent()) {
+            Cancion c = cancion.get();
+            c.setTimesPlayed(c.getTimesPlayed() + 1);
+            songRepository.save(c);
+            return ResponseEntity.ok(c);
+        }
+        return null;
     }
 
     @PostMapping(value = "/new",
@@ -49,4 +56,15 @@ public class CancionController {
         return ResponseEntity.ok(cancionConRelaciones);
     }
 
+    @GetMapping("/song")
+    public Cancion playSong(@RequestParam Long id) {
+        Optional<Cancion> cancion = songRepository.findById(id);
+        if (cancion.isPresent()) {
+            Cancion c = cancion.get();
+            c.setTimesPlayed(c.getTimesPlayed() + 1);
+            songRepository.save(c);
+            return c;
+        }
+        return null;
+    }
 }
