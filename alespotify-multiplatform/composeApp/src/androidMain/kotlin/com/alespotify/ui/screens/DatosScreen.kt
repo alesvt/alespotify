@@ -249,7 +249,7 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
     ) {
         Image(
             painter = rememberAsyncImagePainter("https://via.placeholder.com/400"),
-            contentDescription = playlist.name,
+            contentDescription = playlist.nombre,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -263,7 +263,7 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
         ) {
-            Text(playlist.name, style = MaterialTheme.typography.h5, color = Color.White)
+            Text(playlist.nombre, style = MaterialTheme.typography.h5, color = Color.White)
             Button(onClick = {}, modifier = Modifier.padding(top = 8.dp)) {
                 Text("Play Now")
             }

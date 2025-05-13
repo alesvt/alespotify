@@ -33,7 +33,7 @@ fun NavGraph(
             LoginScreen(
                 navController = navController,
                 loginViewModel = loginViewModel,
-                appViewModel,
+                appViewModel = appViewModel,
                 onLoginSuccess = {
                     navController.navigate(DestinosNavegacion.load.route)
                 }
@@ -42,17 +42,22 @@ fun NavGraph(
 
         }
         composable(DestinosNavegacion.load.route) {
+
             LoadingDataScreen(
                 navController = navController,
                 appViewModel = appViewModel,
-                loginViewModel
+                loginViewModel = loginViewModel
             )
         }
         composable(DestinosNavegacion.app.route) {
+            println("---")
+            println(loginViewModel.nose.value)
+            // sale "no actualizado", que es el valor que le doy en el propio viewmodel,
+            // antes de actualizarlo dentro del viewmodel
             DatosScreen(
                 navController = navController,
-                appViewModel,
-                loginViewModel
+                appViewModel = appViewModel,
+                loginViewModel = loginViewModel
             )
         }
 

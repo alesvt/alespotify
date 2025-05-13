@@ -387,13 +387,13 @@ fun PlayScreen(song: Cancion, user: User) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    song.title,
+                    song.name,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
-                Text(song.id, fontSize = 14.sp, color = Color.Gray)
+                Text(song.id.toString(), fontSize = 14.sp, color = Color.Gray)
             }
 
             // Album art
@@ -436,7 +436,7 @@ fun PlayScreen(song: Cancion, user: User) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text("lo que lleve", fontSize = 12.sp, color = Color.Gray)
-                    Text(secondsToMMSS(song.length!!), fontSize = 12.sp, color = Color.Gray)
+                    Text(secondsToMMSS(song.duration!!), fontSize = 12.sp, color = Color.Gray)
                 }
 
                 // Control buttons

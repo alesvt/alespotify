@@ -33,4 +33,13 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> login(@RequestBody String credentials) {
+        Usuario usuario = userService.login(credentials);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

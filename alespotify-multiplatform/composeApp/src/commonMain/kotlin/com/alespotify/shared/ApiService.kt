@@ -14,6 +14,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 
 const val BASE_URL = "http://172.24.128.1:8080/api"
@@ -33,7 +34,7 @@ class ApiService {
         }
         if (response.status == HttpStatusCode.OK) {
             // tendria que poner la ruta de main y cargar con otra llamada tal y tal
-            println(response.body() as User)
+
             // println("Login correcto: ${response.body<User>()}")
             return response.body() as User
         }
@@ -79,7 +80,7 @@ class ApiService {
         }
     }
 
-    suspend fun getSongById(id: String): Cancion? {
+    suspend fun getSongById(id: Float): Cancion? {
         return try {
             val response = httpClient.get("$BASE_URL/songs/$id")
             if (response.status == HttpStatusCode.OK) {

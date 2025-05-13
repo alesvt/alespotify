@@ -42,6 +42,7 @@ import androidx.navigation.NavHostController
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
+import kotlin.math.log
 
 
 @Composable
@@ -55,6 +56,12 @@ actual fun DatosScreen(
     var isPlaying by remember { mutableStateOf(false) }
     var volumeSliderValue by remember { mutableStateOf(80f) }
 
+    val nose by loginViewModel.nose.collectAsState()
+    println(nose)
+    println("***")
+    println(loginViewModel.nose.collectAsState().value)
+    println("##")
+    println(loginViewModel.nose.collectAsState())
     /*
     val songs by appViewModel.songs.collectAsState()
     val artists by appViewModel.artists.collectAsState()

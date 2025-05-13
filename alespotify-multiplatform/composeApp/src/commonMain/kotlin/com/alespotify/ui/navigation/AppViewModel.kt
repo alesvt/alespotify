@@ -53,10 +53,12 @@ class AppViewModel : ViewModel() {
     fun loadSongs() {
         viewModelScope.launch {
             try {
+                println("HE ENTRADO")
                 // Cargar las tres listas
                 val fetchedSongs = apiService.getSongs()
                 val fetchedArtists = apiService.getArtists()
                 val fetchedPlaylists = apiService.getPlaylists()
+
                 // Imprimir resultados para debug
                 println("Canciones cargadas: ${fetchedSongs?.size}")
                 println("Artistas cargados: ${fetchedArtists?.size}")
@@ -82,7 +84,7 @@ class AppViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 // todo mas errores
-                _errorMessage.value = "Error al cargar artistas" + e.message
+                _errorMessage.value = "Error al cargar valores: " + e.cause
 
             } finally {
 

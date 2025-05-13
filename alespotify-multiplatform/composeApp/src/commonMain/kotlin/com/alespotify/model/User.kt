@@ -7,10 +7,8 @@ import org.mongodb.kbson.ObjectId
 data class User(
     val id: String,
     val email: String,
-  //  val password: String,
+    val password: String,
     val name: String,
-    val image : String,
-    val playlists: List<Playlist>?,
-    val favourites: Playlist?
+    val imagen : String? = null,
 
 )

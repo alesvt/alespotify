@@ -38,6 +38,7 @@ fun LoadingDataScreen(navController: NavHostController, appViewModel: AppViewMod
         // Asegurarse de que la carga se inicie
         if (!songsLoaded && !artistsLoaded && !playlistsLoaded) {
             appViewModel.loadSongs()
+        println(loginViewModel.nose.value)
         }
     }
 

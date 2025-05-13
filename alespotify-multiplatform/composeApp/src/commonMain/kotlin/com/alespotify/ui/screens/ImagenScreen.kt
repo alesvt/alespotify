@@ -30,7 +30,7 @@ fun ImagenDesdeApiScreen() {
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             try {
-                imageData = apiService.getSongById("67d9331e22be08aece99c041") // Llama a la función de tu ApiService
+                imageData = apiService.getSongById(11f) // Llama a la función de tu ApiService
             } catch (e: Exception) {
                 errorMessage = "Error al obtener datos: ${e.message}"
             } finally {
@@ -47,7 +47,7 @@ fun ImagenDesdeApiScreen() {
         if (isLoading) {
             CircularProgressIndicator()
         } else if (imageData != null) {
-            Text(imageData!!.title)
+            Text(imageData!!.name)
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalPlatformContext.current)
                     .data("https://png.pngtree.com/png-vector/20221108/ourmid/pngtree-cartoon-house-illustration-png-image_6434928.png")

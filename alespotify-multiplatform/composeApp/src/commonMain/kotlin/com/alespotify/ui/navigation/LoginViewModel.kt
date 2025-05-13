@@ -19,6 +19,8 @@ class LoginViewModel : ViewModel() {
     private val _usuario = MutableStateFlow<User?>(null)
     val usuario: StateFlow<User?> = _usuario
 
+    private val _nose = MutableStateFlow<String>("no actualizado")
+    val nose: StateFlow<String> = _nose
     var loginResult by mutableStateOf<User?>(null)
         private set
     var errorMessage by mutableStateOf<String?>(null)
@@ -26,18 +28,24 @@ class LoginViewModel : ViewModel() {
     var isLoading by mutableStateOf(false)
         private set
 
+
     fun login(email: String, password: String) {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
             loginResult = null
+            _nose.value = "hola"
+            _nose.emit("adios")
             try {
                 val user = apiService.login(email, password)
                 loginResult = user
                 _usuario.value = loginResult
                 _usuario.emit(user)
                 if (user != null) {
+                    _usuario.value = user
                     // Manejar el éxito del login (e.g., actualizar estado, navegar)
+                    println(_nose.value)
+                    println("+++")
                     println("Login successful: $user")
                 } else {
                     errorMessage = "Credenciales incorrectas"
