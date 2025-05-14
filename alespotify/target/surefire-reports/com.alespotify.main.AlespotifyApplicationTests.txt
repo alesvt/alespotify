@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.alespotify.main.AlespotifyApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.442 s -- in com.alespotify.main.AlespotifyApplicationTests
