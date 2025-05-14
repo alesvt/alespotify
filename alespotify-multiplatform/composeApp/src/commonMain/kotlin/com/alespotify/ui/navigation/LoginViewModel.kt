@@ -10,6 +10,7 @@ import com.alespotify.model.User
 import com.alespotify.shared.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -17,10 +18,10 @@ class LoginViewModel : ViewModel() {
     private val apiService = ApiService()
 
     private val _usuario = MutableStateFlow<User?>(null)
-    val usuario: StateFlow<User?> = _usuario
+    val usuario: StateFlow<User?> = _usuario.asStateFlow()
 
     private val _nose = MutableStateFlow<String>("no actualizado")
-    val nose: StateFlow<String> = _nose
+    val nose: StateFlow<String> = _nose.asStateFlow()
     var loginResult by mutableStateOf<User?>(null)
         private set
     var errorMessage by mutableStateOf<String?>(null)

@@ -1,10 +1,6 @@
 package com.alespotify.ui.screens
 
-/*
-import alespotify_multiplatform.composeapp.generated.resources.Res
-import alespotify_multiplatform.composeapp.generated.resources.allStringResources
-import alespotify_multiplatform.composeapp.generated.resources.compose_multiplatform
-*/
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,12 +46,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 
-
 @Composable
 expect fun DatosScreen(
     navController: NavHostController,
-    appViewModel: AppViewModel,
-    loginViewModel: LoginViewModel
+    appViewModel: AppViewModel = AppViewModel(),
+    loginViewModel: LoginViewModel = LoginViewModel()
 
 )
 
@@ -126,7 +121,7 @@ fun FeaturedCard(title: String, description: String, imagePath: String) {
                 )
                 Text(text = description, color = Color.White.copy(alpha = 0.8f), fontSize = 14.sp)
                 Button(onClick = { }, modifier = Modifier.padding(top = 8.dp)) {
-                    Text("Play Now")
+                    Text("Reproducir")
                 }
             }
         }
@@ -177,7 +172,7 @@ fun TopArtistsCard() {
     Card {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Your Top Artists",
+                text = "Los artistas más top",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)

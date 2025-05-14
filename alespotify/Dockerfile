@@ -2,7 +2,7 @@
 FROM openjdk:23-jdk-slim
 
 # Copia el archivo JAR de la aplicación
-COPY target/alespotify-0.0.1-SNAPSHOT.jar app.jar
+COPY target/main-0.0.1-SNAPSHOT.jar app.jar
 
 # Expone el puerto en el que la aplicación escucha
 EXPOSE 8080

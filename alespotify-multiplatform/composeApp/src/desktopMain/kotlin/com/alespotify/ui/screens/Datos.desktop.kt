@@ -39,11 +39,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.alespotify.model.Cancion
+import com.alespotify.shared.ApiService
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
+import io.realm.kotlin.mongodb.App
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import kotlin.math.log
+import kotlin.time.Duration.Companion.hours
 
+fun getHoraDia(): String {
+    val formatter = DateTimeFormatter.ofPattern("HH")
+    val horaActual = LocalTime.now()
+    when  {
+        horaActual.isBefore(LocalTime.parse("12", formatter)) -> return "Buenos días"
+        horaActual.isAfter(LocalTime.parse("12", formatter)) -> return "Buenas tardes"
+        horaActual.isAfter(LocalTime.parse("20", formatter)) -> return "Buenas noches"
+    }
+    return ""
+}
 
 @Composable
 actual fun DatosScreen(
@@ -57,6 +74,9 @@ actual fun DatosScreen(
     var volumeSliderValue by remember { mutableStateOf(80f) }
 
     val nose by loginViewModel.nose.collectAsState()
+
+    val textoBienvenida = getHoraDia()
+
     println(nose)
     println("***")
     println(loginViewModel.nose.collectAsState().value)
@@ -74,6 +94,7 @@ actual fun DatosScreen(
     println(playlists?.size)
 
 */
+
 
     MaterialTheme(colors = MyColors) {
         Row(modifier = Modifier.fillMaxSize()) {
@@ -132,8 +153,9 @@ actual fun DatosScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Good afternoon",
+                            text = textoBienvenida,
                             fontSize = 24.sp,
+                            color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                         Avatar("JD", "placeholder.svg")
@@ -146,12 +168,13 @@ actual fun DatosScreen(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         FeaturedCard(
-                            "Weekly Discoveries",
-                            "Fresh music curated just for you",
-                            "placeholder.svg"
+                            "Descubrimiento semanal",
+                            "Esta semana te traemos...",
+                            "https://publitronic.es/wp-content/uploads/2025/05/Diseno-sin-titulo2.png"
                         )
-                        Column(modifier = Modifier.weight(1f)) {
-                            RecentlyPlayedCard()
+                        Row(modifier = Modifier.weight(1f)) {
+                            // NovedadesCard()
+                            // RecentlyPlayedCard()
                             Spacer(modifier = Modifier.height(16.dp))
                             TopArtistsCard()
                         }

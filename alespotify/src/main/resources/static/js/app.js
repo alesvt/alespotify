@@ -70,6 +70,7 @@ async function getSong(id) {
 }
 
 async function getPlaylist(id) {
+    currentSongIndex = 0
     try {
         const response = await fetch(`http://${APP_IP}/api/playlists/${id}`)
         if (!response.ok) {
@@ -78,6 +79,7 @@ async function getPlaylist(id) {
         const data = await response.json()
         playqueue = data
         colaOrdenada = playqueue
+        console.log(playqueue)
         playFromQueue(0)
     } catch (error) {
         console.error(error)
@@ -100,7 +102,9 @@ function loadElements() {
     const userName = document.getElementById("user-data").getAttribute("userName")
     const userImage = document.getElementById("user-data").getAttribute("userImage")
     const userEmail = document.getElementById("user-data").getAttribute("userEmail")
+    const loop = document.getElementById("loop-button")
     return {
+        loop,
         songPlayer,
         repro,
         imagen_cancion,
@@ -128,11 +132,9 @@ async function loadUserData() {
 
 function play(song) {
     elementos = loadElements();
-    console.log(song);
     if (elementos.songPlayer) {
         elementos.songPlayer.style.display = "flex";
     }
-
 
     if (elementos.repro) {
         elementos.repro.src = song.source;
@@ -145,7 +147,8 @@ function play(song) {
     if (song.artists && song.artists.length > 0 && elementos.artist_cancion) {
         elementos.artist_cancion.innerText = song.artists[0].name;
     }
-    document.title = song.nombre + " - " + song.artists[0].name
+    document.title = song.name + " - " + song.artists[0].name
+    antetitle = document.title
     if (elementos.trackbar && elementos.trackbar.children.length >= 3) {
         elementos.trackbar.children[2].innerText = secsToMMSS(song.duration);
     }
@@ -247,11 +250,13 @@ document.addEventListener("DOMContentLoaded", function () {
             playNext();
         });
     }
-
+    const antetitle = ""
     // Funcionalidad del botón de Play/Pause
     if (playButton && elementos && elementos.repro) {
         playButton.addEventListener('click', function () {
+
             if (elementos.repro.paused) {
+                document.title = antetitle
                 elementos.repro.play();
                 // Cambiar el icono a pausa (puedes ajustar esto según tu HTML)
                 playButton.innerHTML = `
@@ -299,8 +304,10 @@ document.addEventListener("DOMContentLoaded", function () {
             elementos.repro.loop = !elementos.repro.loop;
             // Puedes cambiar la apariencia del botón para indicar el estado de repetición
             if (elementos.repro.loop) {
+                repeatButton.classList.add("checked")
                 repeatButton.style.color = 'var(--accent-color)'; // Ejemplo de cambio de color
             } else {
+                repeatButton.classList.remove("checked")
                 repeatButton.style.color = ''; // Restablecer el color
             }
             console.log("Repetir:", elementos.repro.loop);
@@ -542,20 +549,32 @@ function addToQueue(songId) {
 
 async function playFromQueue(index) {
     //console.log(playqueue)
-    if (index >= 0 && playqueue) {
+    if (index >= 0 && index <= playqueue.songs.length) {
         console.log(index)
         if (playqueue.songs) {
-            console.log("existe")
+            console.log("la playlist tiene canciones")
             const songId = playqueue.songs[index].id
-            console.log(songId)
+            console.log("la canción tiene el id:" + songId)
             currentSongData = getSong(songId)
+            console.log("reproduciendo desde playlist")
+            console.log(currentSongData)
+        }
+    } else {
+        console.log("no hay más canciones en cola")
+        if (repeatButton.classList.contains("checked")) {
+            playFromQueue(0)
+        } else {
+            elementos.repro.stop()
         }
     }
 }
 
 function playNext() {
-    if (currentSongIndex < playqueue.songs.length - 1) {
+    console.log(`indice: ${currentSongIndex}, cancion: ${playqueue.songs[currentSongIndex].id}`)
+
+    if (currentSongIndex < playqueue.songs.length) {
         playFromQueue(currentSongIndex + 1);
+        currentSongIndex++
     } else {
         console.log("Fin de la cola.");
         // Aquí podrías implementar la lógica para repetir la cola o detener la reproducción
@@ -573,16 +592,4 @@ function playNext() {
             document.title = "Alespotify - Inicio";
         }
     }
-}
-
-async function fetchPlaylist(id) {
-    try {
-        let pl = await fetch(`https://${APP_IP}/api/playlists/${id}`)
-        if (pl) {
-            console.log(pl)
-        }
-    } catch (error) {
-        console.error(error)
-    }
-    console.log(id)
 }

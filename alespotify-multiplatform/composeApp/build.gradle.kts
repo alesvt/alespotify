@@ -71,7 +71,6 @@ kotlin {
             implementation("io.realm.kotlin:library-sync:1.16.0")
             // If using coroutines with the SDK
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.bson.kotlinx)
             // implementation(libs.coil3.compose)
              // implementation("")
             implementation(libs.coil.compose)

@@ -304,7 +304,16 @@ button.checked {
 }
 
 .made-for-you-grid .card {
-    padding-bottom: 5px;
+    padding-bottom: 20px;
+}
+
+.made-for-you-grid .card p {
+    margin: 4px auto;
+    padding: 4px 0;
+}
+
+.made-for-you-grid .card p:last-child {
+    text-align: right;
 }
 
 .made-for-you-grid .card img {
