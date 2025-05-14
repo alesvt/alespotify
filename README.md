@@ -50,14 +50,14 @@ Asegúrate de tener instaladas las siguientes herramientas:
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [https://github.com/alesvt/alespotify](https://github.com/alesvt/alespotify)
-    cd [alespotify]
+    git clone https://github.com/alesvt/alespotify
+    cd alespotify/
     ```
 
 2.  **Configurar el backend (API y Web - Java/Spring Boot):**
     * Requiere una base de datos en mongodb con las colecciones de `MongoColls`
     * Navega al directorio del backend (`alespotify/src`).
-    * Configura las propiedades de la aplicación en `application.properties` o `application.yml` (por ejemplo, la conexión a la base de datos).
+    * Configura las propiedades de la aplicación en `application.properties` (por ejemplo, la conexión a la base de datos).
     * Ejecuta la aplicación Spring Boot utilizando Maven o Gradle:
         ```bash
         ./mvnw spring-boot:run
@@ -88,16 +88,5 @@ Asegúrate de tener instaladas las siguientes herramientas:
 ├── LICENSE
 └── README.md
 ```
-
-## 🤝 Contribución
-
-¡Las contribuciones son bienvenidas! Si deseas contribuir a este proyecto, por favor sigue estos pasos:
-
-1.  Haz un fork del repositorio.
-2.  Crea una nueva rama con tu propuesta de mejora (`git checkout -b feature/tu-mejora`).
-3.  Realiza tus cambios y commitea (`git commit -am 'Añade tu mejora'`).
-4.  Sube tus cambios al fork (`git push origin feature/tu-mejora`).
-5.  Crea un Pull Request explicando tus cambios.
-
 
 ## ✨ ¡Gracias por explorar este proyecto! ✨
