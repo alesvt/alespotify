@@ -82,7 +82,6 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.ui.util)
             implementation(libs.ktor.client.logging)
-
             implementation(compose.materialIconsExtended)
 
 

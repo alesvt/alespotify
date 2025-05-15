@@ -22,10 +22,9 @@ const val BASE_URL = "http://172.24.128.1:8080/api"
 @Serializable
 data class Credentials(val email: String, val password: String)
 
-
 class ApiService {
     private val httpClient =
-        createHttpClient() // Obtiene el HttpClient con la configuración común y el motor específico
+        createHttpClient()
 
     suspend fun login(email: String, password: String): User? {
         val response = httpClient.post("$BASE_URL/users/login") {
@@ -33,12 +32,8 @@ class ApiService {
             setBody(Credentials(email, password))
         }
         if (response.status == HttpStatusCode.OK) {
-            // tendria que poner la ruta de main y cargar con otra llamada tal y tal
-
-            // println("Login correcto: ${response.body<User>()}")
             return response.body() as User
         }
-
         print(response)
         return null
     }
