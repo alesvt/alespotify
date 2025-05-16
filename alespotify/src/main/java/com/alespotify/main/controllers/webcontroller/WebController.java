@@ -41,20 +41,13 @@ public class WebController {
         return "index";
     }
 
-    @GetMapping("/info")
-    public String info(Model model) {
-        model.addAttribute("nombre", "ales");
-        return "info";
-    }
-
 
     @GetMapping("/app")
     public String app(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = authentication.getName(); // Obtiene el email del usuario
-        Optional<Usuario> user = userService.findByEmail(currentUserName); // Busca el usuario completo en la base de datos
+        String currentUserName = authentication.getName();
+        Optional<Usuario> user = userService.findByEmail(currentUserName);
         if (user.isPresent()) {
-            // todo cambiar para sacar solo unas cuantas
             List<Cancion> songs = songRepository.findByVecesReproducido();
             List<Album> albumes = albumRepository.findNewestAlbums();
             List<Artista> artists = artistaRepository.findTop3Artists();

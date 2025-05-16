@@ -1,20 +1,24 @@
-package com.alespotify.main.controllers.restcontroller;
+package com.alespotify.main.controllers.webcontroller;
 
 import com.alespotify.main.models.entities.Usuario;
+import com.alespotify.main.repository.UserRepository;
 import com.alespotify.main.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@AllArgsConstructor
 public class RegisterController {
 
-    private final UserService userServiceImpl;
-
-    public RegisterController(UserService userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
-    }
+    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -23,14 +27,16 @@ public class RegisterController {
         return "register";
     }
 
+
     @PostMapping("/register")
     public String registerUser(Usuario user, Model model) {
-        if (userServiceImpl.findByEmail(user.getEmail()).isPresent()) {
+        if (userService.findByEmail(user.getEmail()).isPresent()) {
             model.addAttribute("error", "Email already exists");
             return "register";
         }
-        userServiceImpl.registerUser(user);
+        userService.registerUser(user);
         System.out.println("User registered successfully");
         return "redirect:/app";
     }
+
 }

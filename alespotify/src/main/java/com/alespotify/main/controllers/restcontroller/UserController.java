@@ -4,8 +4,10 @@ import com.alespotify.main.models.entities.Usuario;
 import com.alespotify.main.repository.UserRepository;
 import com.alespotify.main.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +18,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -42,4 +46,12 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<Usuario> register(@RequestBody Usuario usuario) {
+        usuario.setCreationDate(Instant.now());
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        System.out.println(usuario.getPassword());
+        Usuario usuarioCreado = userRepository.save(usuario);
+        return ResponseEntity.ok(usuarioCreado);
+    }
 }

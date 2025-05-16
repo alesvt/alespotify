@@ -1,44 +1,4 @@
-// async function getSong(id) {
-//     try {
-//         const response = await fetch('http://127.0.0.1:8080/api/songs/' + id);
-//         if (!response.ok) {
-//             throw new Error('Error en la solicitud: ' + response.status);
-//         }
-//         const data = await response.json();
-//         console.log(data);
-//         play(data)
-//     } catch (error) {
-//         console.error('Error:', error);
-//     }
-// }
-//
-// let player = document.getElementById("reproductorMedia")
-// let container = document.getElementById("reproductor")
-// console.log(container);
-// let imagen = container.querySelector("img")
-// let playbt = container.querySelector("#play-song")
-// const progressBar = document.getElementById("pb");
-//
-//
-// playbt.addEventListener("click", function () {
-//     if (player.paused) {
-//         playbt.innerHTML = "<i class=\"fa-solid fa-pause\"></i>";
-//         player.play();
-//     } else {
-//         playbt.innerHTML = "<i class=\"fa-solid fa-play\"></i>";
-//         player.pause();
-//     }
-// })
-//
-// function play(data) {
-//     player.source = data.source
-//     imagen.src = data.thumbImage
-//     tTotal.innerText = secsToMMSS(data.length);
-//
-// }
-//
-
-const APP_IP = "192.168.0.112:8080"
+const APP_IP = "192.168.56.1:8080"
 const toggleDarkMode = document.getElementById('toggle-dark-mode');
 if (toggleDarkMode) {
     toggleDarkMode.addEventListener('click', () => {
@@ -53,7 +13,7 @@ let userData
 const modalContainer = document.getElementById('modal-container');
 const modalContent = document.getElementById("modal-content");
 
-// todo
+
 async function getSong(id) {
     try {
         const response = await fetch(`http://${APP_IP}/api/songs/${id}`);
@@ -61,8 +21,7 @@ async function getSong(id) {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
         const data = await response.json();
-        console.log("of")
-        console.log(data)
+        //console.log(data)
         play(data);
     } catch (error) {
         console.error("Error al obtener la canción:", error);
@@ -314,7 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     //todo shuffle playqueue
-    /*
+
     if (shuffleButton && elementos && elementos.repro && playqueue) {
         shuffleButton.addEventListener('click', function () {
             if (!shuffleButton.classList.contains('checked')) {
@@ -325,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 playqueue = colaOrdenada
             }
         })
-    }*/
+    }
 
     const createPlaylistButton = document.getElementById('create-playlist-button');
     if (createPlaylistButton) {
@@ -351,11 +310,8 @@ function closeModal() {
 
 function randomizarCola(list) {
     let currentIndex = list.length
-    while (currentIndex != 0) {
-        let randomIndex = Math.floor(Math.random() * currentIndex)
-        currentIndex--
-        [list[currentIndex], list[randomIndex]] = [list[randomIndex], list[currentIndex]]
-    }
+    list.sort(() => Math.random() - .5)
+
 }
 
 async function showModalInfo(modalType) {

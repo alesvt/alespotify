@@ -24,7 +24,7 @@ public class CancionController {
     private final SongRepository songRepository;
     private final SongService songService;
 
-    public CancionController(UserRepository userRepository, SongRepository songRepository, SongService songService) {
+    public CancionController(SongRepository songRepository, SongService songService) {
         this.songRepository = songRepository;
         this.songService = songService;
     }

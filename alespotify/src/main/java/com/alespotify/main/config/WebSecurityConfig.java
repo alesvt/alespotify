@@ -52,6 +52,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> {
                     requests.requestMatchers(
                             "/",
+                            "/**",
                             "/404",
                             "/index",
                             "/register",
@@ -73,7 +74,10 @@ public class WebSecurityConfig {
                         .usernameParameter("email")
                         .permitAll()
                         .defaultSuccessUrl("/app", true))
-                .logout(LogoutConfigurer::permitAll);
+                .logout(LogoutConfigurer::permitAll)
+
+        ;
+
 
         return http.build();
     }
