@@ -31,8 +31,7 @@ public class CancionController {
 
     @GetMapping
     public List<Cancion> listarCanciones() {
-        System.out.println(songRepository.findAll());
-        return songRepository.findAll();
+        return songRepository.findByVecesReproducido();
     }
 
     @GetMapping("/{id}")

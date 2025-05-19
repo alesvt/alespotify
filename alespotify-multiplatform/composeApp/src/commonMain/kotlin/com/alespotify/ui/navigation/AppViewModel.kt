@@ -17,9 +17,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
+
+
 class AppViewModel : ViewModel() {
 
     private val apiService = ApiService()
+
 
     private val _songs = MutableStateFlow<List<Cancion>?>(null)
     val songs = _songs.asStateFlow()
@@ -28,7 +31,7 @@ class AppViewModel : ViewModel() {
     private val _songsLoaded = MutableStateFlow(false)
     val songsLoaded: StateFlow<Boolean> = _songsLoaded
 
-    // Estados para Artistas
+    // artistas
     private val _artists = MutableStateFlow<List<Artist>?>(null)
     val artists: StateFlow<List<Artist>?> = _artists
     private val _isLoadingArtists = MutableStateFlow(false)
@@ -46,9 +49,6 @@ class AppViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow("")
     val errorMessage: StateFlow<String> = _errorMessage
 
-
-    private val _currentSong = MutableStateFlow<Cancion?>(null)
-    val currentSong: StateFlow<Cancion?> = _currentSong
 
     fun loadSongs() {
         viewModelScope.launch {
@@ -91,4 +91,5 @@ class AppViewModel : ViewModel() {
             }
         }
     }
+
 }

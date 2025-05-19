@@ -11,7 +11,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +26,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.automirrored.filled.*
 import coil3.compose.rememberAsyncImagePainter
 
 import org.jetbrains.compose.resources.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Slider
+import androidx.compose.material.SliderDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
@@ -44,14 +49,20 @@ import com.alespotify.ui.navigation.LoginViewModel
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Brush
+import com.alespotify.model.Artist
+import com.alespotify.model.Playlist
+import com.alespotify.shared.ApiService
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @Composable
 expect fun DatosScreen(
     navController: NavHostController,
     appViewModel: AppViewModel = AppViewModel(),
-    loginViewModel: LoginViewModel = LoginViewModel()
-
+    loginViewModel: LoginViewModel = LoginViewModel(),
+    apiService: ApiService
 )
 
 @OptIn(ExperimentalResourceApi::class)
@@ -86,7 +97,7 @@ fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
 fun Avatar(fallbackText: String, imagePath: String) {
     Box(modifier = Modifier.size(40.dp)) {
         Image(
-            painter = rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
+            painter = rememberAsyncImagePainter(imagePath),
             contentDescription = "User Avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize().clip(CircleShape)
@@ -166,57 +177,60 @@ fun RecentlyPlayedCard() {
     }
 }
 
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun TopArtistsCard() {
+fun TopArtistsCard(artist: Artist) {
     Card {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Los artistas más top",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Image(
+                rememberAsyncImagePainter(artist.image),
+                contentDescription = "Imagen ${artist.name}",
+                modifier = Modifier.aspectRatio(1f)
+                    .height(180.dp)
+                    .width(180.dp),
+                contentScale = ContentScale.Crop
             )
-            Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                List(3) { it + 1 }.forEach { index ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-                            contentDescription = "Artist $index",
-                            modifier = Modifier.size(64.dp).clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
-                        Text(
-                            text = "Artist $index",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
+        }
+        Column(
+            modifier = Modifier.background(
+                Brush.verticalGradient(listOf(MyColors.background, Color(0x616161)))
+            )
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = artist.name,
+                fontWeight = FontWeight.Medium
+            )
+
         }
     }
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun MadeForYouCard(index: Int) {
+fun MadeForYouCard(playlist: Playlist) {
     Card {
         Box(modifier = Modifier.fillMaxWidth()) {
             Image(
-                rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-                contentDescription = "Playlist $index",
-                modifier = Modifier.aspectRatio(1f),
+                rememberAsyncImagePainter(playlist.image),
+                contentDescription = "Playlist ${playlist.nombre}",
+                modifier = Modifier.aspectRatio(1f)
+                    .height(230.dp)
+                    .width(230.dp),
                 contentScale = ContentScale.Crop
             )
-            IconButton(onClick = { }, modifier = Modifier.align(Alignment.BottomEnd)) {
+            IconButton(
+                onClick = { /* todo play playlist*/ },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
             }
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = "Playlist $index", fontWeight = FontWeight.Medium)
+            Text(text = playlist.nombre, fontWeight = FontWeight.Medium)
             Text(
-                text = "By Melodify",
+                text = "By ${playlist.user.name}",
                 fontSize = 12.sp,
                 color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
             )
@@ -226,24 +240,56 @@ fun MadeForYouCard(index: Int) {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun NewReleaseCard(index: Int) {
+fun NewReleaseCard(song: Cancion) {
     Card(modifier = Modifier.width(180.dp)) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Image(
-                rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-                contentDescription = "New Release $index",
+                rememberAsyncImagePainter(song.image),
+                contentDescription = "New Release ${song.name}",
                 modifier = Modifier.aspectRatio(1f),
                 contentScale = ContentScale.Crop
             )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp)
+                    .clip(CircleShape)
+
+            ) {
+                IconButton(
+                    modifier = Modifier.background(MyColors.primary)
+                        .clip(CircleShape),
+                    onClick = { /* todo darle al plei de cansione*/ }
+                )
+                {
+                    Icon(Icons.Filled.PlayArrow, contentDescription = "Play", tint = Color.White)
+                }
+
+            }
         }
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = "New Album $index", fontWeight = FontWeight.Medium)
+
+        Column(
+            modifier = Modifier
+                .background(
+                    Brush.verticalGradient(listOf(MyColors.background, Color(0x616161)))
+                )
+        ) {
             Text(
-                text = "Artist Name",
-                fontSize = 12.sp,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                modifier = Modifier.padding(8.dp),
+                text = song.name,
+                fontWeight = FontWeight.Medium
             )
+            song.artists?.get(0)?.let {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = it.name,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                )
+            }
+
         }
+
     }
 }
 

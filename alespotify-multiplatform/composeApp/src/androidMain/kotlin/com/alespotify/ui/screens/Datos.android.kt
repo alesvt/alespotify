@@ -1,7 +1,6 @@
 package com.alespotify.ui.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,50 +18,31 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.navigation.NavHostController
-import coil3.Image
 import coil3.compose.rememberAsyncImagePainter
-import com.alespotify.model.Cancion
 import com.alespotify.model.Playlist
+import com.alespotify.shared.ApiService
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.readBytes
-import io.ktor.http.ContentType
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -71,7 +51,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 actual fun DatosScreen(
     navController: NavHostController,
     appViewModel: AppViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    apiService: ApiService
 ) {
     val isPlaying = remember { mutableStateOf(false) }
     val currentTab = remember { mutableStateOf("home") }
@@ -87,8 +68,7 @@ actual fun DatosScreen(
     println(artists)
     val coroutineScope = rememberCoroutineScope()
 
-    var canciones: List<Cancion>
-    val songsState by appViewModel.songs.collectAsState()
+
 
 
     // Function to handle tab changes

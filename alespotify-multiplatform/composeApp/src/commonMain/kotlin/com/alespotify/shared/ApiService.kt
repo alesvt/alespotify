@@ -4,15 +4,21 @@ import com.alespotify.model.Artist
 import com.alespotify.model.Cancion
 import com.alespotify.model.Playlist
 import com.alespotify.model.User
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.append
 import io.ktor.http.contentType
+import io.ktor.http.parameters
+import io.ktor.http.parametersOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -54,7 +60,6 @@ class ApiService {
     }
 
 
-
     suspend fun getArtists(): List<Artist>? {
         val response = httpClient.get("$BASE_URL/artists")
         if (response.status == HttpStatusCode.OK) {
@@ -66,7 +71,7 @@ class ApiService {
     }
 
     suspend fun getPlaylists(): List<Playlist>? {
-        val response = httpClient.get("$BASE_URL/playlists")
+        val response = httpClient.get("$BASE_URL/playlists/public")
         if (response.status == HttpStatusCode.OK) {
             return response.body() as List<Playlist>
         } else {
@@ -91,4 +96,43 @@ class ApiService {
     }
 
     // ... otros métodos de la API
+
+    suspend fun createPlaylist(playlist: Playlist): Playlist? {
+        return try {
+            val response = httpClient.post("") {
+                contentType(ContentType.Application.Json)
+                setBody(playlist)
+            }
+            if (response.status == HttpStatusCode.OK) {
+                response.body() as Playlist
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun registerUser(usuario: User): User? {
+        return try {
+            val response = httpClient.submitForm(
+                url = "$BASE_URL/users/register",
+                formParameters = parameters {
+                    append("name", usuario.name)
+                    usuario.imagen?.let { append("image", it) }
+                    append("email", usuario.email)
+                    append("password", usuario.password)
+                }
+            )
+            if (response.status == HttpStatusCode.OK) {
+                response.body() as User
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+
 }

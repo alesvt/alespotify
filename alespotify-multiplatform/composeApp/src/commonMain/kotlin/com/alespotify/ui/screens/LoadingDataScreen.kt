@@ -22,7 +22,11 @@ import com.alespotify.ui.navigation.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoadingDataScreen(navController: NavHostController, appViewModel: AppViewModel, loginViewModel: LoginViewModel) {
+fun LoadingDataScreen(
+    navController: NavHostController,
+    appViewModel: AppViewModel = AppViewModel(),
+    loginViewModel: LoginViewModel = LoginViewModel()
+) {
     val isLoadingSongs by appViewModel.isLoadingSongs.collectAsState()
     val isLoadingArtists by appViewModel.isLoadingArtists.collectAsState()
     val isLoadingPlaylists by appViewModel.isLoadingPlaylists.collectAsState()
@@ -33,12 +37,20 @@ fun LoadingDataScreen(navController: NavHostController, appViewModel: AppViewMod
 
     val errorMessage by appViewModel.errorMessage.collectAsState()
 
+
+    val songesteit by appViewModel.songs.collectAsState()
+    println(songesteit)
+
+    println("cargan?")
+    println(isLoadingSongs)
+    println(songsLoaded)
+    println(artistsLoaded)
     // Lanzar la carga de datos al entrar a la pantalla
     LaunchedEffect(key1 = Unit) {
         // Asegurarse de que la carga se inicie
         if (!songsLoaded && !artistsLoaded && !playlistsLoaded) {
             appViewModel.loadSongs()
-        println(loginViewModel.nose.value)
+            println(loginViewModel.nose.value)
         }
     }
 
@@ -56,7 +68,8 @@ fun LoadingDataScreen(navController: NavHostController, appViewModel: AppViewMod
 
         // Agregar botón para reintento manual en caso de fallo
         if (!isLoadingSongs && !isLoadingArtists && !isLoadingPlaylists &&
-            (!songsLoaded || !artistsLoaded || !playlistsLoaded)) {
+            (!songsLoaded || !artistsLoaded || !playlistsLoaded)
+        ) {
             Button(onClick = { appViewModel.loadSongs() }) {
                 Text("Reintentar carga")
             }
@@ -66,10 +79,11 @@ fun LoadingDataScreen(navController: NavHostController, appViewModel: AppViewMod
     // Navegar cuando todas las listas estén cargadas o al menos las necesarias
     if ((songsLoaded || !appViewModel.songs.value.isNullOrEmpty()) &&
         (artistsLoaded || !appViewModel.artists.value.isNullOrEmpty()) &&
-        (playlistsLoaded || !appViewModel.playlists.value.isNullOrEmpty())) {
+        (playlistsLoaded || !appViewModel.playlists.value.isNullOrEmpty())
+    ) {
         LaunchedEffect(key1 = Unit) {
-            navController.navigate(DestinosNavegacion.app.route) {
-                popUpTo(DestinosNavegacion.load.route) { inclusive = true }
+            navController.navigate(DestinosNavegacion.App.route) {
+                println("ya están cargadas las listas, nos vamos")
             }
         }
     }

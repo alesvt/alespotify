@@ -20,6 +20,6 @@ public class ArtistController {
 
     @GetMapping
     public List<Artista> getArtists() {
-        return artistRepository.findAll();
+        return artistRepository.findTop3Artists();
     }
 }

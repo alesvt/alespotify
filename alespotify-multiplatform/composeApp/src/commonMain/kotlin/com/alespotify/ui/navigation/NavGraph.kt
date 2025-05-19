@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.alespotify.shared.ApiService
 import com.alespotify.ui.screens.DatosScreen
 import com.alespotify.ui.screens.LoadingDataScreen
 // import com.alespotify.ui.screens.DatosScreen
@@ -34,13 +35,14 @@ fun NavGraph(
                 loginViewModel = loginViewModel,
                 appViewModel = appViewModel,
                 onLoginSuccess = {
-                    navController.navigate(DestinosNavegacion.load.route)
+                    navController.navigate(DestinosNavegacion.App.route)
+                    //navController.navigate(DestinosNavegacion.Load.route)
                 }
             )
 
 
         }
-        composable(DestinosNavegacion.load.route) {
+        composable(DestinosNavegacion.Load.route) {
 
             LoadingDataScreen(
                 navController = navController,
@@ -48,21 +50,15 @@ fun NavGraph(
                 loginViewModel = loginViewModel
             )
         }
-        composable(DestinosNavegacion.app.route) {
-            println("---")
-            println(loginViewModel.nose.value)
-            // sale "no actualizado", que es el valor que le doy en el propio viewmodel,
-            // antes de actualizarlo dentro del viewmodel
+        composable(DestinosNavegacion.App.route) {
             DatosScreen(
                 navController = navController,
                 appViewModel = appViewModel,
-                loginViewModel = loginViewModel
+                loginViewModel = loginViewModel,
+                apiService = ApiService()
             )
         }
 
-        composable(DestinosNavegacion.android.route) {
-            //s DatosAndroid()
-        }
 
     }
 }

@@ -10,11 +10,10 @@ open class DestinosNavegacion(
 ) {
 
     object LoginScreen : DestinosNavegacion("loginScreen", "loginScreen")
-    object app : DestinosNavegacion("app", "app")
+    object App : DestinosNavegacion("app", "app")
 
-    object load : DestinosNavegacion("load", "load")
+    object Load : DestinosNavegacion("load", "load")
 
-    object android : DestinosNavegacion("android", "DatosAndroid")
 
 
 }

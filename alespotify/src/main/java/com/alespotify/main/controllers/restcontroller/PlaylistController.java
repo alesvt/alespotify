@@ -32,6 +32,11 @@ public class PlaylistController {
         return playlistRepository.findAll();
     }
 
+    @GetMapping("/public")
+    public List<Playlist> getPublicPlaylists() {
+        return playlistRepository.findPublicPlaylists();
+    }
+
     @PostMapping("/new")
     public ResponseEntity<Playlist> createPlaylist(@RequestParam String nombre, @RequestParam String userId) {
         System.out.println(nombre + " " + userId);

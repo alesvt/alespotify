@@ -16,7 +16,7 @@ val json = Json {
 }
 
 fun createHttpClient(config: HttpClientConfig<*>.() -> Unit = {}): HttpClient {
-    return httpClient { // Llama a la función expect, que se resolverá a la actual de cada plataforma
+    return httpClient {
         install(ContentNegotiation) {
             json(json)
         }

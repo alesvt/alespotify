@@ -84,6 +84,9 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(compose.materialIconsExtended)
 
+            // para el reproductor
+            implementation("org.openjfx:javafx-media:19")
+
 
 
         }

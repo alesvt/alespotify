@@ -27,10 +27,13 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,9 +57,9 @@ import kotlin.time.Duration.Companion.hours
 fun getHoraDia(): String {
     val formatter = DateTimeFormatter.ofPattern("HH")
     val horaActual = LocalTime.now()
-    when  {
-        horaActual.isBefore(LocalTime.parse("12", formatter)) -> return "Buenos días"
-        horaActual.isAfter(LocalTime.parse("12", formatter)) -> return "Buenas tardes"
+    when {
+        horaActual.isBefore(LocalTime.parse("14", formatter)) -> return "Buenos días"
+        horaActual.isAfter(LocalTime.parse("14", formatter)) -> return "Buenas tardes"
         horaActual.isAfter(LocalTime.parse("20", formatter)) -> return "Buenas noches"
     }
     return ""
@@ -66,34 +69,27 @@ fun getHoraDia(): String {
 actual fun DatosScreen(
     navController: NavHostController,
     appViewModel: AppViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    apiService: ApiService
 ) {
+
+
+    LaunchedEffect(Unit) {
+        appViewModel.loadSongs()
+    }
+
+    val songs by appViewModel.songs.collectAsState()
+    val playlists by appViewModel.playlists.collectAsState()
+    val artists by appViewModel.artists.collectAsState()
+    val user by loginViewModel.usuario.collectAsState()
+    println(artists)
 
     var sliderValue by remember { mutableStateOf(33f) }
     var isPlaying by remember { mutableStateOf(false) }
     var volumeSliderValue by remember { mutableStateOf(80f) }
 
-    val nose by loginViewModel.nose.collectAsState()
 
     val textoBienvenida = getHoraDia()
-
-    println(nose)
-    println("***")
-    println(loginViewModel.nose.collectAsState().value)
-    println("##")
-    println(loginViewModel.nose.collectAsState())
-    /*
-    val songs by appViewModel.songs.collectAsState()
-    val artists by appViewModel.artists.collectAsState()
-    val playlists by appViewModel.playlists.collectAsState()
-    // Obtener los datos del usuario desde LoginViewModel
-    val user by loginViewModel.usuario.collectAsState()
-
-    println(songs?.size)
-    println(artists?.size)
-    println(playlists?.size)
-
-*/
 
 
     MaterialTheme(colors = MyColors) {
@@ -158,7 +154,7 @@ actual fun DatosScreen(
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
-                        Avatar("JD", "placeholder.svg")
+                        user?.let { user?.imagen?.let { it1 -> Avatar(user!!.name, it1) } }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -172,14 +168,25 @@ actual fun DatosScreen(
                             "Esta semana te traemos...",
                             "https://publitronic.es/wp-content/uploads/2025/05/Diseno-sin-titulo2.png"
                         )
-                        Row(modifier = Modifier.weight(1f)) {
-                            // NovedadesCard()
-                            // RecentlyPlayedCard()
-                            Spacer(modifier = Modifier.height(16.dp))
-                            TopArtistsCard()
+
+                    }
+                    Text(
+                        text = "Los artistas más top",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        artists?.let {
+                            items(it) { index ->
+                                TopArtistsCard(index)
+                            }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
@@ -189,9 +196,12 @@ actual fun DatosScreen(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
+
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(List(6) { it + 1 }) { index ->
-                            MadeForYouCard(index)
+                        playlists?.let {
+                            items(it) { index ->
+                                MadeForYouCard(index)
+                            }
                         }
                     }
 
@@ -205,9 +215,12 @@ actual fun DatosScreen(
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(List(2) { it + 1 }) { index ->
-                            NewReleaseCard(index)
+                        songs?.let {
+                            items(it) { s ->
+                                NewReleaseCard(s)
+                            }
                         }
+
                     }
                 }
 
@@ -225,5 +238,15 @@ actual fun DatosScreen(
     }
 }
 
+@Composable
+fun AudioPlayerFromApi(
 
+//    val audioPlayer = remember { AudioPlayer() }
+//    val scope = rememberCoroutineScope()
+) {
 
+    /* DisposableEffect(Unit){
+         onDispose { audioPlayer.release() }
+     }
+ */
+}

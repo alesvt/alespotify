@@ -59,20 +59,7 @@ fun LoginForm(
     onLoginSuccess: (User) -> Unit,
     appViewModel: AppViewModel
 ) {
-    /*
-    when (val loginState = loginViewModel.loginState.value) {
-        is LoginState.Loading -> Text("Cargando...")
-        is LoginState.Success -> {
-            val user = loginState.user
-            // Llamar al DataViewModel para cargar los datos
-            appViewModel.loadSongs()
-            onLoginSuccess(user)
-        }
-        is LoginState.Error -> {
-            Text("Error: ${loginState.mensaje}")
-        }
-    }
-*/
+
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
