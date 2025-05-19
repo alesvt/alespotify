@@ -11,7 +11,7 @@ open class DestinosNavegacion(
 
     object LoginScreen : DestinosNavegacion("loginScreen", "loginScreen")
     object App : DestinosNavegacion("app", "app")
-
+    object RegisterScreen : DestinosNavegacion("registerScreen", "registerScreen")
     object Load : DestinosNavegacion("load", "load")
 
 

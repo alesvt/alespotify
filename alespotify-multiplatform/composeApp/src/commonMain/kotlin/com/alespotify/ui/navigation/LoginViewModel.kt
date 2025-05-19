@@ -20,8 +20,6 @@ class LoginViewModel : ViewModel() {
     private val _usuario = MutableStateFlow<User?>(null)
     val usuario: StateFlow<User?> = _usuario.asStateFlow()
 
-    private val _nose = MutableStateFlow<String>("no actualizado")
-    val nose: StateFlow<String> = _nose.asStateFlow()
     var loginResult by mutableStateOf<User?>(null)
         private set
     var errorMessage by mutableStateOf<String?>(null)
@@ -29,14 +27,14 @@ class LoginViewModel : ViewModel() {
     var isLoading by mutableStateOf(false)
         private set
 
+    var registrationResult by mutableStateOf<User?>(null)
+        private set
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
             loginResult = null
-            _nose.value = "hola"
-            _nose.emit("adios")
             try {
                 val user = apiService.login(email, password)
                 loginResult = user
@@ -44,12 +42,33 @@ class LoginViewModel : ViewModel() {
                 _usuario.emit(user)
                 if (user != null) {
                     _usuario.value = user
-                    // Manejar el éxito del login (e.g., actualizar estado, navegar)
-                    println(_nose.value)
-                    println("+++")
                     println("Login successful: $user")
                 } else {
                     errorMessage = "Credenciales incorrectas"
+                }
+            } catch (e: Exception) {
+                errorMessage = "Error al realizar la petición de login: ${e.message}"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+    fun registro(nombre: String, email: String, password: String, image: String) {
+        viewModelScope.launch {
+            isLoading = true
+            errorMessage = null
+            registrationResult = null
+            try {
+                val user = apiService.registerUser(nombre, email, password, image)
+                registrationResult = user
+                _usuario.value = registrationResult
+                _usuario.emit(user)
+                if (user != null) {
+                    _usuario.value = user
+                    println("user registered successfully")
+                } else {
+                    errorMessage = "Error. algo pasa"
                 }
             } catch (e: Exception) {
                 errorMessage = "Error al realizar la petición de login: ${e.message}"

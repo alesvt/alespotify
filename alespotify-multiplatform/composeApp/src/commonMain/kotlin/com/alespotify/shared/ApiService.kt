@@ -113,15 +113,20 @@ class ApiService {
         }
     }
 
-    suspend fun registerUser(usuario: User): User? {
+    suspend fun registerUser(
+        nombre: String,
+        email: String,
+        password: String,
+        image: String
+    ): User? {
         return try {
             val response = httpClient.submitForm(
                 url = "$BASE_URL/users/register",
                 formParameters = parameters {
-                    append("name", usuario.name)
-                    usuario.imagen?.let { append("image", it) }
-                    append("email", usuario.email)
-                    append("password", usuario.password)
+                    append("name", nombre)
+                    append("image", image)
+                    append("email", email)
+                    append("password", password)
                 }
             )
             if (response.status == HttpStatusCode.OK) {
