@@ -5,18 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "genero")
 public class Genero implements Serializable {
@@ -34,4 +28,36 @@ public class Genero implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"genre"})
     private Set<Cancion> songs = new LinkedHashSet<>();
 
+    public Genero() {
+    }
+
+    public Genero(Integer id, String name, Set<Cancion> songs) {
+        this.id = id;
+        this.name = name;
+        this.songs = songs;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Cancion> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(Set<Cancion> songs) {
+        this.songs = songs;
+    }
 }

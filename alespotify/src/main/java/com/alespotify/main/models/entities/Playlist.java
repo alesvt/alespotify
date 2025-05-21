@@ -3,7 +3,6 @@ package com.alespotify.main.models.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -14,11 +13,7 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 @Entity
 @Table(name = "playlist")
 public class Playlist implements Serializable {
@@ -65,4 +60,91 @@ public class Playlist implements Serializable {
     )
     private Set<Cancion> songs = new LinkedHashSet<>();
 
+
+    public Playlist() {
+    }
+
+    public Playlist(Integer id, String nombre, Usuario user, Boolean isPublic, String image, Instant creationDate, Instant updateDate, Favorito favoritos, Set<Cancion> songs) {
+        this.id = id;
+        this.nombre = nombre;
+        this.user = user;
+        this.isPublic = isPublic;
+        this.image = image;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+        this.favoritos = favoritos;
+        this.songs = songs;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Usuario getUser() {
+        return user;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Instant getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Instant updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Favorito getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(Favorito favoritos) {
+        this.favoritos = favoritos;
+    }
+
+    public Set<Cancion> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(Set<Cancion> songs) {
+        this.songs = songs;
+    }
 }

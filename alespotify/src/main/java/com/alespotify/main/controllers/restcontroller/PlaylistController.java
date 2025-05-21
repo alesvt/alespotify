@@ -4,7 +4,6 @@ import com.alespotify.main.models.entities.Playlist;
 import com.alespotify.main.models.entities.Usuario;
 import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.UserRepository;
-import lombok.Data;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,7 @@ public class PlaylistController {
         Optional<Usuario> user = userRepository.findById(Long.valueOf(userId));
         Playlist nplaylist = new Playlist();
         if (user.isPresent()) {
-            nplaylist.setIsPublic(true);
+            nplaylist.setPublic(true);
             nplaylist.setCreationDate(Instant.now());
             nplaylist.setUpdateDate(nplaylist.getCreationDate());
             nplaylist.setNombre(nombre);
