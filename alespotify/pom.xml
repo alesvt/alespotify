@@ -75,10 +75,11 @@
             <artifactId>modelmapper</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-security-core</artifactId>
+            <version>6.4.5</version>
         </dependency>
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
