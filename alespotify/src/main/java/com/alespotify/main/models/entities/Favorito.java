@@ -2,13 +2,18 @@ package com.alespotify.main.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "favoritos")
 public class Favorito implements Serializable {
@@ -30,36 +35,5 @@ public class Favorito implements Serializable {
     @JoinColumn(name = "playlist_id", nullable = false)
     private Playlist playlist;
 
-    public Favorito() {
-    }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Usuario getUser() {
-        return user;
-    }
-
-    public void setUser(Usuario user) {
-        this.user = user;
-    }
-
-    public Playlist getPlaylist() {
-        return playlist;
-    }
-
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
-    }
-
-    public Favorito(Integer id, Usuario user, Playlist playlist) {
-        this.id = id;
-        this.user = user;
-        this.playlist = playlist;
-    }
 }

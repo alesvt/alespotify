@@ -42,7 +42,7 @@ public class PlaylistController {
         Optional<Usuario> user = userRepository.findById(Long.valueOf(userId));
         Playlist nplaylist = new Playlist();
         if (user.isPresent()) {
-            nplaylist.setPublic(true);
+            nplaylist.setIsPublic(true);
             nplaylist.setCreationDate(Instant.now());
             nplaylist.setUpdateDate(nplaylist.getCreationDate());
             nplaylist.setNombre(nombre);

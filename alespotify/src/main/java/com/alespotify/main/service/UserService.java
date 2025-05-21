@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
         Playlist playlist = new Playlist();
         playlist.setNombre("Favoritos de " + user.getName());
         playlist.setImage("https://placehold.co/200?text=Mis%20favoritos");
-        playlist.setPublic(false);
+        playlist.setIsPublic(false);
         playlist.setCreationDate(Instant.now());
         playlist.setUpdateDate(playlist.getCreationDate());
         playlist.setUser(user);
