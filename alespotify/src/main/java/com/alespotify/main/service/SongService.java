@@ -17,9 +17,7 @@ import java.util.Set;
 @Service
 public class SongService {
 
-    @Autowired
     private final SongRepository songRepository;
-    @Autowired
     private final ArtistRepository artistRepository;
 
 
