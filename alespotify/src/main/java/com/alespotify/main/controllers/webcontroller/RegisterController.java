@@ -17,7 +17,6 @@ public class RegisterController {
 
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
-    @Autowired
     private UserService userService;
 
     @GetMapping("/register")
