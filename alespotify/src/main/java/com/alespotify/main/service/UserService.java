@@ -7,6 +7,7 @@ import com.alespotify.main.repository.FavoritoRepository;
 import com.alespotify.main.repository.PlaylistRepository;
 import com.alespotify.main.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
 
@@ -31,13 +33,6 @@ public class UserService implements UserDetailsService {
     private final PlaylistRepository playlistRepository;
     private final FavoritoRepository favoritoRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PlaylistRepository playlistRepository,
-                       FavoritoRepository favoritoRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.playlistRepository = playlistRepository;
-        this.favoritoRepository = favoritoRepository;
-    }
 
     @Transactional
     public Usuario registerUser(Usuario user) {
