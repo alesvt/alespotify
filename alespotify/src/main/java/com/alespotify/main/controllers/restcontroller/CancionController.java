@@ -66,4 +66,13 @@ public class CancionController {
         }
         return null;
     }
+
+    @GetMapping("/song")
+    public List<Cancion> getSongSearch(@RequestParam String nombre) {
+        Optional<List<Cancion>> canciones = songRepository.findByNombre(nombre);
+        if (canciones.isPresent()) {
+            return canciones.get();
+        }
+        return null;
+    }
 }

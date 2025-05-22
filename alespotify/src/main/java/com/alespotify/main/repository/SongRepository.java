@@ -19,4 +19,7 @@ public interface SongRepository extends JpaRepository<Cancion, Long> {
     List<Cancion> findByVecesReproducido();
 
 
+    @Query("SELECT c from Cancion c where c.name like %:nombre%")
+    Optional<List<Cancion>> findByNombre(@Param("nombre") String nombre);
+
 }
