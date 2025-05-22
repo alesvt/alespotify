@@ -37,12 +37,13 @@ public class PlaylistController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Playlist> createPlaylist(@RequestParam String nombre, @RequestParam String userId) {
+    public ResponseEntity<Playlist> createPlaylist(@RequestParam String nombre, @RequestParam String userId, @RequestParam boolean isPublic) {
         System.out.println(nombre + " " + userId);
         Optional<Usuario> user = userRepository.findById(Long.valueOf(userId));
         Playlist nplaylist = new Playlist();
         if (user.isPresent()) {
-            nplaylist.setIsPublic(true);
+            nplaylist.setIsPublic(isPublic);
+            nplaylist.setImage("https://picsum.photos/400");
             nplaylist.setCreationDate(Instant.now());
             nplaylist.setUpdateDate(nplaylist.getCreationDate());
             nplaylist.setNombre(nombre);

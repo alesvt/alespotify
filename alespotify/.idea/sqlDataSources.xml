@@ -8,21 +8,4 @@
       </scope>
     </mapping>
   </component>
-  <component name="SqlDataSourceStorage">
-    <option name="dataSources">
-      <list>
-        <State>
-          <option name="id" value="a0e4a00a-b418-4a3e-8022-b6daa0ee84aa" />
-          <option name="name" value="mongoaws (DDL)" />
-          <option name="dbmsName" value="MONGO" />
-          <option name="urls">
-            <array>
-              <option value="file://$PROJECT_DIR$" />
-            </array>
-          </option>
-          <option name="outLayout" value="File per object by schema.groovy" />
-        </State>
-      </list>
-    </option>
-  </component>
 </project>

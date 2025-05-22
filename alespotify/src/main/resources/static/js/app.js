@@ -1,4 +1,4 @@
-const APP_IP = "192.168.56.1:8080"
+const APP_IP = "172.205.130.42"
 const toggleDarkMode = document.getElementById('toggle-dark-mode');
 if (toggleDarkMode) {
     toggleDarkMode.addEventListener('click', () => {
@@ -139,9 +139,7 @@ function secsToMMSS(secs) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    const userDataDOM = document.getElementById("user-data");
     userData = loadUserData()
-    // Asegurarse de que userDataDOM existe antes de acceder a sus atributos
     elementos = loadElements();
     const reproductor = document.getElementById("player");
     const audioPlayer = reproductor ? reproductor.querySelector("audio") : null;
@@ -162,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if (audioPlayer && audioPlayer.src === `http://localhost:8080/app`) {
+    if (audioPlayer && audioPlayer.src === `http://172.205.130.42/app`) {
         if (elementos && elementos.songPlayer) {
             elementos.songPlayer.style.display = "none";
         }
@@ -217,7 +215,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (elementos.repro.paused) {
                 document.title = antetitle
                 elementos.repro.play();
-                // Cambiar el icono a pausa (puedes ajustar esto según tu HTML)
                 playButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -227,7 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
             } else {
                 elementos.repro.pause();
-                // Cambiar el icono a play
                 document.title = "Alespotify - Inicio"
                 playButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -239,40 +235,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Funcionalidad del botón de Anterior (necesitarás lógica para la lista de reproducción)
-    if (prevButton) {
-        prevButton.addEventListener('click', function () {
-            console.log("Botón de Anterior clickeado");
-            // Aquí iría la lógica para cargar la canción anterior en la lista de reproducción
-            // y llamar a la función play(nuevaCancion);
-        });
-    }
 
-    // Funcionalidad del botón de Siguiente (necesitarás lógica para la lista de reproducción)
-    if (nextButton) {
-        nextButton.addEventListener('click', function () {
-            console.log("Botón de Siguiente clickeado");
-            // Aquí iría la lógica para cargar la siguiente canción en la lista de reproducción
-            // y llamar a la función play(nuevaCancion);
-        });
-    }
-
-    // Funcionalidad del botón de Repetir (toggling)
     if (repeatButton && elementos && elementos.repro) {
         repeatButton.addEventListener('click', function () {
             elementos.repro.loop = !elementos.repro.loop;
-            // Puedes cambiar la apariencia del botón para indicar el estado de repetición
             if (elementos.repro.loop) {
                 repeatButton.classList.add("checked")
-                repeatButton.style.color = 'var(--accent-color)'; // Ejemplo de cambio de color
+                repeatButton.style.color = 'var(--accent-color)';
             } else {
                 repeatButton.classList.remove("checked")
-                repeatButton.style.color = ''; // Restablecer el color
+                repeatButton.style.color = '';
             }
             console.log("Repetir:", elementos.repro.loop);
         });
     }
-    //todo shuffle playqueue
+
 
     if (shuffleButton && elementos && elementos.repro && playqueue) {
         shuffleButton.addEventListener('click', function () {
@@ -327,36 +304,23 @@ async function showModalInfo(modalType) {
     switch (modalType) {
         case "profile":
             const title = document.createElement('h2');
-            let u = document.getElementById("user-data").getAttribute("userId");
-            let userData = await fetch(`http://${APP_IP}/api/users/${u}`)
-            if (userData.ok) {
-                console.log(userData)
-                let usuario = userData.json()
-                console.log(usuario)
-            }
+            let user = document.getElementById("user-data")
+            let uId = user.getAttribute("userId");
+            let uName = user.getAttribute("userName")
+            let uEmail = user.getAttribute("userEmail");
 
             title.textContent = "Perfil de Usuario";
             const nameParagraph = document.createElement('p');
-            nameParagraph.innerHTML = `<b>Nombre:</b> ${userData && userData.nombre ? userData.nombre : 'N/A'}`;
+            nameParagraph.innerHTML = `<b>Nombre:</b> ${user && uName ? uName : 'N/A'}`;
 
             const emailParagraph = document.createElement('p');
-            emailParagraph.innerHTML = `<b>Email:</b> ${userData && userData.email ? userData.email : 'N/A'}`;
+            emailParagraph.innerHTML = `<b>Email:</b> ${user && uEmail ? uEmail : 'N/A'}`;
 
-            const imagen = document.createElement('img');
-            if (userData && userData.image) {
-                imagen.src = `${userData.image}`;
-                imagen.height = 80;
-                imagen.width = 80;
-                imagen.style.padding = "12px";
-            } else {
-                imagen.alt = "No hay imagen de perfil";
-            }
 
             modalContainer.style.zIndex = "99";
             modalContent.appendChild(title);
             modalContent.appendChild(nameParagraph);
             modalContent.appendChild(emailParagraph);
-            modalContent.appendChild(imagen);
             modalContent.appendChild(closeButton);
 
             break;
@@ -376,13 +340,22 @@ async function showModalInfo(modalType) {
             inputField.id = 'playlist-name';
             inputField.name = 'playlist-name';
 
+            const publicLabel = document.createElement('label');
+            publicLabel.textContent = "¿Hacer pública?";
+            publicLabel.setAttribute('for', 'ispublic-playlist');
+            const publicField = document.createElement('input')
+            publicField.type = 'checkbox';
+            publicField.id = "ispublic-playlist"
+            publicField.name = 'ispublic';
+
             const createButton = document.createElement('button');
             createButton.textContent = "Crear";
             createButton.addEventListener('click', async function () {
                 const playlistName = document.getElementById('playlist-name').value;
+                const isPublic = document.getElementById('ispublic-playlist').value == "checked" ? true : false;
                 if (playlistName && userId) {
                     try {
-                        const response = await fetch(`http://${APP_IP}/api/playlists/new?nombre=${playlistName}&userId=${userId}`, {
+                        const response = await fetch(`http://${APP_IP}/api/playlists/new?nombre=${playlistName}&userId=${userId}&isPublic=${isPublic}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -412,9 +385,13 @@ async function showModalInfo(modalType) {
                 }
             });
 
+            modalContainer.style.zIndex = "99";
+
             modalContent.appendChild(formTitle);
             modalContent.appendChild(inputLabel);
             modalContent.appendChild(inputField);
+            modalContent.appendChild(publicField);
+            modalContent.appendChild(publicLabel);
             modalContent.appendChild(createButton);
             modalContent.appendChild(closeButton);
             break;
@@ -549,3 +526,55 @@ function playNext() {
         }
     }
 }
+
+
+const volumeSlider = document.getElementById('volume-slider');
+const volumeIcon = document.getElementById('volume-icon')
+const volumeMediumPath = volumeIcon.querySelector('.volume-medium');
+const volumeHighPath = volumeIcon.querySelector('.volume-high');
+
+function updateVolumeIcon(volume) {
+
+    volumeMediumPath.style.display = 'none';
+    volumeHighPath.style.display = 'none';
+
+    if (volume === 0) {
+
+        volumeIcon.setAttribute('stroke', 'currentColor');
+        volumeIcon.innerHTML = `
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="22" y1="18" x2="16" y2="12"></line>
+                <line x1="16" y1="18" x2="22" y2="12"></line>
+            `;
+
+    } else {
+        volumeIcon.innerHTML = `
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path class="volume-medium" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path class="volume-high" d="M19.07 4.93a9 9 0 0 1 0 14.14"></path>
+            `;
+
+        const newVolumeMediumPath = volumeIcon.querySelector('.volume-medium');
+        const newVolumeHighPath = volumeIcon.querySelector('.volume-high');
+
+        if (volume > 0 && volume <= 33) {
+        } else if (volume > 33 && volume <= 66) {
+            if (newVolumeMediumPath) newVolumeMediumPath.style.display = 'block';
+        } else if (volume > 66) {
+            if (newVolumeMediumPath) newVolumeMediumPath.style.display = 'block';
+            if (newVolumeHighPath) newVolumeHighPath.style.display = 'block';
+        }
+    }
+}
+
+
+volumeSlider.addEventListener('input', (event) => {
+    const currentVolume = parseInt(event.target.value); // Obtenemos el valor del slider como número entero
+    console.log('Volumen:', currentVolume); // Para depuración, puedes ver el valor en la consola
+    if (elementos.repro) {
+        elementos.repro.volume = currentVolume / 100
+    }
+    updateVolumeIcon(currentVolume);
+});
+
+updateVolumeIcon(parseInt(volumeSlider.value));

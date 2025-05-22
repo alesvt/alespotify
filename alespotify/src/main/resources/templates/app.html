@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<div th:userId="${user.getId()}" id="user-data"></div>
+<div th:userName="${user.getName()}" th:userEmail="${user.getEmail()}" th:userId="${user.getId()}" id="user-data"></div>
 <div class="sidebar">
 
     <div class="sidebar-content">
@@ -168,7 +168,8 @@
             <h2>Listas de reproducción</h2>
             <!-- playlists-->
             <div class="made-for-you-grid">
-                <div class="card" th:each="playlist : ${playlists}">
+                <div class="card" th:each="playlist : ${playlists}" th:data-plId="${playlist.getId()}"
+                                                                                          th:onclick="getPlaylist(this.getAttribute('data-plId'))">
                     <img th:src="${playlist.image}" th:alt="${playlist.nombre}">
                     <div>
                         <p th:text="${playlist.nombre}"></p>
