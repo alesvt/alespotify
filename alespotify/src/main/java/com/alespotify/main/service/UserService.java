@@ -28,9 +28,13 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
 
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
     private final PlaylistRepository playlistRepository;
+    @Autowired
     private final FavoritoRepository favoritoRepository;
 
 
