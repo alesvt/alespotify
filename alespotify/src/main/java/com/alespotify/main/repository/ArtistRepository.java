@@ -3,9 +3,11 @@ package com.alespotify.main.repository;
 import com.alespotify.main.models.entities.Artista;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ArtistRepository extends JpaRepository<Artista, Integer> {
     @Query("SELECT ar, SUM(c.timesPlayed) AS totalReproducciones " +
             "FROM Artista ar JOIN ar.songs c " +
