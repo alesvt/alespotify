@@ -26,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.alespotify.model.User
@@ -75,6 +77,7 @@ fun RegisterForm(
             ),
             label = { Text("Nombre") }
         )
+
         OutlinedTextField(
             value = email,
             singleLine = true,
@@ -111,31 +114,7 @@ fun RegisterForm(
             }
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = if (imageUri == null) "Seleccionar imagen" else "Imagen seleccionada",
-                color = Color.White
-            )
-            Button(
-                onClick = { /* todo */ },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.primary)
-            ) {
-                Icon(
-                    Icons.Filled.Image,
-                    contentDescription = "Seleccionar imagen",
-                    tint = Color.White
-                )
-            }
-        }
-        Image(
-            painter = rememberAsyncImagePainter(imageUri),
-            contentDescription = "Imagen seleccionada",
-            modifier = Modifier.size(80.dp).clip(CircleShape)
-        )
+
 
         Button(
             onClick = {
@@ -143,7 +122,7 @@ fun RegisterForm(
                 loginViewModel.registro(nombre, email, password, imageUri)
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.secondary)
+            colors = ButtonDefaults.buttonColors(backgroundColor = MyColors.primary)
         ) {
             Text("Registrarse", color = Color.White)
         }
@@ -181,6 +160,24 @@ fun RegisterScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Box(
+                modifier = Modifier.background(MyColors.primary)
+            ) {
+                IconButton(
+                    onClick = { navController.navigateUp() },
+                    modifier = Modifier
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        tint = Color.White,
+                        contentDescription = "volver atrás",
+                        modifier = Modifier
+                            .background(Color(0xaa3b3b3b))
+                            .padding(5.dp)
+                    )
+                }
+
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -196,7 +193,7 @@ fun RegisterScreen(
                         Icon(
                             imageVector = Icons.Filled.PersonAdd,
                             contentDescription = "Registro",
-                            tint = Color.White,
+                            tint = MyColors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -219,7 +216,7 @@ fun RegisterScreen(
                 )
                 Text(
                     text = "Introduce tus datos para registrarte",
-                    color = MyColors.surface,
+                    color = MyColors.primary,
                     modifier = Modifier.padding(top = 8.dp)
                 )
 

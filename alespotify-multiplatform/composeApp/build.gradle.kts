@@ -47,6 +47,10 @@ kotlin {
 
             implementation("androidx.compose.ui:ui-graphics:1.7.8")
 
+            // mediaplayer
+            implementation("androidx.media3:media3-exoplayer:1.2.0")
+            implementation("androidx.media3:media3-ui:1.2.0")
+            implementation("androidx.media3:media3-common:1.2.0")
 
 
         }
@@ -82,18 +86,18 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.ui.util)
             implementation(libs.ktor.client.logging)
-            implementation(compose.materialIconsExtended)
-
-            // para el reproductor
-            implementation("org.openjfx:javafx-media:19")
 
 
+            implementation(libs.korau)
 
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation("io.ktor:ktor-client-apache5:3.1.0")
             implementation(libs.kotlinx.coroutines.swing)
+
+
+            implementation("com.soywiz.korge:korge:6.0.0")
 
         }
         iosMain.dependencies {
@@ -136,6 +140,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics.android)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.material3.desktop)
     implementation(libs.androidx.activity.ktx)
     debugImplementation(compose.uiTooling)
 }

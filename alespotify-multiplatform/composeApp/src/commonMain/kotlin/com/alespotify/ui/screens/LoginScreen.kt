@@ -32,6 +32,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.TextButton
 import androidx.compose.material.darkColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -112,10 +113,11 @@ fun LoginForm(
         }
 
         Row {
-            ClickableText(
-                text = AnnotatedString("crear cuenta"),
+            OutlinedButton(
                 onClick = { navController.navigate(DestinosNavegacion.RegisterScreen.route) }
-            )
+            ){
+                Text("Crear cuenta", color = MyColors.surface)
+            }
         }
         if (loginViewModel.isLoading) {
             Spacer(modifier = Modifier.height(8.dp))

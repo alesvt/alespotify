@@ -47,6 +47,7 @@ import com.alespotify.shared.ApiService
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
+import com.alespotify.ui.navigation.QueueViewModel
 import io.realm.kotlin.mongodb.App
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -70,6 +71,7 @@ actual fun DatosScreen(
     navController: NavHostController,
     appViewModel: AppViewModel,
     loginViewModel: LoginViewModel,
+    queueViewModel: QueueViewModel,
     apiService: ApiService
 ) {
 
@@ -216,7 +218,7 @@ actual fun DatosScreen(
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         songs?.let {
                             items(it) { s ->
-                                NewReleaseCard(s)
+                                NewReleaseCard(s, queueViewModel = queueViewModel)
                             }
                         }
 
@@ -225,12 +227,7 @@ actual fun DatosScreen(
 
                 // Player
                 PlayerControls(
-                    isPlaying = isPlaying,
-                    onPlayPauseToggle = { isPlaying = !isPlaying },
-                    sliderValue = sliderValue,
-                    onSliderValueChange = { sliderValue = it },
-                    volumeSliderValue = volumeSliderValue,
-                    onVolumeSliderValueChange = { volumeSliderValue = it }
+                   queueViewModel = QueueViewModel()
                 )
             }
         }

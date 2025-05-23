@@ -42,6 +42,7 @@ import com.alespotify.shared.ApiService
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
+import com.alespotify.ui.navigation.QueueViewModel
 import kotlinx.coroutines.launch
 
 
@@ -52,6 +53,7 @@ actual fun DatosScreen(
     navController: NavHostController,
     appViewModel: AppViewModel,
     loginViewModel: LoginViewModel,
+    queueViewModel: QueueViewModel,
     apiService: ApiService
 ) {
     val isPlaying = remember { mutableStateOf(false) }

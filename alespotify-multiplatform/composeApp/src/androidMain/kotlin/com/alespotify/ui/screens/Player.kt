@@ -46,7 +46,7 @@ actual fun Player(
     val currentSlideIndex = remember { mutableStateOf(0) }
     val sliderState = rememberLazyListState()
 
-    val song = appViewModel.currentSong.collectAsState()
+    // val song = appViewModel..collectAsState()
     val sliderPosition = remember { mutableStateOf(38f) }
 
 

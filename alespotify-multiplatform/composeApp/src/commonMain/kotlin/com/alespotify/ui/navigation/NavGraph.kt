@@ -22,7 +22,8 @@ import kotlin.math.log
 fun NavGraph(
     navController: NavHostController,
     loginViewModel: LoginViewModel = LoginViewModel(),
-    appViewModel: AppViewModel = AppViewModel()
+    appViewModel: AppViewModel = AppViewModel(),
+    queueViewModel: QueueViewModel = QueueViewModel()
 ) {
     NavHost(
         navController = navController,
@@ -53,6 +54,7 @@ fun NavGraph(
                 navController = navController,
                 appViewModel = appViewModel,
                 loginViewModel = loginViewModel,
+                queueViewModel = queueViewModel,
                 apiService = ApiService()
             )
         }

@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 
-const val BASE_URL = "http://172.24.128.1:8080/api"
+const val BASE_URL = "http://172.205.130.42/api"
 
 @Serializable
 data class Credentials(val email: String, val password: String)

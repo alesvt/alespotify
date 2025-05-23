@@ -51,9 +51,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
+import coil3.compose.AsyncImage
 import com.alespotify.model.Artist
 import com.alespotify.model.Playlist
 import com.alespotify.shared.ApiService
+import com.alespotify.ui.navigation.QueueViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -62,6 +64,7 @@ expect fun DatosScreen(
     navController: NavHostController,
     appViewModel: AppViewModel = AppViewModel(),
     loginViewModel: LoginViewModel = LoginViewModel(),
+    queueViewModel: QueueViewModel = QueueViewModel(),
     apiService: ApiService
 )
 
@@ -240,7 +243,7 @@ fun MadeForYouCard(playlist: Playlist) {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun NewReleaseCard(song: Cancion) {
+fun NewReleaseCard(song: Cancion, queueViewModel: QueueViewModel) {
     Card(modifier = Modifier.width(180.dp)) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Image(
@@ -259,7 +262,9 @@ fun NewReleaseCard(song: Cancion) {
                 IconButton(
                     modifier = Modifier.background(MyColors.primary)
                         .clip(CircleShape),
-                    onClick = { /* todo darle al plei de cansione*/ }
+                    onClick = {
+                        queueViewModel.playSong(song)
+                    }
                 )
                 {
                     Icon(Icons.Filled.PlayArrow, contentDescription = "Play", tint = Color.White)
@@ -293,117 +298,134 @@ fun NewReleaseCard(song: Cancion) {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PlayerControls(
-    isPlaying: Boolean,
-    onPlayPauseToggle: () -> Unit,
-    sliderValue: Float,
-    onSliderValueChange: (Float) -> Unit,
-    volumeSliderValue: Float,
-    onVolumeSliderValueChange: (Float) -> Unit
+    queueViewModel: QueueViewModel,
+    modifier: Modifier = Modifier
 ) {
+    val isPlaying by queueViewModel.isPlaying.collectAsState()
+    val currentSong by queueViewModel.currentSong.collectAsState()
+    val currentPosition by queueViewModel.currentPosition.collectAsState()
+    val duration by queueViewModel.duration.collectAsState()
+    val volume by queueViewModel.volume.collectAsState()
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
             .padding(16.dp)
     ) {
+        // Song info
+        currentSong?.let { song ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Song image (if available)
+                song.image?.let { imageUrl ->
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = "Album art",
+                        modifier = Modifier.size(48.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = song.name,
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.onSurface
+                    )
+                    song.artists?.get(0)?.let {
+                        Text(
+                            text = it.name,
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        // Progress bar
+        Column {
+            Slider(
+                value = if (duration > 0) currentPosition.toFloat() / duration.toFloat() else 0f,
+                onValueChange = { progress ->
+                    if (duration > 0) {
+                        val newPosition = (progress * duration).toLong()
+                        queueViewModel.seekTo(newPosition)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = formatTime(currentPosition),
+                    style = MaterialTheme.typography.caption
+                )
+                Text(
+                    text = formatTime(duration),
+                    style = MaterialTheme.typography.caption
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Control buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Image(
-                    rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-                    contentDescription = "Now Playing",
-                    modifier = Modifier.size(56.dp).clip(MaterialTheme.shapes.medium),
-                    contentScale = ContentScale.Crop
-                )
-                Column {
-                    Text(text = "Current Track", fontWeight = FontWeight.Medium)
-                    Text(
-                        text = "Current Artist",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                    )
-                }
-                IconButton(onClick = { }) {
-                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Like")
-                }
+            IconButton(onClick = { queueViewModel.playPrevious() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous")
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Filled.Shuffle,
-                        contentDescription = "Shuffle"
-                    )
-                }
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Skip Back"
-                    )
-                }
-                IconButton(onClick = onPlayPauseToggle) {
-                    Icon(
-                        imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                        contentDescription = "Play/Pause"
-                    )
-                }
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "Skip Forward"
-                    )
-                }
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Filled.Repeat,
-                        contentDescription = "Repeat"
-                    )
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+
+            IconButton(
+                onClick = { queueViewModel.playPause() },
+                modifier = Modifier.size(48.dp)
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                    contentDescription = "Volume"
+                    imageVector = if (isPlaying) Icons.AutoMirrored.Filled.ArrowBack else Icons.Filled.PlayArrow,
+                    contentDescription = if (isPlaying) "Pause" else "Play",
+                    modifier = Modifier.size(32.dp)
                 )
-                Slider(value = volumeSliderValue, onValueChange = onVolumeSliderValueChange)
+            }
+
+            IconButton(onClick = { queueViewModel.playNext() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
             }
         }
+
+        // Volume control
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "1:23",
-                fontSize = 12.sp,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-            )
+            Icon(Icons.Filled.VolumeDown, contentDescription = "Volume")
             Slider(
-                value = sliderValue,
-                onValueChange = onSliderValueChange,
+                value = volume,
+                onValueChange = { queueViewModel.setVolume(it) },
                 modifier = Modifier.weight(1f)
             )
-            Text(
-                text = "3:45",
-                fontSize = 12.sp,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-            )
+            Icon(Icons.Filled.VolumeUp, contentDescription = "Volume")
         }
     }
+}
+
+private fun formatTime(milliseconds: Long): String {
+    val seconds = (milliseconds / 1000) % 60
+    val minutes = (milliseconds / (1000 * 60)) % 60
+    return secondsToMMSS((milliseconds * 1000).toInt())
 }
 
 
