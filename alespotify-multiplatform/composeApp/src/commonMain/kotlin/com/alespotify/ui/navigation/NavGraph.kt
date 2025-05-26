@@ -44,7 +44,11 @@ fun NavGraph(
                 navController = navController,
                 loginViewModel = loginViewModel,
                 onRegistrationSuccess = {
-                    navController.navigate(DestinosNavegacion.App.route)
+                    navController.navigate(DestinosNavegacion.App.route){
+                        popUpTo(DestinosNavegacion.LoginScreen.route){
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

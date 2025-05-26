@@ -411,13 +411,13 @@ fun PlayerControls(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Filled.VolumeDown, contentDescription = "Volume")
+            Icon(Icons.Filled.ThumbUp, contentDescription = "Volume")
             Slider(
                 value = volume,
                 onValueChange = { queueViewModel.setVolume(it) },
                 modifier = Modifier.weight(1f)
             )
-            Icon(Icons.Filled.VolumeUp, contentDescription = "Volume")
+            Icon(Icons.Filled.ThumbUp, contentDescription = "Volume")
         }
     }
 }

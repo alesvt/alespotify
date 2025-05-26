@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -37,12 +38,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
+import com.alespotify.model.Cancion
 import com.alespotify.model.Playlist
 import com.alespotify.shared.ApiService
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
 import com.alespotify.ui.navigation.QueueViewModel
+
 import kotlinx.coroutines.launch
 
 
@@ -56,6 +59,12 @@ actual fun DatosScreen(
     queueViewModel: QueueViewModel,
     apiService: ApiService
 ) {
+
+
+    LaunchedEffect(Unit) {
+        appViewModel.loadSongs()
+    }
+
     val isPlaying = remember { mutableStateOf(false) }
     val currentTab = remember { mutableStateOf("home") }
     val expandPlayer = remember { mutableStateOf(false) }
@@ -64,14 +73,8 @@ actual fun DatosScreen(
     val featuredPlaylists = appViewModel.playlists.collectAsState()
     val songs = appViewModel.songs.collectAsState()
     val artists = appViewModel.artists.collectAsState()
-    println(loginViewModel.loginResult)
-    println(featuredPlaylists.value)
-    println(songs.value?.get(0)?.id)
-    println(artists)
+
     val coroutineScope = rememberCoroutineScope()
-
-
-
 
     // Function to handle tab changes
     val onTabSelected = { tab: String ->
@@ -120,17 +123,25 @@ actual fun DatosScreen(
                     .background(MyColors.background)
             ) {
                 when (currentTab.value) {
-                    "home" -> HomeScreen(
-                        featuredPlaylists = featuredPlaylists,
-                        currentSlideIndex = currentSlideIndex.value,
-                        onSlideChange = { index ->
-                            currentSlideIndex.value = index
-                            coroutineScope.launch {
-                                sliderState.animateScrollToItem(index)
+                    "home" -> featuredPlaylists.value?.get(0)?.let { it1 -> queueViewModel.playlistClick(playlist = it1) }
+                        ?.let { it2 ->
+                            featuredPlaylists.value?.let { it1 ->
+                                HomeScreen(
+                                    featuredPlaylists = it1,
+                                    currentSlideIndex = currentSlideIndex.value,
+                                    onSlideChange = { index ->
+                                        currentSlideIndex.value = index
+                                        coroutineScope.launch {
+                                            sliderState.animateScrollToItem(index)
+                                        }
+                                    },
+                                    songs.value,
+                                    queueViewModel,
+                                    sliderState = sliderState,
+                                    onPlaylistClick = {}
+                                )
                             }
-                        },
-                        sliderState = sliderState
-                    )
+                        }
 
                     "search" -> SearchScreen()
                     "library" -> LibraryScreen()
@@ -142,10 +153,13 @@ actual fun DatosScreen(
 
 @Composable
 fun HomeScreen(
-    featuredPlaylists: State<List<Playlist>?>,
+    featuredPlaylists: List<Playlist>,
     currentSlideIndex: Int,
     onSlideChange: (Int) -> Unit,
-    sliderState: LazyListState
+    songs: List<Cancion>?,
+    queueViewModel: QueueViewModel,
+    sliderState: LazyListState,
+    onPlaylistClick: () -> Unit
 ) {
 
 
@@ -160,14 +174,18 @@ fun HomeScreen(
         FeaturedCarousel(
             playlists = featuredPlaylists,
             currentSlideIndex = currentSlideIndex,
-            onSlideChange = onSlideChange
+            onSlideChange = onSlideChange,
+            onPlaylistClick = onPlaylistClick
         )
 
         // Recently Played
-        RecentlyPlayedSection()
+        println(songs)
+        if (songs != null) {
+            RecentlyPlayedSection(songs = songs, queueViewModel = queueViewModel)
+        }
 
         // Made For You
-        MadeForYouSection()
+        MadeForYouSection(playlists = featuredPlaylists)
 
         // New Releases
         NewReleasesSection()
@@ -178,17 +196,14 @@ fun HomeScreen(
 
 @Composable
 fun FeaturedCarousel(
-    playlists: State<List<Playlist>?>,
+    playlists: List<Playlist>,
     currentSlideIndex: Int,
-    onSlideChange: (Int) -> Unit
+    onSlideChange: (Int) -> Unit,
+    onPlaylistClick: () -> Unit
 ) {
-    val pageCount = playlists.value?.size
+    val pageCount = playlists.size
     var pagerState = rememberPagerState { 3 }
-    if (pageCount != null) {
-        pagerState = rememberPagerState(pageCount = { pageCount })
-    } else {
-        pagerState = rememberPagerState { 3 }
-    }
+    pagerState = rememberPagerState(pageCount = { pageCount })
 
 
     LaunchedEffect(currentSlideIndex) {
@@ -196,8 +211,13 @@ fun FeaturedCarousel(
     }
 
     HorizontalPager(state = pagerState) { page ->
-        playlists.value?.get(page)
-            ?.let { FeaturedPlaylistItem(playlist = it, onItemClick = { onSlideChange(page) }) }
+         val pl = playlists.get(page)
+
+        FeaturedPlaylistItem(
+            playlist = pl,
+            onItemClick = { onSlideChange(page) },
+            onPlaylistClick = {})
+
     }
 
     Row(
@@ -222,7 +242,7 @@ fun FeaturedCarousel(
 }
 
 @Composable
-fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
+fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit, onPlaylistClick: () -> Unit) {
     Box(
         Modifier
             .height(200.dp)
@@ -230,7 +250,7 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
             .clickable { onItemClick() }
     ) {
         Image(
-            painter = rememberAsyncImagePainter("https://via.placeholder.com/400"),
+            painter = rememberAsyncImagePainter(playlist.image),
             contentDescription = playlist.nombre,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -246,77 +266,84 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit) {
                 .padding(16.dp)
         ) {
             Text(playlist.nombre, style = MaterialTheme.typography.h5, color = Color.White)
-            Button(onClick = {}, modifier = Modifier.padding(top = 8.dp)) {
-                Text("Play Now")
+            Button(onClick = { onPlaylistClick() }, modifier = Modifier.padding(top = 8.dp)) {
+                Text("Reproducir")
             }
         }
     }
 }
 
 @Composable
-fun RecentlyPlayedSection() {
+fun RecentlyPlayedSection(songs: List<Cancion>, queueViewModel: QueueViewModel) {
     Column(Modifier.padding(16.dp)) {
         Text("Recientes", style = MaterialTheme.typography.h6, color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            repeat(3) { index ->
-                RecentlyPlayedItem(trackNumber = index + 1)
+            songs.forEach { s ->
+                RecentlyPlayedItem(s, onItemClick = queueViewModel.playSong(s))
             }
         }
     }
 }
 
 @Composable
-fun RecentlyPlayedItem(trackNumber: Int) {
+fun RecentlyPlayedItem(song: Cancion, onItemClick: Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /*TODO: Implement track click*/ }
+            .clickable { onItemClick }
             .padding(8.dp)
     ) {
         Image(
-            painter = rememberAsyncImagePainter("https://via.placeholder.com/48"),
-            contentDescription = "Track $trackNumber",
+            painter = rememberAsyncImagePainter(song.image),
+            contentDescription = "Track ${song.id}",
             modifier = Modifier.size(48.dp)
         )
         Column(Modifier.weight(1f)) {
             Text(
-                "Track Title $trackNumber",
+                song.name,
                 style = MaterialTheme.typography.body1,
                 color = Color.White
             )
-            Text("Artist Name", style = MaterialTheme.typography.caption, color = Color.Gray)
+            song.artists?.get(0)
+                ?.let {
+                    Text(
+                        it.name,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Gray
+                    )
+                }
         }
-        IconButton(onClick = { /*TODO: Implement play icon click*/ }) {
+        IconButton(onClick = { onItemClick }) {
             Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
         }
     }
 }
 
 @Composable
-fun MadeForYouSection() {
+fun MadeForYouSection(playlists: List<Playlist>) {
     Column(Modifier.padding(horizontal = 16.dp)) {
         Text("Para ti", style = MaterialTheme.typography.h6, color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(6) { index ->
-                MadeForYouItem(playlistNumber = index + 1)
+            items(playlists) { pl ->
+                MadeForYouItem(pl)
             }
         }
     }
 }
 
 @Composable
-fun MadeForYouItem(playlistNumber: Int) {
+fun MadeForYouItem(playlist: Playlist) {
     Card(
         modifier = Modifier.size(120.dp)
     ) {
         Box(Modifier.fillMaxSize()) {
             Image(
-                painter = rememberAsyncImagePainter("https://via.placeholder.com/150"),
-                contentDescription = "Playlist $playlistNumber",
+                painter = rememberAsyncImagePainter(playlist.image),
+                contentDescription = "Playlist ${playlist.nombre}",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )

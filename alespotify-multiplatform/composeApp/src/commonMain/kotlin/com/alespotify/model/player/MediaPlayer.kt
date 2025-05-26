@@ -1,6 +1,7 @@
 package com.alespotify.model.player
 
 import com.alespotify.model.Cancion
+import com.alespotify.model.Playlist
 import kotlinx.coroutines.flow.StateFlow
 
 interface MediaPlayer {
@@ -14,8 +15,13 @@ interface MediaPlayer {
     suspend fun pause()
     suspend fun stop()
     suspend fun seekTo(position: Long)
-    suspend fun setVolume(volume: Float) // 0.0f to 1.0f
+    suspend fun setVolume(volume: Float)
+    suspend fun playPlaylist(playlist: Playlist, startIndex: Int)
+    suspend fun nextSong(currentIndex: Int)
+    suspend fun prevSong(currentIndex: Int)
+
+
     fun release()
 }
 
-expect fun createMediaPlayer() : MediaPlayer
+expect fun createMediaPlayer(): MediaPlayer

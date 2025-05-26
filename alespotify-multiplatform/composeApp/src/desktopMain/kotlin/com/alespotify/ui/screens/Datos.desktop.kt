@@ -48,12 +48,10 @@ import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
 import com.alespotify.ui.navigation.QueueViewModel
-import io.realm.kotlin.mongodb.App
+
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import kotlin.math.log
-import kotlin.time.Duration.Companion.hours
+
 
 fun getHoraDia(): String {
     val formatter = DateTimeFormatter.ofPattern("HH")

@@ -14,7 +14,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -90,6 +90,7 @@ kotlin {
 
             implementation(libs.korau)
 
+            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -140,7 +141,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics.android)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.material3.android)
-    implementation(libs.androidx.material3.desktop)
     implementation(libs.androidx.activity.ktx)
     debugImplementation(compose.uiTooling)
 }

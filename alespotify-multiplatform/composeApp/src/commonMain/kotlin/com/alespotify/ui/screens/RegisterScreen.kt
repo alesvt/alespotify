@@ -52,6 +52,7 @@ import com.alespotify.model.User
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.LoginViewModel
 
+
 @Composable
 fun RegisterForm(
     loginViewModel: LoginViewModel,

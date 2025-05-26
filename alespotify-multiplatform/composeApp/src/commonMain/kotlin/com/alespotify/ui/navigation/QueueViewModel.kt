@@ -1,8 +1,10 @@
 package com.alespotify.ui.navigation
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alespotify.model.Cancion
+import com.alespotify.model.Playlist
 import com.alespotify.model.player.MediaPlayer
 import com.alespotify.model.player.createMediaPlayer
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +20,8 @@ class QueueViewModel : ViewModel() {
     private val _songCalled = MutableStateFlow<Cancion?>(null)
     val songCalled = _songCalled.asStateFlow()
 
+    private val _currentPlaylist = MutableStateFlow<Playlist?>(null)
+    var currentPlaylist = _currentPlaylist.asStateFlow()
 
     val mediaPlayer: MediaPlayer = createMediaPlayer()
 
@@ -44,6 +48,13 @@ class QueueViewModel : ViewModel() {
                 // Handle error
                 println("Error playing song: ${e.message}")
             }
+        }
+    }
+
+    fun playlistClick(playlist: Playlist, startIndex: Int = 0) {
+        viewModelScope.launch {
+            _currentPlaylist.value = currentPlaylist.value?.copy()
+            mediaPlayer.playPlaylist(playlist, startIndex)
         }
     }
 

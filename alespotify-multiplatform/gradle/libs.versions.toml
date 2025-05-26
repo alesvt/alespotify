@@ -86,7 +86,6 @@ androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graph
 ui-util = { module = "org.jetbrains.compose.ui:ui-util" }
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "runtimeAndroid" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-androidx-material3-desktop = {group ="androidx.compose.material3", name ="material-desktop", version.ref = "material3Android"}
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 vlcj = { module = "uk.co.caprica:vlcj", version.ref = "vlcj" }
 

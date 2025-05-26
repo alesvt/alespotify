@@ -5,6 +5,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.alespotify.model.Cancion
+import com.alespotify.model.Playlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -88,6 +89,18 @@ class AndroidMediaPlayer : MediaPlayer {
 
     override suspend fun setVolume(volume: Float) {
         exoPlayer?.volume = volume
+    }
+
+    override suspend fun playPlaylist(playlist: Playlist, startIndex: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun nextSong(currentIndex: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun prevSong(currentIndex: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun release() {
