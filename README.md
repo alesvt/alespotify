@@ -8,6 +8,10 @@
 
 Una aplicación moderna construida con una API y web en Java (Spring Boot) y clientes nativos para Android, iOS y escritorio desarrollados con Kotlin Multiplatform.
 
+## 🪧 Aviso
+
+Este proyecto ha sido desarrollado como parte del módulo final del grado superior de "Desarrollo de Aplicaciones Multiplataforma" en el IES Severo Ochoa de Elche. 
+
 ## 💡 Descripción General
 
 Este proyecto demuestra el poder de combinar la robustez y el ecosistema de Java con la flexibilidad y la eficiencia de Kotlin Multiplatform para crear una experiencia de usuario consistente y de alto rendimiento en diversas plataformas.
@@ -33,42 +37,11 @@ Los **clientes nativos** para **Android, iOS y escritorio** se construyen con **
 
 ## ⚙️ Cómo Empezar
 
-Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local:
+1. Descarga desde el apartado de `Releases` la última versión de la aplicación de escritorio, Android o iOS
 
-### Requisitos Previos
+2. Instala la aplicación y ya está! Listo para usar.
 
-Asegúrate de tener instaladas las siguientes herramientas:
-
-* **Java Development Kit (JDK):** Versión compatible con Spring Boot.
-* **Maven o Gradle:** Herramientas de gestión de dependencias para el proyecto Java.
-* **Android Studio:** Para desarrollar y ejecutar la aplicación Android.
-* **Xcode:** Para desarrollar y ejecutar la aplicación iOS (requiere macOS).
-* **IntelliJ IDEA:** Recomendado para el desarrollo con Kotlin Multiplatform, con los plugins de Kotlin y Android instalados.
-* **Kotlin:** El compilador de Kotlin se incluye generalmente con IntelliJ IDEA y Android Studio.
-
-### Configuración
-
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone https://github.com/alesvt/alespotify
-    cd alespotify/
-    ```
-
-2.  **Configurar el backend (API y Web - Java/Spring Boot):**
-    * Requiere una base de datos en mongodb con las colecciones de `MongoColls`
-    * Navega al directorio del backend (`alespotify/src`).
-    * Configura las propiedades de la aplicación en `application.properties` (por ejemplo, la conexión a la base de datos).
-    * Ejecuta la aplicación Spring Boot utilizando Maven o Gradle:
-        ```bash
-        ./mvnw spring-boot:run
-        ```
-    * La API y la interfaz web deberían estar accesibles en la dirección configurada (`http://localhost:8080`).
-
-4.  **Configurar las aplicaciones cliente (Android, iOS, Desktop - Kotlin Multiplatform):**
-    * Abre el proyecto raíz en Android Studio.
-    * **Android:** Ejecuta la aplicación con la configuración `composeApp` en un emulador o dispositivo físico.
-    * **iOS:** Abre el archivo `iosApp/iosApp.xcworkspace` en Xcode y ejecuta la aplicación en un simulador o dispositivo físico.
-    * **Desktop:** Ejecuta la aplicación con la configuración `compose-multiplatform run` en Android Studio.
+3. Puedes usar también la aplicación web, alojada [aquí](http://172.205.130.42)
 
 ## 📂 Estructura del Proyecto
 ```
@@ -89,4 +62,4 @@ Asegúrate de tener instaladas las siguientes herramientas:
 └── README.md
 ```
 
-## ✨ ¡Gracias por explorar este proyecto! ✨
+## ✨ ¡Gracias por ver este proyecto! ✨
