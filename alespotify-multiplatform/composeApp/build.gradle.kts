@@ -1,3 +1,4 @@
+import org.apache.tools.ant.util.JavaEnvUtils.VERSION_11
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -71,23 +72,18 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation("io.realm.kotlin:library-base:1.16.0")
-            // If using Device Sync
             implementation("io.realm.kotlin:library-sync:1.16.0")
-            // If using coroutines with the SDK
             implementation(libs.kotlinx.coroutines.core)
-            // implementation(libs.coil3.compose)
-             // implementation("")
+
             implementation(libs.coil.compose)
             implementation(libs.coil)
             implementation(libs.coil.network.ktor)
-            // Kotlin coroutine dependency
+
             implementation(libs.navigation.compose)
 
             implementation(compose.components.resources)
             implementation(libs.ui.util)
             implementation(libs.ktor.client.logging)
-
-
             implementation(libs.korau)
 
             implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
@@ -96,7 +92,6 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation("io.ktor:ktor-client-apache5:3.1.0")
             implementation(libs.kotlinx.coroutines.swing)
-
 
             implementation("com.soywiz.korge:korge:6.0.0")
 
@@ -156,7 +151,7 @@ compose.desktop {
             description = "Aplicación para el módulo de proyecto final de Desarrollo de Aplicaciones Multiplataforma"
             copyright = "© 2025 alesvolta. Todos los derechos reservados"
             windows {
-                iconFile.set(project.file("/logo/Windows/applogo.ico"))
+                iconFile.set(project.file("/logo/Windows/alespotify.ico"))
                 menuGroup = "Alespotify"
                 shortcut
                 vendor = "Alesvolta"

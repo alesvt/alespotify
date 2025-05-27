@@ -123,25 +123,22 @@ actual fun DatosScreen(
                     .background(MyColors.background)
             ) {
                 when (currentTab.value) {
-                    "home" -> featuredPlaylists.value?.get(0)?.let { it1 -> queueViewModel.playlistClick(playlist = it1) }
-                        ?.let { it2 ->
-                            featuredPlaylists.value?.let { it1 ->
-                                HomeScreen(
-                                    featuredPlaylists = it1,
-                                    currentSlideIndex = currentSlideIndex.value,
-                                    onSlideChange = { index ->
-                                        currentSlideIndex.value = index
-                                        coroutineScope.launch {
-                                            sliderState.animateScrollToItem(index)
-                                        }
-                                    },
-                                    songs.value,
-                                    queueViewModel,
-                                    sliderState = sliderState,
-                                    onPlaylistClick = {}
-                                )
-                            }
-                        }
+                    "home" -> featuredPlaylists.value?.let { it1 ->
+                        HomeScreen(
+                            featuredPlaylists = it1,
+                            currentSlideIndex = currentSlideIndex.value,
+                            onSlideChange = { index ->
+                                currentSlideIndex.value = index
+                                coroutineScope.launch {
+                                    sliderState.animateScrollToItem(index)
+                                }
+                            },
+                            sliderState = sliderState,
+                            queueViewModel = queueViewModel,
+                            songs = songs.value,
+                            onPlaylistClick = {}
+                        )
+                    }
 
                     "search" -> SearchScreen()
                     "library" -> LibraryScreen()
