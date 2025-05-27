@@ -543,7 +543,7 @@ section.main-content {
 
 .feature-card:hover {
     box-shadow: var(--shadow-sm);
-    transform: translateY(-2px);
+    transform: scale(1.025);
 }
 
 .feature-icon-wrapper {

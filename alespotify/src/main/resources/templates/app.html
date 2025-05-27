@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alespotify - Inicio</title>
-    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="shortcut icon" th:href="@{/img/alespotify.ico}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
           integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
@@ -24,7 +24,7 @@
     <div class="sidebar-content">
         <h2>Alespotify</h2>
         <nav>
-            <a href="#" class="active">
+            <a class="active">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -32,7 +32,7 @@
                 </svg>
                 Inicio
             </a>
-            <a href="#">
+            <a onclick="openModal('search')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -48,14 +48,14 @@
     <div class="sidebar-content playlists-sidebar-container">
         <h3>Tus listas de reproducción</h3>
         <nav id="playlists-nav">
-            <a href="#">
+            <a>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.23l-1.06-.62a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
                 Canciones que te gustan
             </a>
-            <a href="#">
+            <a >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
@@ -85,7 +85,7 @@
     </div>
     <div class="sidebar-content" style="margin-top: auto;">
         <nav>
-            <a onclick="openModal('profile')" href="#">
+            <a onclick="openModal('profile')" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
@@ -169,7 +169,7 @@
             <!-- playlists-->
             <div class="made-for-you-grid">
                 <div class="card" th:each="playlist : ${playlists}" th:data-plId="${playlist.getId()}"
-                                                                                          th:onclick="getPlaylist(this.getAttribute('data-plId'))">
+                     th:onclick="getPlaylist(this.getAttribute('data-plId'))">
                     <img th:src="${playlist.image}" th:alt="${playlist.nombre}">
                     <div>
                         <p th:text="${playlist.nombre}"></p>
@@ -198,7 +198,7 @@
         <audio src=""></audio>
         <div class="player-content">
             <div class="player-track">
-                <img id="player_track_song" src="placeholder.svg?height=56&width=56" alt="Now Playing">
+                <img id="player_track_song" src="" alt="Now Playing">
                 <div>
                     <p id="current_track"></p>
                     <p id="current_artist"></p>
@@ -244,7 +244,7 @@
                     </button>
                     <button id="loop-button">
                         <svg fill="#fff" id="Layer_1"
-                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                             xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 472.615 472.615" xml:space="preserve">
                             <g>
                                 <g>
@@ -266,11 +266,12 @@
                 </div>
             </div>
             <div class="player-volume">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                <svg id="volume-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    <path d="M19.07 4.93a9 9 0 0 1 0 14.14"></path>
+                    <path class="volume-medium" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path class="volume-high" d="M19.07 4.93a9 9 0 0 1 0 14.14"></path>
                 </svg>
                 <input id="volume" type="range" min="0" max="100" value="50">
             </div>
