@@ -15,11 +15,15 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
@@ -29,6 +33,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +46,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.Window
 import androidx.navigation.NavHostController
 import com.alespotify.model.Cancion
+import com.alespotify.model.Playlist
+import com.alespotify.model.User
 import com.alespotify.shared.ApiService
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
@@ -51,6 +61,7 @@ import com.alespotify.ui.navigation.QueueViewModel
 
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.system.exitProcess
 
 
 fun getHoraDia(): String {
@@ -81,11 +92,10 @@ actual fun DatosScreen(
     val playlists by appViewModel.playlists.collectAsState()
     val artists by appViewModel.artists.collectAsState()
     val user by loginViewModel.usuario.collectAsState()
-    println(artists)
 
-    var sliderValue by remember { mutableStateOf(33f) }
-    var isPlaying by remember { mutableStateOf(false) }
-    var volumeSliderValue by remember { mutableStateOf(80f) }
+    println("Artists loaded: ${artists?.size}")
+    println("Songs loaded: ${songs?.size}")
+    println("Playlists loaded: ${playlists?.size}")
 
 
     val textoBienvenida = getHoraDia()
@@ -108,9 +118,9 @@ actual fun DatosScreen(
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-                    NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true)
-                    NavigationLink(icon = Icons.Filled.Search, text = "Search")
-                    NavigationLink(icon = Icons.Filled.LibraryMusic, text = "Tu música")
+                    NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true, onClick = {})
+                    NavigationLink(icon = Icons.Filled.Search, text = "Búsqueda", onClick = {})
+
                 }
 
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
@@ -122,19 +132,30 @@ actual fun DatosScreen(
                         color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos")
-                    NavigationLink(icon = Icons.Filled.History, text = "Canciones recientes")
+
+                    NavigationLink(icon = Icons.Filled.Favorite, text = "Favoritos", onClick = {})
+                    NavigationLink(
+                        icon = Icons.Filled.History,
+                        text = "Canciones recientes",
+                        onClick = {})
+                    for (playlist in playlists ?: emptyList()) {
+                        NavigationLink(
+                            icon = Icons.Filled.LibraryMusic,
+                            text = playlist.nombre,
+                            onClick = {
+                                println("se ha clicado")
+                                queueViewModel.playPlaylist(playlist) })
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 Column(modifier = Modifier.padding(16.dp)) {
-                    NavigationLink(icon = Icons.Filled.AccountBox, text = "Perfil")
-                    NavigationLink(icon = Icons.Filled.Settings, text = "Ajustes")
+                    NavigationLink(icon = Icons.Filled.AccountBox, text = "Perfil", onClick = {})
+                    NavigationLink(icon = Icons.AutoMirrored.Filled.ExitToApp, text = "Salir", onClick = {exitProcess(0)} )
                 }
             }
 
-            // Main Content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -153,7 +174,9 @@ actual fun DatosScreen(
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
-                        user?.let { user?.imagen?.let { it1 -> Avatar(user!!.name, it1) } }
+                        user?.let { currentUser ->
+                            currentUser.imagen?.let { Avatar(currentUser.name, it) }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -162,10 +185,11 @@ actual fun DatosScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
+
                         FeaturedCard(
                             "Descubrimiento semanal",
                             "Esta semana te traemos...",
-                            "https://publitronic.es/wp-content/uploads/2025/05/Diseno-sin-titulo2.png"
+                            "https://publitronic.es/wp-content/uploads/2025/05/Diseno-sin-titulo2.png",
                         )
 
                     }
@@ -199,7 +223,7 @@ actual fun DatosScreen(
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         playlists?.let {
                             items(it) { index ->
-                                MadeForYouCard(index)
+                                MadeForYouCard(index, queueViewModel)
                             }
                         }
                     }
@@ -225,22 +249,11 @@ actual fun DatosScreen(
 
                 // Player
                 PlayerControls(
-                   queueViewModel = QueueViewModel()
+                    queueViewModel = queueViewModel
                 )
             }
         }
+
     }
 }
 
-@Composable
-fun AudioPlayerFromApi(
-
-//    val audioPlayer = remember { AudioPlayer() }
-//    val scope = rememberCoroutineScope()
-) {
-
-    /* DisposableEffect(Unit){
-         onDispose { audioPlayer.release() }
-     }
- */
-}

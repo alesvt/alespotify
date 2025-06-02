@@ -96,14 +96,16 @@ actual fun DatosScreen(
                         MiniPlayer(
                             isPlaying = isPlaying.value,
                             onPlayPauseClick = { isPlaying.value = !isPlaying.value },
-                            onExpandClick = { expandPlayer.value = true }
+                            onExpandClick = { expandPlayer.value = true },
+                            queueViewModel
                         )
                     } else {
                         Player(
                             isPlaying = isPlaying.value,
                             onPlayPauseClick = { isPlaying.value = !isPlaying.value },
                             onCollapseClick = { expandPlayer.value = false },
-                            appViewModel
+                            appViewModel,
+                            queueViewModel
                         )
                     }
 
@@ -277,20 +279,20 @@ fun RecentlyPlayedSection(songs: List<Cancion>, queueViewModel: QueueViewModel) 
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             songs.forEach { s ->
-                RecentlyPlayedItem(s, onItemClick = queueViewModel.playSong(s))
+                RecentlyPlayedItem(s, queueViewModel)
             }
         }
     }
 }
 
 @Composable
-fun RecentlyPlayedItem(song: Cancion, onItemClick: Unit) {
+fun RecentlyPlayedItem(song: Cancion, queueViewModel: QueueViewModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onItemClick }
+            .clickable { queueViewModel.playSong(song) }
             .padding(8.dp)
     ) {
         Image(
@@ -304,16 +306,15 @@ fun RecentlyPlayedItem(song: Cancion, onItemClick: Unit) {
                 style = MaterialTheme.typography.body1,
                 color = Color.White
             )
-            song.artists?.get(0)
-                ?.let {
-                    Text(
-                        it.name,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Gray
-                    )
-                }
+            song.artists?.get(0)?.let {
+                Text(
+                    it.name,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Gray
+                )
+            }
         }
-        IconButton(onClick = { onItemClick }) {
+        IconButton(onClick = { queueViewModel.playSong(song) }) {
             Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
         }
     }
@@ -487,7 +488,15 @@ fun LibraryItem(libraryItemNumber: Int) {
 }
 
 @Composable
-fun MiniPlayer(isPlaying: Boolean, onPlayPauseClick: () -> Unit, onExpandClick: () -> Unit) {
+fun MiniPlayer(
+    isPlaying: Boolean,
+    onPlayPauseClick: () -> Unit,
+    onExpandClick: () -> Unit,
+    queueViewModel: QueueViewModel
+) {
+    val currentSong by queueViewModel.currentSong.collectAsState()
+    val isPlayingState by queueViewModel.isPlaying.collectAsState()
+
     Row(
         Modifier
             .fillMaxWidth()
@@ -496,9 +505,10 @@ fun MiniPlayer(isPlaying: Boolean, onPlayPauseClick: () -> Unit, onExpandClick: 
             .clickable { onExpandClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Image(
-            painter = rememberAsyncImagePainter("https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png"),
+            painter = rememberAsyncImagePainter(
+                currentSong?.image ?: "https://via.placeholder.com/40"
+            ),
             contentDescription = "Now Playing",
             modifier = Modifier.size(40.dp)
         )
@@ -507,16 +517,20 @@ fun MiniPlayer(isPlaying: Boolean, onPlayPauseClick: () -> Unit, onExpandClick: 
                 .weight(1f)
                 .padding(start = 5.dp)
         ) {
-            Text("Current Track", style = MaterialTheme.typography.body1, color = Color.White)
             Text(
-                "Current Artist",
+                currentSong?.name ?: "Sin canción",
+                style = MaterialTheme.typography.body1,
+                color = Color.White
+            )
+            Text(
+                currentSong?.artists?.firstOrNull()?.name ?: "Artista desconocido",
                 style = MaterialTheme.typography.caption,
                 color = MyColors.background
             )
         }
-        IconButton(onClick = { onPlayPauseClick() }) {
+        IconButton(onClick = { queueViewModel.playPause() }) {
             Icon(
-                if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                if (isPlayingState) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                 contentDescription = "Play/Pause",
                 tint = Color.White
             )

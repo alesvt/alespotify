@@ -4,24 +4,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,33 +23,42 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.alespotify.ui.navigation.QueueViewModel
+import com.alespotify.ui.navigation.RepeatMode
 
-// androidMain
-@Preview
 @Composable
 actual fun Player(
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onCollapseClick: () -> Unit,
-    appViewModel: AppViewModel
+    appViewModel: AppViewModel,
+    queueViewModel: QueueViewModel
 ) {
-    val isPlaying = remember { mutableStateOf(false) }
-    val currentTab = remember { mutableStateOf("home") }
-    val expandPlayer = remember { mutableStateOf(false) }
-    val currentSlideIndex = remember { mutableStateOf(0) }
-    val sliderState = rememberLazyListState()
+    // Estados del reproductor
+    val currentSong by queueViewModel.currentSong.collectAsState()
+    val isPlayingState by queueViewModel.isPlaying.collectAsState()
+    val currentPosition by queueViewModel.currentPosition.collectAsState()
+    val duration by queueViewModel.duration.collectAsState()
+    val isShuffleEnabled by queueViewModel.isShuffleEnabled.collectAsState()
+    val repeatMode by queueViewModel.repeatMode.collectAsState()
 
-    // val song = appViewModel..collectAsState()
-    val sliderPosition = remember { mutableStateOf(38f) }
+    // Estado local para el slider
+    var sliderPosition by remember { mutableStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
 
-
+    // Actualizar posición del slider
+    LaunchedEffect(currentPosition, duration) {
+        if (!isDragging && duration > 0) {
+            sliderPosition = (currentPosition.toFloat() / duration.toFloat()) * 100f
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        // Botón de volver
         Row(
             Modifier
                 .background(Color.Transparent)
@@ -71,27 +74,25 @@ actual fun Player(
                     modifier = Modifier
                         .background(Color(0xaa3b3b3b))
                         .padding(5.dp)
-
                 )
             }
         }
 
-// fondo
-        Image(
-            painter = rememberAsyncImagePainter("https://img2.rtve.es/i/?h=800&i=1375287599788.jpg&crop=yes"),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            alpha = 0.3f,
-            modifier = Modifier.fillMaxSize()
-        )
+        // Imagen de fondo
+        currentSong?.image?.let { imageUrl ->
+            Image(
+                painter = rememberAsyncImagePainter(imageUrl),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                alpha = 0.3f,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-
-
-            // Album art
+            // Arte del álbum
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -107,14 +108,17 @@ actual fun Player(
                         .aspectRatio(1f)
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter("https://img2.rtve.es/i/?h=800&i=1375287599788.jpg&crop=yes"), // Usando una URL de placeholder
+                        painter = rememberAsyncImagePainter(
+                            currentSong?.image ?: "https://via.placeholder.com/400"
+                        ),
                         contentDescription = "Album cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
             }
-            // Song info
+
+            // Información de la canción
             Column(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center,
@@ -123,29 +127,37 @@ actual fun Player(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "Puntos suspensivos",
+                    text = currentSong?.name ?: "Sin canción",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "Robe",
+                    text = currentSong?.artists?.firstOrNull()?.name ?: "Artista desconocido",
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
             }
-            // Playback controls
+
+            // Controles de reproducción
             Column(
                 modifier = Modifier
                     .padding(start = 32.dp, end = 32.dp, bottom = 160.dp)
             ) {
-                // Progress bar
+                // Barra de progreso
                 Slider(
-                    value = sliderPosition.value,
-                    onValueChange = { sliderPosition.value = it },
+                    value = sliderPosition,
+                    onValueChange = {
+                        sliderPosition = it
+                        isDragging = true
+                    },
+                    onValueChangeFinished = {
+                        isDragging = false
+                        val newPosition = (sliderPosition / 100f * duration).toLong()
+                        queueViewModel.seekTo(newPosition)
+                    },
                     valueRange = 0f..100f,
-                    steps = 99,
                     colors = SliderDefaults.colors(
                         thumbColor = Color.White,
                         activeTrackColor = Color.White,
@@ -154,28 +166,37 @@ actual fun Player(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                // Time indicators
+                // Indicadores de tiempo
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 24.dp)
                 ) {
-                    Text("1:42", color = Color.Gray, fontSize = 15.sp)
-                    Text("4:22", color = Color.Gray, fontSize = 15.sp)
+                    Text(
+                        queueViewModel.formatTime(currentPosition),
+                        color = Color.Gray,
+                        fontSize = 15.sp
+                    )
+                    Text(
+                        queueViewModel.formatTime(duration),
+                        color = Color.Gray,
+                        fontSize = 15.sp
+                    )
                 }
 
-                // Control buttons
+                // Botones de control
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    IconButton(onClick = { /* TODO: Implement shuffle */ }) {
+                    // Shuffle
+                    IconButton(onClick = { queueViewModel.toggleShuffle() }) {
                         Icon(
                             Icons.Filled.Shuffle,
                             contentDescription = "Shuffle",
-                            tint = Color.Gray
+                            tint = if (isShuffleEnabled) MyColors.primary else Color.Gray
                         )
                     }
 
@@ -183,8 +204,9 @@ actual fun Player(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        // Anterior
                         IconButton(
-                            onClick = { /* TODO: Implement skip back */ },
+                            onClick = { queueViewModel.playPrevious() },
                             modifier = Modifier.size(52.dp)
                         ) {
                             Icon(
@@ -194,10 +216,9 @@ actual fun Player(
                             )
                         }
 
-
-
+                        // Play/Pause
                         Button(
-                            onClick = { onPlayPauseClick() },
+                            onClick = { queueViewModel.playPause() },
                             shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color.White,
@@ -206,13 +227,15 @@ actual fun Player(
                             modifier = Modifier.size(56.dp)
                         ) {
                             Icon(
-                                if (isPlaying.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                                if (isPlayingState) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                                 contentDescription = "play/pause",
                                 modifier = Modifier.size(32.dp)
                             )
                         }
+
+                        // Siguiente
                         IconButton(
-                            onClick = { /* TODO: Implement skip forward */ },
+                            onClick = { queueViewModel.playNext() },
                             modifier = Modifier.size(52.dp)
                         ) {
                             Icon(
@@ -223,11 +246,15 @@ actual fun Player(
                         }
                     }
 
-                    IconButton(onClick = { /* TODO: Implement repeat */ }) {
+                    // Repeat
+                    IconButton(onClick = { queueViewModel.toggleRepeat() }) {
                         Icon(
-                            Icons.Filled.Repeat,
+                            when (repeatMode) {
+                                RepeatMode.ONE -> Icons.Filled.RepeatOne
+                                else -> Icons.Filled.Repeat
+                            },
                             contentDescription = "Repeat",
-                            tint = Color.Gray
+                            tint = if (repeatMode != RepeatMode.OFF) MyColors.primary else Color.Gray
                         )
                     }
                 }
@@ -235,5 +262,3 @@ actual fun Player(
         }
     }
 }
-
-

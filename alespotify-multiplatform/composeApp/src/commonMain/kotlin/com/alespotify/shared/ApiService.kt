@@ -95,7 +95,23 @@ class ApiService {
         }
     }
 
-    // ... otros métodos de la API
+
+    suspend fun getPlaylistById(id: String): Playlist? {
+        return try {
+            val response = httpClient.get("$BASE_URL/playlists/$id")
+            if (response.status == HttpStatusCode.OK) {
+                response.body() as Playlist
+            } else {
+                println("Error al obtener playlist con ID $id: ${response.status}")
+                null
+            }
+        } catch (e: Exception) {
+            println("Error al obtener playlist con ID $id: ${e.message}")
+            null
+        }
+
+    }
+
 
     suspend fun createPlaylist(playlist: Playlist): Playlist? {
         return try {
@@ -119,6 +135,7 @@ class ApiService {
         password: String,
         image: String
     ): User? {
+
         return try {
             val response = httpClient.submitForm(
                 url = "$BASE_URL/users/register",
@@ -135,6 +152,7 @@ class ApiService {
                 null
             }
         } catch (e: Exception) {
+            println(e.message)
             null
         }
     }

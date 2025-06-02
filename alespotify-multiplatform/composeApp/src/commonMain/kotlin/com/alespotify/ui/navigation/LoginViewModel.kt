@@ -61,6 +61,7 @@ class LoginViewModel : ViewModel() {
             registrationResult = null
             try {
                 val user = apiService.registerUser(nombre, email, password, image)
+                println(user)
                 registrationResult = user
                 _usuario.value = registrationResult
                 _usuario.emit(user)
@@ -71,7 +72,7 @@ class LoginViewModel : ViewModel() {
                     errorMessage = "Error. algo pasa"
                 }
             } catch (e: Exception) {
-                errorMessage = "Error al realizar la petición de login: ${e.message}"
+                errorMessage = "Error al realizar la petición de registro: ${e.message}"
             } finally {
                 isLoading = false
             }

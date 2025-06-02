@@ -23,7 +23,7 @@ class AppViewModel : ViewModel() {
 
     private val apiService = ApiService()
 
-
+    // canciones
     private val _songs = MutableStateFlow<List<Cancion>?>(null)
     val songs = _songs.asStateFlow()
     private val _isLoadingSongs = MutableStateFlow(false)
@@ -53,19 +53,15 @@ class AppViewModel : ViewModel() {
     fun loadSongs() {
         viewModelScope.launch {
             try {
-                println("HE ENTRADO")
-                // Cargar las tres listas
                 val fetchedSongs = apiService.getSongs()
                 val fetchedArtists = apiService.getArtists()
                 val fetchedPlaylists = apiService.getPlaylists()
 
-                // Imprimir resultados para debug
                 println("Canciones cargadas: ${fetchedSongs?.size}")
                 println("Artistas cargados: ${fetchedArtists?.size}")
                 println("Playlists cargadas: ${fetchedPlaylists?.size}")
 
                 if (fetchedSongs != null) {
-                    // Actualizar los estados con los resultados
                     _songs.value = fetchedSongs
                     _songsLoaded.value = true
                     _songs.emit(fetchedSongs)
@@ -83,7 +79,6 @@ class AppViewModel : ViewModel() {
 
 
             } catch (e: Exception) {
-                // todo mas errores
                 _errorMessage.value = "Error al cargar valores: " + e.cause
 
             } finally {

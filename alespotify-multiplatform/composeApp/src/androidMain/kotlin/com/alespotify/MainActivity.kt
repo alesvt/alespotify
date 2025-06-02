@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import com.alespotify.model.player.AndroidMediaPlayer
 import com.alespotify.ui.navigation.QueueViewModel
 import io.ktor.client.HttpClient
@@ -16,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val queueViewModel = QueueViewModel()
-        (queueViewModel.mediaPlayer as? AndroidMediaPlayer)?.initialize(this)
+        AndroidMediaPlayer().initialize(this)
         setContent {
             App()
         }

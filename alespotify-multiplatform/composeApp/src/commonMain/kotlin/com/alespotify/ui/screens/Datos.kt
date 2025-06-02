@@ -5,12 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.runtime.*
@@ -39,24 +35,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.alespotify.model.Cancion
 import com.alespotify.model.User
 import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
-import com.alespotify.ui.navigation.DestinosNavegacion
 import com.alespotify.ui.navigation.LoginViewModel
-import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import coil3.compose.AsyncImage
 import com.alespotify.model.Artist
 import com.alespotify.model.Playlist
 import com.alespotify.shared.ApiService
 import com.alespotify.ui.navigation.QueueViewModel
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.alespotify.ui.navigation.RepeatMode
 
 
 @Composable
@@ -70,7 +62,7 @@ expect fun DatosScreen(
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
+fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false, onClick: () -> Unit) {
     val backgroundColor =
         if (selected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
     val textColor =
@@ -79,7 +71,7 @@ fun NavigationLink(icon: ImageVector, text: String, selected: Boolean = false) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable { onClick() }
             .background(backgroundColor, shape = MaterialTheme.shapes.medium)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -134,52 +126,10 @@ fun FeaturedCard(title: String, description: String, imagePath: String) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = description, color = Color.White.copy(alpha = 0.8f), fontSize = 14.sp)
-                Button(onClick = { }, modifier = Modifier.padding(top = 8.dp)) {
-                    Text("Reproducir")
-                }
             }
         }
     }
 }
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun RecentlyPlayedCard() {
-    Card {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Recently Played",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                List(3) { it + 1 }.forEach { index ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Image(
-                            rememberAsyncImagePainter("https://cdn-images.dzcdn.net/images/cover/b159f9470a45ca0ecda42062136ac33a/0x1900-000000-80-0-0.jpg"),
-                            contentDescription = "Track $index",
-                            modifier = Modifier.size(48.dp).clip(MaterialTheme.shapes.medium),
-                            contentScale = ContentScale.Crop
-                        )
-                        Column {
-                            Text(text = "Track Title $index", fontWeight = FontWeight.Medium)
-                            Text(
-                                text = "Artist Name",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -212,7 +162,7 @@ fun TopArtistsCard(artist: Artist) {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun MadeForYouCard(playlist: Playlist) {
+fun MadeForYouCard(playlist: Playlist, queueViewModel: QueueViewModel) {
     Card {
         Box(modifier = Modifier.fillMaxWidth()) {
             Image(
@@ -224,7 +174,7 @@ fun MadeForYouCard(playlist: Playlist) {
                 contentScale = ContentScale.Crop
             )
             IconButton(
-                onClick = { /* todo play playlist*/ },
+                onClick = { queueViewModel.playPlaylist(playlist) },
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
@@ -315,42 +265,45 @@ fun PlayerControls(
             .background(MaterialTheme.colors.surface)
             .padding(16.dp)
     ) {
-        // Song info
+
         currentSong?.let { song ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Song image (if available)
-                song.image?.let { imageUrl ->
-                    AsyncImage(
-                        model = imageUrl,
-                        contentDescription = "Album art",
-                        modifier = Modifier.size(48.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                }
+
+                AsyncImage(
+                    model = song.image,
+                    contentDescription = "Imagen cancion",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = song.name,
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onSurface
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onSurface,
+                        maxLines = 1
                     )
-                    song.artists?.get(0)?.let {
+                    song.artists?.firstOrNull()?.let { artist ->
                         Text(
-                            text = it.name,
+                            text = artist.name,
                             style = MaterialTheme.typography.body2,
-                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                            maxLines = 1
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Progress bar
+
         Column {
             Slider(
                 value = if (duration > 0) currentPosition.toFloat() / duration.toFloat() else 0f,
@@ -360,7 +313,12 @@ fun PlayerControls(
                         queueViewModel.seekTo(newPosition)
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = SliderDefaults.colors(
+                    thumbColor = MaterialTheme.colors.primary,
+                    activeTrackColor = MaterialTheme.colors.primary,
+                    inactiveTrackColor = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
+                )
             )
 
             Row(
@@ -369,210 +327,116 @@ fun PlayerControls(
             ) {
                 Text(
                     text = formatTime(currentPosition),
-                    style = MaterialTheme.typography.caption
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
                 Text(
                     text = formatTime(duration),
-                    style = MaterialTheme.typography.caption
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Control buttons
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(
+                onClick = { queueViewModel.toggleShuffle() }
+            ) {
+                Icon(
+                    Icons.Filled.Shuffle,
+                    contentDescription = "Randomizar",
+                    tint = if (queueViewModel.isShuffleEnabled.collectAsState().value)
+                        MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                )
+            }
+
             IconButton(onClick = { queueViewModel.playPrevious() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous")
+                Icon(
+                    Icons.Filled.SkipPrevious,
+                    contentDescription = "Previous",
+                    tint = MaterialTheme.colors.onSurface
+                )
             }
 
             IconButton(
                 onClick = { queueViewModel.playPause() },
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(64.dp)
             ) {
                 Icon(
-                    imageVector = if (isPlaying) Icons.AutoMirrored.Filled.ArrowBack else Icons.Filled.PlayArrow,
+                    imageVector = if (isPlaying) Icons.Filled.PauseCircleFilled else Icons.Filled.PlayCircleFilled,
                     contentDescription = if (isPlaying) "Pause" else "Play",
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(64.dp),
+                    tint = MaterialTheme.colors.primary
                 )
             }
 
             IconButton(onClick = { queueViewModel.playNext() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
+                Icon(
+                    Icons.Filled.SkipNext,
+                    contentDescription = "Next",
+                    tint = MaterialTheme.colors.onSurface
+                )
+            }
+
+            IconButton(onClick = { queueViewModel.toggleRepeat() }) {
+                val repeatMode by queueViewModel.repeatMode.collectAsState()
+                Icon(
+                    when (repeatMode) {
+                        RepeatMode.ONE -> Icons.Filled.RepeatOne
+                        else -> Icons.Filled.Repeat
+                    },
+                    contentDescription = "Repetir",
+                    tint = when (repeatMode) {
+                        RepeatMode.ALL -> MaterialTheme.colors.primary
+                        RepeatMode.ONE -> MaterialTheme.colors.primary
+                        else -> MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    }
+                )
             }
         }
 
-        // Volume control
+        Spacer(modifier = Modifier.height(16.dp))
+
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Filled.ThumbUp, contentDescription = "Volume")
+            Icon(
+                Icons.AutoMirrored.Filled.VolumeMute,
+                contentDescription = "Mute",
+                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+            )
             Slider(
                 value = volume,
                 onValueChange = { queueViewModel.setVolume(it) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = SliderDefaults.colors(
+                    thumbColor = MaterialTheme.colors.primary,
+                    activeTrackColor = MaterialTheme.colors.primary,
+                    inactiveTrackColor = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
+                )
             )
-            Icon(Icons.Filled.ThumbUp, contentDescription = "Volume")
+            Icon(
+                Icons.AutoMirrored.Filled.VolumeUp,
+                contentDescription = "Volume Up",
+                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+            )
         }
     }
 }
 
-private fun formatTime(milliseconds: Long): String {
-    val seconds = (milliseconds / 1000) % 60
-    val minutes = (milliseconds / (1000 * 60)) % 60
-    return secondsToMMSS((milliseconds * 1000).toInt())
-}
 
-
-@Composable
-fun PlayScreen(song: Cancion, user: User) {
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-        // Background blur (puedes necesitar implementar un efecto de desenfoque personalizado)
-        // en Android, puedes usar RenderEffect y en iOS, Core Image filters
-        Image(
-            painter = rememberAsyncImagePainter("https://img.freepik.com/vector-gratis/casa-encantadora-ilustracion-arbol_1308-176337.jpg"), // Reemplaza con tu imagen
-            contentDescription = "Background Blur",
-            modifier = Modifier.fillMaxSize().alpha(0.3f),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Song info
-            Column(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(top = 48.dp, bottom = 24.dp, start = 24.dp, end = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    song.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Text(song.id.toString(), fontSize = 14.sp, color = Color.Gray)
-            }
-
-            // Album art
-            Box(
-                modifier = Modifier.weight(1f).fillMaxWidth().padding(start = 40.dp, end = 40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                var imageLoaded by rememberSaveable { mutableStateOf(false) }
-                val painter = rememberAsyncImagePainter(
-                    model = "https://ignsl.es/wp-content/uploads/2024/07/verifactu.jpg",
-                    onError = { error ->
-                        println("Error al cargar la imagen: ${error.result}")
-                    }
-                )
-                Image(
-                    painter = painter,
-                    contentDescription = "Descripción de la imagen",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            // Playback controls
-            Column(modifier = Modifier.padding(start = 32.dp, end = 32.dp, bottom = 80.dp)) {
-                // Progress bar
-                Slider(
-                    value = 38f,
-                    onValueChange = {},
-                    valueRange = 0f..100f,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color.White,
-                        activeTrackColor = Color.White,
-                        inactiveTrackColor = Color.White.copy(alpha = 0.3f)
-                    )
-                )
-
-                // Time indicators
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("lo que lleve", fontSize = 12.sp, color = Color.Gray)
-                    Text(secondsToMMSS(song.duration!!), fontSize = 12.sp, color = Color.Gray)
-                }
-
-                // Control buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = {}) {
-                        //ShuffleIcon(tint = Color.Gray)
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(onClick = {}) {
-                            //SkipBackIcon(tint = Color.White)
-                        }
-                        IconButton(
-                            onClick = {},
-                            modifier = Modifier.size(56.dp)
-                                .background(Color.White, shape = RoundedCornerShape(28.dp))
-                        ) {
-                            Icons.Filled.PlayArrow
-                        }
-                        IconButton(onClick = {}) {
-                            //SkipForwardIcon(tint = Color.White)
-                        }
-                    }
-
-                    IconButton(onClick = {}) {
-                        //RepeatIcon(tint = Color.Gray)
-                    }
-                }
-            }
-
-            // Navigation bar
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .background(Color(0xFF282828))
-                    .padding(vertical = 16.dp, horizontal = 24.dp),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                NavigationButton(icon = {
-                    Icon(Icons.Filled.Home, "home")
-                }, text = "Home")
-                NavigationButton(icon = {
-                    Icon(Icons.Filled.Search, "buscar")
-                }, text = "Buscar")
-                NavigationButton(icon = {
-                    Icon(Icons.AutoMirrored.Filled.List, "Library")
-                }, text = "Library")
-                NavigationButton(icon = {
-                    Icon(Icons.Filled.Person, "person")
-                }, text = user.name)
-            }
-        }
-    }
-}
-
-fun secondsToMMSS(length: Int): String {
-    return "${(length / 60).toString().padStart(2, '0')}: ${
-        (length % 60).toString().padStart(2, '0')
-    }"
-}
-
-@Composable
-fun NavigationButton(icon: @Composable () -> Unit, text: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        IconButton(onClick = {}) {
-            icon()
-        }
-        Text(text, fontSize = 12.sp, color = Color.White)
-    }
+fun formatTime(milliseconds: Long): String {
+    val totalSeconds = milliseconds / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
 }

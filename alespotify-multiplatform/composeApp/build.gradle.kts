@@ -49,9 +49,11 @@ kotlin {
             implementation("androidx.compose.ui:ui-graphics:1.7.8")
 
             // mediaplayer
-            implementation("androidx.media3:media3-exoplayer:1.2.0")
-            implementation("androidx.media3:media3-ui:1.2.0")
-            implementation("androidx.media3:media3-common:1.2.0")
+            implementation("androidx.media3:media3-exoplayer:1.7.1")
+            implementation("androidx.media3:media3-exoplayer-dash:1.7.1")
+            implementation("androidx.media3:media3-common:1.7.1")
+            implementation("androidx.media3:media3-ui:1.7.1")
+            implementation("androidx.media3:media3-ui-compose:1.7.1")
 
 
         }
@@ -94,7 +96,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
 
             implementation("com.soywiz.korge:korge:6.0.0")
-
+            implementation("uk.co.caprica:vlcj:4.8.2")
+            implementation("uk.co.caprica:vlcj-natives:4.8.0")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")

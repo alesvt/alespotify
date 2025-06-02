@@ -14,7 +14,7 @@ data class Cancion(
     val name: String,
     val artists: List<Artist>? = emptyList(),
     val genres: List<Genero>? = emptyList(),
-    val duration: Int? = 0,
+    val duration: Long? = 0,
     val source: String,
     val image: String,
     val timesPlayed: Int? = 0,

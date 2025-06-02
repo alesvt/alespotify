@@ -119,7 +119,7 @@ fun RegisterForm(
 
         Button(
             onClick = {
-                // Aquí deberías llamar a una función en tu ViewModel para registrar al usuario
+
                 loginViewModel.registro(nombre, email, password, imageUri)
             },
             modifier = Modifier.fillMaxWidth(),
