@@ -174,12 +174,12 @@ actual fun Player(
                         .padding(bottom = 24.dp)
                 ) {
                     Text(
-                        queueViewModel.formatTime(currentPosition),
+                        queueViewModel.currentPosition.toString(),
                         color = Color.Gray,
                         fontSize = 15.sp
                     )
                     Text(
-                        queueViewModel.formatTime(duration),
+                        queueViewModel.duration.toString(),
                         color = Color.Gray,
                         fontSize = 15.sp
                     )
@@ -262,3 +262,4 @@ actual fun Player(
         }
     }
 }
+

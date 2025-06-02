@@ -131,7 +131,7 @@ fun LoginForm(
 
         loginViewModel.loginResult?.let { user ->
             LaunchedEffect(user) {
-                onLoginSuccess(user) // Llama a una función para manejar el éxito del login
+                onLoginSuccess(user)
             }
         }
     }
@@ -166,7 +166,7 @@ fun LoginScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Notifications,
+                            imageVector = Icons.Default.MusicNote,
                             contentDescription = "Alespotify",
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
@@ -191,7 +191,7 @@ fun LoginScreen(
                 )
                 Text(
                     text = "Introduce tus credenciales",
-                    color = MyColors.surface,
+                    color = MyColors.primary,
                     modifier = Modifier.padding(top = 8.dp)
                 )
 

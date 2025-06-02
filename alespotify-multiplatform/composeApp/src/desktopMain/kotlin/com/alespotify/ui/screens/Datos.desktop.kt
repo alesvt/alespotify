@@ -98,6 +98,8 @@ actual fun DatosScreen(
     println("Playlists loaded: ${playlists?.size}")
 
 
+    var dialogobusqueda by remember { mutableStateOf(false) }
+
     val textoBienvenida = getHoraDia()
 
 
@@ -118,8 +120,12 @@ actual fun DatosScreen(
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-                    NavigationLink(icon = Icons.Filled.Home, text = "Home", selected = true, onClick = {})
-                    NavigationLink(icon = Icons.Filled.Search, text = "Búsqueda", onClick = {})
+                    NavigationLink(
+                        icon = Icons.Filled.Home,
+                        text = "Home",
+                        selected = true,
+                        onClick = {})
+                    NavigationLink(icon = Icons.Filled.Search, text = "Búsqueda", onClick = {dialogobusqueda = true})
 
                 }
 
@@ -144,7 +150,8 @@ actual fun DatosScreen(
                             text = playlist.nombre,
                             onClick = {
                                 println("se ha clicado")
-                                queueViewModel.playPlaylist(playlist) })
+                                queueViewModel.playPlaylist(playlist)
+                            })
                     }
                 }
 
@@ -152,7 +159,10 @@ actual fun DatosScreen(
 
                 Column(modifier = Modifier.padding(16.dp)) {
                     NavigationLink(icon = Icons.Filled.AccountBox, text = "Perfil", onClick = {})
-                    NavigationLink(icon = Icons.AutoMirrored.Filled.ExitToApp, text = "Salir", onClick = {exitProcess(0)} )
+                    NavigationLink(
+                        icon = Icons.AutoMirrored.Filled.ExitToApp,
+                        text = "Salir",
+                        onClick = { exitProcess(0) })
                 }
             }
 
@@ -253,7 +263,13 @@ actual fun DatosScreen(
                 )
             }
         }
-
+        if (dialogobusqueda) {
+            DialogoBuscaCanciones(
+                apiService,
+                queueViewModel,
+                onDismiss = { dialogobusqueda = false }
+            )
+        }
     }
 }
 

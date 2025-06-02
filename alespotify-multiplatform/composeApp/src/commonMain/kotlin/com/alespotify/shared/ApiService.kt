@@ -80,17 +80,16 @@ class ApiService {
         }
     }
 
-    suspend fun getSongById(id: Float): Cancion? {
+    suspend fun getSongsByName(name: String): List<Cancion>? {
         return try {
-            val response = httpClient.get("$BASE_URL/songs/$id")
+            val response = httpClient.get("$BASE_URL/songs/song/name?nombre=$name")
             if (response.status == HttpStatusCode.OK) {
-                response.body() as Cancion
+                response.body() as List<Cancion>
             } else {
-                println("Error al obtener canción con ID $id: ${response.status}")
                 null
             }
         } catch (e: Exception) {
-            println("Error al obtener canción con ID $id: ${e.message}")
+            println(e.message)
             null
         }
     }

@@ -538,22 +538,6 @@ fun MiniPlayer(
     }
 }
 
-@Composable
-fun AvatarWithFallback(fallbackText: String, imageUrl: String? = null) {
-    if (imageUrl != null) {
-        //TODO: replace with coil.compose.AsyncImage
-        Image(
-            painter = rememberAsyncImagePainter(imageUrl),
-            contentDescription = "User Avatar",
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-        )
-    } else {
-
-    }
-}
-
 
 @Composable
 fun BottomNavigationBar(currentTab: String, onTabSelected: (String) -> Unit) {
