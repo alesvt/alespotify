@@ -35,7 +35,7 @@ public class RegisterController {
         }
         userService.registerUser(user);
         System.out.println("User registered successfully");
-        return "redirect:/app";
+        return "redirect:/login";
     }
 
 }

@@ -3,6 +3,7 @@ package com.alespotify.main.controllers.restcontroller;
 import com.alespotify.main.models.entities.Usuario;
 import com.alespotify.main.repository.UserRepository;
 import com.alespotify.main.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -46,8 +47,9 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Usuario> register(@RequestBody Usuario usuario) {
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Usuario> register( Usuario usuario) {
+        System.out.println(usuario);
         usuario.setCreationDate(Instant.now());
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         System.out.println(usuario.getPassword());

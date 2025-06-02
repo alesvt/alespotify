@@ -15,7 +15,7 @@ public interface SongRepository extends JpaRepository<Cancion, Long> {
     @Query("SELECT c from Cancion c left join fetch c.artists where c.id = :id")
     Optional<Cancion> findByIdConArtista(@Param("id") Long id);
 
-    @Query("SELECT c from Cancion c where true order by c.timesPlayed desc limit 20")
+    @Query("SELECT c from Cancion c where true order by c.timesPlayed desc limit 15")
     List<Cancion> findByVecesReproducido();
 
 
