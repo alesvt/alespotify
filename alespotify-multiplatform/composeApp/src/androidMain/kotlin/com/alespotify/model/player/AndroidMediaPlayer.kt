@@ -18,11 +18,13 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 
-actual fun createMediaPlayer() : MediaPlayer = AndroidMediaPlayer()
+actual fun createMediaPlayer(): MediaPlayer = AndroidMediaPlayer()
 
 
 class AndroidMediaPlayer : MediaPlayer {
-    private var exoPlayer: ExoPlayer? = null
+    private val _exoPlayer = MutableStateFlow<ExoPlayer?>(null)
+    val exoPlayer: StateFlow<ExoPlayer?> = _exoPlayer.asStateFlow()
+
     private var context: Context? = null
     private val scope = CoroutineScope(Dispatchers.Main)
     private var positionUpdateJob: Job? = null
@@ -44,10 +46,10 @@ class AndroidMediaPlayer : MediaPlayer {
     fun initialize(context: Context) {
         this.context = context
         println("AndroidMediaPlayer: initialize() called. Current exoPlayer before check: $exoPlayer") // Log
-        if (exoPlayer == null) {
+        if (exoPlayer.value == null) {
             println("AndroidMediaPlayer: exoPlayer is null, creating new instance.") // Log
             try {
-                exoPlayer = ExoPlayer.Builder(context).build().apply {
+                _exoPlayer.value = ExoPlayer.Builder(context).build().apply {
                     println("AndroidMediaPlayer: ExoPlayer instance CREATED within apply: $this") // 'this' es el ExoPlayer
                     addListener(object : Player.Listener {
                         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -59,14 +61,15 @@ class AndroidMediaPlayer : MediaPlayer {
                             println("AndroidMediaPlayer Listener: onPlaybackStateChanged: $playbackState") // Log
                             when (playbackState) {
                                 Player.STATE_READY -> {
-                                    _duration.value = this@apply.duration // 'this@apply' es el ExoPlayer
+                                    _duration.value =
+                                        this@apply.duration // 'this@apply' es el ExoPlayer
                                     println("AndroidMediaPlayer Listener: State READY. Duration: ${this@apply.duration}")
                                 }
+
                                 Player.STATE_ENDED -> {
                                     println("AndroidMediaPlayer Listener: State ENDED.")
                                     // ... tu lógica de auto-play ...
                                 }
-                                // Considera agregar logs para otros estados como Player.STATE_BUFFERING, Player.STATE_IDLE
                             }
                         }
 
@@ -87,16 +90,20 @@ class AndroidMediaPlayer : MediaPlayer {
     }
 
     override suspend fun playSong(song: Cancion) {
+
         println("AndroidMediaPlayer: playSong() called for '${song.name}'. Current exoPlayer: $exoPlayer") // Log
         try {
-            exoPlayer?.let { player ->
+
+            println(_exoPlayer.value) // aqui sale null
+            _exoPlayer.value.let { player ->
                 println("AndroidMediaPlayer: exoPlayer is NOT NULL. Proceeding with playback for ${song.source}")
                 val mediaItem = MediaItem.fromUri(song.source)
-                player.setMediaItem(mediaItem)
-                player.prepare()
-                player.play()
+                player?.setMediaItem(mediaItem)
+                player?.prepare()
+                player?.play()
                 _currentSong.value = song
-            } ?: println("!!!!!!!! AndroidMediaPlayer: playSong() - exoPlayer IS NULL. Cannot play song.") // Log si es null
+            }
+                ?: println("!!!!!!!! AndroidMediaPlayer: playSong() - exoPlayer IS NULL. Cannot play song.") // Log si es null
         } catch (e: Exception) {
             println("!!!!!!!! AndroidMediaPlayer: Error INSIDE playSong (but exoPlayer was not null): ${e.message}")
             e.printStackTrace()
@@ -104,25 +111,26 @@ class AndroidMediaPlayer : MediaPlayer {
     }
 
     override suspend fun play() {
-        exoPlayer?.play()
+        println("play has been clicked")
+        exoPlayer.value?.play()
     }
 
     override suspend fun pause() {
-        exoPlayer?.pause()
+        exoPlayer.value?.pause()
     }
 
     override suspend fun stop() {
-        exoPlayer?.stop()
+        exoPlayer.value?.stop()
         _currentPosition.value = 0L
     }
 
     override suspend fun seekTo(position: Long) {
-        exoPlayer?.seekTo(position)
+        exoPlayer.value?.seekTo(position)
         _currentPosition.value = position
     }
 
     override suspend fun setVolume(volume: Float) {
-        exoPlayer?.volume = volume.coerceIn(0f, 1f)
+        exoPlayer.value?.volume = volume.coerceIn(0f, 1f)
     }
 
     override suspend fun playPlaylist(playlist: Playlist, startIndex: Int) {
@@ -151,8 +159,8 @@ class AndroidMediaPlayer : MediaPlayer {
 
     override fun release() {
         stopPositionUpdates()
-        exoPlayer?.release()
-        exoPlayer = null
+        exoPlayer.value?.release()
+
         currentPlaylist = emptyList()
         currentIndex = 0
     }
@@ -160,8 +168,8 @@ class AndroidMediaPlayer : MediaPlayer {
     private fun startPositionUpdates() {
         positionUpdateJob?.cancel()
         positionUpdateJob = scope.launch {
-            while (isActive && exoPlayer?.isPlaying == true) {
-                _currentPosition.value = exoPlayer?.currentPosition ?: 0L
+            while (isActive && exoPlayer.value?.isPlaying == true) {
+                _currentPosition.value = exoPlayer.value?.currentPosition ?: 0L
                 delay(1000)
             }
         }

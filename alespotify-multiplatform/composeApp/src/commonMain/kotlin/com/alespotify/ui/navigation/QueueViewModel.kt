@@ -24,6 +24,7 @@ class QueueViewModel : ViewModel() {
 
     val mediaPlayer: MediaPlayer = createMediaPlayer()
 
+
     val isPlaying: StateFlow<Boolean> = mediaPlayer.isPlaying
     val currentPosition: StateFlow<Long> = mediaPlayer.currentPosition
     val duration: StateFlow<Long> = mediaPlayer.duration
@@ -55,6 +56,7 @@ class QueueViewModel : ViewModel() {
 
     fun playSong(song: Cancion) {
         viewModelScope.launch {
+            println(mediaPlayer.toString())
             try {
                 mediaPlayer.playSong(song)
                 _songCalled.value = song

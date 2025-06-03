@@ -1,22 +1,15 @@
 package com.alespotify.ui.navigation
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alespotify.model.Artist
 import com.alespotify.model.Cancion
 import com.alespotify.model.Playlist
-import com.alespotify.model.User
 import com.alespotify.shared.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
-
 
 
 class AppViewModel : ViewModel() {

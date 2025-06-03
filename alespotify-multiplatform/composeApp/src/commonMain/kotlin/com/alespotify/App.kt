@@ -10,6 +10,7 @@ import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.DestinosNavegacion
 import com.alespotify.ui.navigation.LoginViewModel
 import com.alespotify.ui.navigation.NavGraph
+import com.alespotify.ui.navigation.QueueViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -25,10 +26,9 @@ fun App() {
     val loginViewModel = LoginViewModel()
     val appViewModel = AppViewModel()
 
-
     MaterialTheme {
         Surface {
-            NavGraph(navController, loginViewModel, appViewModel )
+            NavGraph(navController, loginViewModel, appViewModel)
         }
     }
 }

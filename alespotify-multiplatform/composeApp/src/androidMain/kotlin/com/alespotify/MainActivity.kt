@@ -3,29 +3,27 @@ package com.alespotify
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
 import com.alespotify.model.player.AndroidMediaPlayer
-import com.alespotify.ui.navigation.QueueViewModel
-import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.android.Android
+import com.alespotify.model.player.MediaPlayer
+
 
 class MainActivity : ComponentActivity() {
+    private lateinit var mediapl: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mediapl = AndroidMediaPlayer().apply {
+            initialize(this@MainActivity)
+        }
 
-        val queueViewModel = QueueViewModel()
-        AndroidMediaPlayer().initialize(this)
+
         setContent {
             App()
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediapl.release()
+    }
 }
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
-}

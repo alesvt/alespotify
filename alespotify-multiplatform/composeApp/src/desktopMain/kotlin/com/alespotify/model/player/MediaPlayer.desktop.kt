@@ -60,7 +60,6 @@ class DesktopMediaPlayer : com.alespotify.model.player.MediaPlayer {
     private fun setupVLCEventHandlers() {
         vlcMediaPlayer.events().addMediaPlayerEventListener(object : MediaPlayerEventAdapter() {
 
-
             override fun playing(mediaPlayer: MediaPlayer) {
                 println("VLC: Playing started")
                 _isPlaying.value = true

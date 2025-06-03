@@ -7,8 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -76,7 +74,6 @@ actual fun DatosScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
-    // Function to handle tab changes
     val onTabSelected = { tab: String ->
         currentTab.value = tab
     }
@@ -143,7 +140,7 @@ actual fun DatosScreen(
                     }
 
                     "search" -> SearchScreen()
-                    "library" -> LibraryScreen()
+                    "library" -> LibraryScreen(featuredPlaylists.value)
                 }
             }
         }
@@ -168,8 +165,6 @@ fun HomeScreen(
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
 
-
-        // Featured Carousel
         FeaturedCarousel(
             playlists = featuredPlaylists,
             currentSlideIndex = currentSlideIndex,
@@ -177,17 +172,13 @@ fun HomeScreen(
             onPlaylistClick = onPlaylistClick
         )
 
-        // Recently Played
+
         println(songs)
         if (songs != null) {
             RecentlyPlayedSection(songs = songs, queueViewModel = queueViewModel)
         }
 
-        // Made For You
         MadeForYouSection(playlists = featuredPlaylists)
-
-        // New Releases
-        NewReleasesSection()
 
         Spacer(Modifier.padding(12.dp))
     }
@@ -210,7 +201,7 @@ fun FeaturedCarousel(
     }
 
     HorizontalPager(state = pagerState) { page ->
-         val pl = playlists.get(page)
+        val pl = playlists.get(page)
 
         FeaturedPlaylistItem(
             playlist = pl,
@@ -355,72 +346,22 @@ fun MadeForYouItem(playlist: Playlist) {
     }
 }
 
-@Composable
-fun NewReleasesSection() {
-    Column(Modifier.padding(horizontal = 16.dp)) {
-        Text("Lo más nuevo", style = MaterialTheme.typography.h6, color = Color.White)
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(8) { index ->
-                NewReleasesItem(albumNumber = index + 1)
-            }
-        }
-    }
-}
-
-@Composable
-fun NewReleasesItem(albumNumber: Int) {
-    Card(
-        modifier = Modifier.size(120.dp)
-    ) {
-        Box(Modifier.fillMaxSize()) {
-            Image(
-                painter = rememberAsyncImagePainter("https://via.placeholder.com/180"),
-                contentDescription = "Album $albumNumber",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        Column(Modifier.padding(8.dp)) {
-            Text("New Album $albumNumber", style = MaterialTheme.typography.body1)
-            Text("Artist Name", style = MaterialTheme.typography.caption, color = Color.Gray)
-        }
-    }
-}
 
 @Composable
 fun SearchScreen() {
     Column(Modifier.padding(16.dp)) {
-        Text("Search", style = MaterialTheme.typography.h5)
+        Text("Búsqueda", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = "",
-            onValueChange = {},
+            onValueChange = {
+                // todo implementar búsqueda (como en el desktop)
+            },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
             placeholder = { Text("Artists, songs, or podcasts") },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Browse Categories", style = MaterialTheme.typography.h6)
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(6) { index ->
-                BrowseCategoryItem(
-                    genre = listOf(
-                        "Pop",
-                        "Rock",
-                        "Hip-Hop",
-                        "Electronic",
-                        "Jazz",
-                        "Classical"
-                    )[index]
-                )
-            }
-        }
+
     }
 }
 
@@ -448,21 +389,22 @@ fun BrowseCategoryItem(genre: String) {
 }
 
 @Composable
-fun LibraryScreen() {
+fun LibraryScreen(playlists: List<Playlist>?) {
     Column(Modifier.padding(16.dp)) {
         Text("Your Library", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(16.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            repeat(5) { index ->
-                LibraryItem(libraryItemNumber = index + 1)
+            // todo meter las playlists
+            playlists?.forEach { p ->
+                LibraryItem(p)
             }
         }
     }
 }
 
 @Composable
-fun LibraryItem(libraryItemNumber: Int) {
+fun LibraryItem(playlist: Playlist) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -472,14 +414,14 @@ fun LibraryItem(libraryItemNumber: Int) {
             .padding(8.dp)
     ) {
         Image(
-            painter = rememberAsyncImagePainter("https://via.placeholder.com/56"),
-            contentDescription = "Library Item $libraryItemNumber",
+            painter = rememberAsyncImagePainter(playlist.image),
+            contentDescription = "Playlist image",
             modifier = Modifier.size(56.dp)
         )
         Column(Modifier.weight(1f)) {
-            Text("My Playlist $libraryItemNumber", style = MaterialTheme.typography.body1)
+            Text(playlist.nombre, style = MaterialTheme.typography.body1)
             Text(
-                if (libraryItemNumber % 2 == 0) "Playlist • ${10 + libraryItemNumber} songs" else "Album • ${10 + libraryItemNumber} songs",
+                "${playlist.songs?.size} canciones · By ${playlist.user.name}",
                 style = MaterialTheme.typography.caption,
                 color = Color.Gray
             )
