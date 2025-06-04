@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -33,7 +34,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.alespotify.model.Cancion
@@ -43,6 +45,8 @@ import com.alespotify.ui.MyColors
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.LoginViewModel
 import com.alespotify.ui.navigation.QueueViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.launch
 
@@ -85,9 +89,9 @@ actual fun DatosScreen(
             Modifier
                 .background(Color.Black),
             bottomBar = {
-                // Mobile Bottom Navigation and Player
+
                 Column(Modifier.background(MyColors.background)) {
-                    // Mini Player / Expanded Player
+
                     if (!expandPlayer.value) {
                         MiniPlayer(
                             isPlaying = isPlaying.value,
@@ -105,7 +109,7 @@ actual fun DatosScreen(
                         )
                     }
 
-                    // Tab Navigation
+
                     BottomNavigationBar(
                         currentTab = currentTab.value,
                         onTabSelected = onTabSelected
@@ -113,7 +117,7 @@ actual fun DatosScreen(
                 }
             }
         ) {
-            // Main Content Area
+
             Box(
                 Modifier
                     .fillMaxSize()
@@ -138,8 +142,8 @@ actual fun DatosScreen(
                         )
                     }
 
-                    "search" -> SearchScreen()
-                    "library" -> LibraryScreen(featuredPlaylists.value)
+                    "search" -> SearchScreen(queueViewModel)
+                    "library" -> LibraryScreen(featuredPlaylists.value, queueViewModel)
                 }
             }
         }
@@ -177,7 +181,7 @@ fun HomeScreen(
             RecentlyPlayedSection(songs = songs, queueViewModel = queueViewModel)
         }
 
-        MadeForYouSection(playlists = featuredPlaylists)
+        MadeForYouSection(playlists = featuredPlaylists, queueViewModel)
 
         Spacer(Modifier.padding(12.dp))
     }
@@ -265,7 +269,7 @@ fun FeaturedPlaylistItem(playlist: Playlist, onItemClick: () -> Unit, onPlaylist
 @Composable
 fun RecentlyPlayedSection(songs: List<Cancion>, queueViewModel: QueueViewModel) {
     Column(Modifier.padding(16.dp)) {
-        Text("Recientes", style = MaterialTheme.typography.h6, color = Color.White)
+        Text("Lo más nuevo", style = MaterialTheme.typography.h6, color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             songs.forEach { s ->
@@ -311,20 +315,20 @@ fun RecentlyPlayedItem(song: Cancion, queueViewModel: QueueViewModel) {
 }
 
 @Composable
-fun MadeForYouSection(playlists: List<Playlist>) {
+fun MadeForYouSection(playlists: List<Playlist>, queueViewModel: QueueViewModel) {
     Column(Modifier.padding(horizontal = 16.dp)) {
         Text("Para ti", style = MaterialTheme.typography.h6, color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(playlists) { pl ->
-                MadeForYouItem(pl)
+                MadeForYouItem(pl, queueViewModel = QueueViewModel())
             }
         }
     }
 }
 
 @Composable
-fun MadeForYouItem(playlist: Playlist) {
+fun MadeForYouItem(playlist: Playlist, queueViewModel: QueueViewModel) {
     Card(
         modifier = Modifier.size(120.dp)
     ) {
@@ -336,7 +340,7 @@ fun MadeForYouItem(playlist: Playlist) {
                 modifier = Modifier.fillMaxSize()
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { queueViewModel.playPlaylist(playlist) },
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
@@ -347,69 +351,115 @@ fun MadeForYouItem(playlist: Playlist) {
 
 
 @Composable
-fun SearchScreen() {
-    Column(Modifier.padding(16.dp)) {
+fun SearchScreen(queueViewModel: QueueViewModel) {
+    var queryBusqueda by remember { mutableStateOf("") }
+    var resultadosBusqueda by remember { mutableStateOf<List<Cancion>?>(null) }
+    val scope = rememberCoroutineScope()
+    var searchJob: Job? by remember { mutableStateOf(null) }
+    val apiService = ApiService()
+
+    Column(Modifier.padding(16.dp, top = 32.dp)) {
         Text("Búsqueda", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = "",
-            onValueChange = {
-                // todo implementar búsqueda (como en el desktop)
+            value = queryBusqueda,
+            onValueChange = { texto ->
+                queryBusqueda = texto
+                searchJob?.cancel()
+                searchJob = scope.launch {
+                    delay(300)
+                    if (texto.isNotBlank()) {
+                        try {
+                            resultadosBusqueda = apiService.getSongsByName(texto)
+                        } catch (e: Exception) {
+                            resultadosBusqueda = emptyList()
+                        }
+                    } else {
+                        resultadosBusqueda = emptyList()
+                    }
+                }
+
             },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
             placeholder = { Text("Artists, songs, or podcasts") },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(12.dp))
+        if (resultadosBusqueda?.isEmpty() == true && queryBusqueda.isNotBlank()) {
+            Text(
+                "No hay resultados",
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        } else if (resultadosBusqueda?.isEmpty() == true && queryBusqueda.isBlank()) {
+            Text(
+                text = "Empieza a escribir para buscar canciones...",
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(resultadosBusqueda ?: emptyList()) { cancion ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                scope.launch {
+                                    queueViewModel.playSong(cancion)
+                                }
+                            }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = cancion.name,
+                                color = MaterialTheme.colors.onSurface,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                            cancion.artists?.let { artist ->
+                                Text(
+                                    text = artist[0].name,
+                                    color = MyColors.secondary.copy(alpha = 0.6f),
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    }
+                    Divider(color = MyColors.secondary.copy(alpha = 0.1f))
+                }
 
-    }
-}
-
-@Composable
-fun BrowseCategoryItem(genre: String) {
-    Card(
-        modifier = Modifier.height(120.dp)
-    ) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.horizontalGradient(
-                        listOf(
-                            Color.Red,
-                            Color.Magenta
-                        )
-                    )
-                ), // Placeholder gradient
-            contentAlignment = Alignment.Center
-        ) {
-            Text(genre, style = MaterialTheme.typography.h6, color = Color.White)
+            }
         }
     }
 }
 
+
 @Composable
-fun LibraryScreen(playlists: List<Playlist>?) {
-    Column(Modifier.padding(16.dp)) {
-        Text("Your Library", style = MaterialTheme.typography.h5)
+fun LibraryScreen(playlists: List<Playlist>?, queueViewModel: QueueViewModel) {
+    Column(Modifier.padding(16.dp, top = 32.dp)) {
+        Text("Tus playlists", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(16.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            // todo meter las playlists
             playlists?.forEach { p ->
-                LibraryItem(p)
+                LibraryItem(p, queueViewModel = queueViewModel)
             }
         }
     }
 }
 
 @Composable
-fun LibraryItem(playlist: Playlist) {
+fun LibraryItem(playlist: Playlist, queueViewModel: QueueViewModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /*TODO*/ }
+            .clickable { queueViewModel.playPlaylist(playlist) }
             .padding(8.dp)
     ) {
         Image(

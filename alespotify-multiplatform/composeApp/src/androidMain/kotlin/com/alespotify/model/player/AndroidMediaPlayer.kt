@@ -45,57 +45,39 @@ class AndroidMediaPlayer : MediaPlayer {
 
     fun initialize(context: Context) {
         this.context = context
-        println("AndroidMediaPlayer: initialize() called. Current exoPlayer before check: $exoPlayer") // Log
         if (exoPlayer.value == null) {
-            println("AndroidMediaPlayer: exoPlayer is null, creating new instance.") // Log
             try {
                 _exoPlayer.value = ExoPlayer.Builder(context).build().apply {
-                    println("AndroidMediaPlayer: ExoPlayer instance CREATED within apply: $this") // 'this' es el ExoPlayer
                     addListener(object : Player.Listener {
                         override fun onIsPlayingChanged(isPlaying: Boolean) {
                             _isPlaying.value = isPlaying
-                            println("AndroidMediaPlayer Listener: onIsPlayingChanged: $isPlaying") // Log
                         }
 
                         override fun onPlaybackStateChanged(playbackState: Int) {
-                            println("AndroidMediaPlayer Listener: onPlaybackStateChanged: $playbackState") // Log
                             when (playbackState) {
                                 Player.STATE_READY -> {
                                     _duration.value =
                                         this@apply.duration // 'this@apply' es el ExoPlayer
-                                    println("AndroidMediaPlayer Listener: State READY. Duration: ${this@apply.duration}")
-                                }
-
-                                Player.STATE_ENDED -> {
-                                    println("AndroidMediaPlayer Listener: State ENDED.")
-                                    // ... tu lógica de auto-play ...
                                 }
                             }
                         }
 
                         override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-                            println("!!!!!!!! AndroidMediaPlayer Listener: onPlayerError: ${error.message}") // Log MUY IMPORTANTE
-                            error.printStackTrace() // Para ver la traza completa del error
+                            error.printStackTrace()
                         }
                     })
                 }
-                println("AndroidMediaPlayer: exoPlayer variable assigned after creation: $exoPlayer") // Log
             } catch (e: Exception) {
-                println("!!!!!!!! AndroidMediaPlayer: CRITICAL ERROR during ExoPlayer creation: ${e.message}")
                 e.printStackTrace()
             }
-        } else {
-            println("AndroidMediaPlayer: initialize() called, but exoPlayer was already initialized.")
         }
     }
 
     override suspend fun playSong(song: Cancion) {
 
-        println("AndroidMediaPlayer: playSong() called for '${song.name}'. Current exoPlayer: $exoPlayer") // Log
         try {
             println(_exoPlayer.value) // aqui sale null
             _exoPlayer.value.let { player ->
-                println("AndroidMediaPlayer: exoPlayer is NOT NULL. Proceeding with playback for ${song.source}")
                 val mediaItem = MediaItem.fromUri(song.source)
                 player?.setMediaItem(mediaItem)
                 player?.prepare()
@@ -103,16 +85,13 @@ class AndroidMediaPlayer : MediaPlayer {
                 _currentSong.value = song
 
             }
-                ?: println("!!!!!!!! AndroidMediaPlayer: playSong() - exoPlayer IS NULL. Cannot play song.") // Log si es null
         } catch (e: Exception) {
-            println("!!!!!!!! AndroidMediaPlayer: Error INSIDE playSong (but exoPlayer was not null): ${e.message}")
             e.printStackTrace()
         }
 
     }
 
     override suspend fun play() {
-        println("play has been clicked")
         exoPlayer.value?.play()
     }
 
