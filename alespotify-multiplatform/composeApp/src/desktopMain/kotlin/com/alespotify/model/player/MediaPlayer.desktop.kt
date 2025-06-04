@@ -2,7 +2,6 @@ package com.alespotify.model.player
 
 import com.alespotify.model.Cancion
 import com.alespotify.model.Playlist
-import com.alespotify.model.User
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory
 import uk.co.caprica.vlcj.player.base.MediaPlayer
 import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter
@@ -61,45 +60,37 @@ class DesktopMediaPlayer : com.alespotify.model.player.MediaPlayer {
         vlcMediaPlayer.events().addMediaPlayerEventListener(object : MediaPlayerEventAdapter() {
 
             override fun playing(mediaPlayer: MediaPlayer) {
-                println("VLC: Playing started")
                 _isPlaying.value = true
                 isMediaReady = true
 
                 val duration = mediaPlayer.status().length()
                 if (duration > 0) {
                     _duration.value = duration
-                    println("VLC: Duration set to ${duration}ms")
                 }
 
                 pendingSeekPosition?.let { position ->
                     mediaPlayer.controls().setTime(position)
                     _currentPosition.value = position
                     pendingSeekPosition = null
-                    println("VLC: Applied pending seek to ${position}ms")
                 }
             }
 
             override fun paused(mediaPlayer: MediaPlayer) {
-                println("VLC: Playback paused")
                 _isPlaying.value = false
             }
 
             override fun stopped(mediaPlayer: MediaPlayer) {
-                println("VLC: Playback stopped")
                 _isPlaying.value = false
                 _currentPosition.value = 0L
                 isMediaReady = false
             }
 
             override fun finished(mediaPlayer: MediaPlayer) {
-                println("VLC: Playback finished")
                 _isPlaying.value = false
-
                 onSongFinished?.invoke()
             }
 
             override fun error(mediaPlayer: MediaPlayer) {
-                println("VLC: Playback error occurred")
                 _isPlaying.value = false
                 isMediaReady = false
             }
@@ -145,31 +136,22 @@ class DesktopMediaPlayer : com.alespotify.model.player.MediaPlayer {
     override suspend fun playSong(song: Cancion) {
         withContext(Dispatchers.IO) {
             try {
-                println("Playing song: ${song.name} from ${song.source}")
-
                 _currentSong.value = song
-
                 // Detener reproducción actual
                 vlcMediaPlayer.controls().stop()
-
                 // Limpiar estados
                 _currentPosition.value = 0L
                 _duration.value = 0L
                 isMediaReady = false
                 pendingSeekPosition = null
 
-                // Reproducir nueva canción
                 val success = vlcMediaPlayer.media().play(song.source)
 
-                if (success) {
-                    println("Successfully started VLC playback for: ${song.name}")
-                } else {
-                    println("Failed to start VLC playback for: ${song.name}")
+                if (!success) {
                     _isPlaying.value = false
                 }
-
             } catch (e: Exception) {
-                println("Error playing song with VLC: ${e.message}")
+                println("Error: ${e.message}")
                 _isPlaying.value = false
             }
         }
@@ -185,23 +167,19 @@ class DesktopMediaPlayer : com.alespotify.model.player.MediaPlayer {
                 val songToPlay = playlist.songs?.getOrNull(_currentIndex.value)
                 if (songToPlay != null) {
                     playSong(songToPlay)
-                } else {
-                    println("No song found at index $startIndex in playlist ${playlist.nombre}")
                 }
             } catch (e: Exception) {
-                println("Error playing playlist: ${e.message}")
+                println("Error: ${e.message}")
             }
         }
     }
 
     override suspend fun nextSong(currentIndex: Int) {
-        // Esta función se maneja desde QueueViewModel
-        println("nextSong called - handled by QueueViewModel")
+
     }
 
     override suspend fun prevSong(currentIndex: Int) {
-        // Esta función se maneja desde QueueViewModel
-        println("prevSong called - handled by QueueViewModel")
+
     }
 
     override suspend fun play() {
@@ -263,15 +241,12 @@ class DesktopMediaPlayer : com.alespotify.model.player.MediaPlayer {
 
                     vlcMediaPlayer.controls().setTime(seekPosition)
                     _currentPosition.value = seekPosition
-                    println("VLC: Seeked to position: ${seekPosition}ms")
                 } else {
-                    // Si el media no está listo, guardar la posición para aplicar después
                     pendingSeekPosition = clampedPosition
                     _currentPosition.value = clampedPosition
-                    println("VLC: Seek queued for when media is ready: ${clampedPosition}ms")
                 }
             } catch (e: Exception) {
-                println("Error seeking: ${e.message}")
+                println("Error: ${e.message}")
             }
         }
     }
@@ -281,60 +256,21 @@ class DesktopMediaPlayer : com.alespotify.model.player.MediaPlayer {
             try {
                 val vlcVolume = (volume * 100).toInt().coerceIn(0, 100)
                 vlcMediaPlayer.audio().setVolume(vlcVolume)
-                println("VLC: Volume set to: $vlcVolume%")
             } catch (e: Exception) {
-                println("Error setting volume: ${e.message}")
+                println("Error: ${e.message}")
             }
         }
     }
 
     override fun release() {
         try {
-            println("VLC: Releasing media player...")
+
             vlcMediaPlayer.controls().stop()
             vlcMediaPlayer.release()
             mediaPlayerFactory.release()
-            println("VLC: Media player released successfully")
         } catch (e: Exception) {
-            println("Error releasing media player: ${e.message}")
+            println("Error: ${e.message}")
         }
     }
 
-    // Funciones adicionales útiles
-    fun setPlaybackSpeed(speed: Float) {
-        try {
-            if (isMediaReady) {
-                vlcMediaPlayer.controls().setRate(speed)
-                println("VLC: Playback speed set to: ${speed}x")
-            }
-        } catch (e: Exception) {
-            println("Error setting playback speed: ${e.message}")
-        }
-    }
-
-    fun getCurrentTime(): Long {
-        return try {
-            if (isMediaReady) {
-                vlcMediaPlayer.status().time()
-            } else {
-                0L
-            }
-        } catch (e: Exception) {
-            println("Error getting current time: ${e.message}")
-            0L
-        }
-    }
-
-    fun getTotalDuration(): Long {
-        return try {
-            if (isMediaReady) {
-                vlcMediaPlayer.status().length()
-            } else {
-                0L
-            }
-        } catch (e: Exception) {
-            println("Error getting duration: ${e.message}")
-            0L
-        }
-    }
 }

@@ -89,7 +89,6 @@ actual fun DatosScreen(
                 Column(Modifier.background(MyColors.background)) {
                     // Mini Player / Expanded Player
                     if (!expandPlayer.value) {
-
                         MiniPlayer(
                             isPlaying = isPlaying.value,
                             onPlayPauseClick = { isPlaying.value = !isPlaying.value },

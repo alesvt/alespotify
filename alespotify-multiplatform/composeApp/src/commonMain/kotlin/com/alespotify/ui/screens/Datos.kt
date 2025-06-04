@@ -360,7 +360,7 @@ fun PlayerControls(
             IconButton(onClick = { queueViewModel.playPrevious() }) {
                 Icon(
                     Icons.Filled.SkipPrevious,
-                    contentDescription = "Previous",
+                    contentDescription = "Anterior",
                     tint = MaterialTheme.colors.onSurface
                 )
             }
@@ -371,7 +371,7 @@ fun PlayerControls(
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Filled.PauseCircleFilled else Icons.Filled.PlayCircleFilled,
-                    contentDescription = if (isPlaying) "Pause" else "Play",
+                    contentDescription = if (isPlaying) "Pausa" else "Play",
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colors.primary
                 )
@@ -380,7 +380,7 @@ fun PlayerControls(
             IconButton(onClick = { queueViewModel.playNext() }) {
                 Icon(
                     Icons.Filled.SkipNext,
-                    contentDescription = "Next",
+                    contentDescription = "Siguiente",
                     tint = MaterialTheme.colors.onSurface
                 )
             }

@@ -93,7 +93,6 @@ class AndroidMediaPlayer : MediaPlayer {
 
         println("AndroidMediaPlayer: playSong() called for '${song.name}'. Current exoPlayer: $exoPlayer") // Log
         try {
-
             println(_exoPlayer.value) // aqui sale null
             _exoPlayer.value.let { player ->
                 println("AndroidMediaPlayer: exoPlayer is NOT NULL. Proceeding with playback for ${song.source}")
@@ -102,12 +101,14 @@ class AndroidMediaPlayer : MediaPlayer {
                 player?.prepare()
                 player?.play()
                 _currentSong.value = song
+
             }
                 ?: println("!!!!!!!! AndroidMediaPlayer: playSong() - exoPlayer IS NULL. Cannot play song.") // Log si es null
         } catch (e: Exception) {
             println("!!!!!!!! AndroidMediaPlayer: Error INSIDE playSong (but exoPlayer was not null): ${e.message}")
             e.printStackTrace()
         }
+
     }
 
     override suspend fun play() {
@@ -155,8 +156,6 @@ class AndroidMediaPlayer : MediaPlayer {
         }
     }
 
-    fun getCurrentIndex(): Int = currentIndex
-
     override fun release() {
         stopPositionUpdates()
         exoPlayer.value?.release()
@@ -165,15 +164,6 @@ class AndroidMediaPlayer : MediaPlayer {
         currentIndex = 0
     }
 
-    private fun startPositionUpdates() {
-        positionUpdateJob?.cancel()
-        positionUpdateJob = scope.launch {
-            while (isActive && exoPlayer.value?.isPlaying == true) {
-                _currentPosition.value = exoPlayer.value?.currentPosition ?: 0L
-                delay(1000)
-            }
-        }
-    }
 
     private fun stopPositionUpdates() {
         positionUpdateJob?.cancel()

@@ -14,8 +14,6 @@ class MainActivity : ComponentActivity() {
         mediapl = AndroidMediaPlayer().apply {
             initialize(this@MainActivity)
         }
-
-
         setContent {
             App()
         }

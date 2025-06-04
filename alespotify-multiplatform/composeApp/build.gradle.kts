@@ -94,9 +94,9 @@ kotlin {
             implementation("io.ktor:ktor-client-apache5:3.1.0")
             implementation(libs.kotlinx.coroutines.swing)
 
-            implementation("com.soywiz.korge:korge:6.0.0")
-            implementation("uk.co.caprica:vlcj:4.8.2")
-            implementation("uk.co.caprica:vlcj-natives:4.8.0")
+
+            implementation(libs.vlcj)
+            implementation(libs.vlcj.natives)
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")
