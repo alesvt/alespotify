@@ -5,6 +5,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowDecoration
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import uk.co.caprica.vlcj.player.base.MediaPlayer
 
 fun main() = application {
     val state = rememberWindowState(

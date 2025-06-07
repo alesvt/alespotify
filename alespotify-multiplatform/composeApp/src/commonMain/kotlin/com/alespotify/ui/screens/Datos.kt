@@ -54,9 +54,9 @@ import com.alespotify.ui.navigation.RepeatMode
 @Composable
 expect fun DatosScreen(
     navController: NavHostController,
-    appViewModel: AppViewModel = AppViewModel(),
-    loginViewModel: LoginViewModel = LoginViewModel(),
-    queueViewModel: QueueViewModel = QueueViewModel(),
+    appViewModel: AppViewModel,
+    loginViewModel: LoginViewModel,
+    queueViewModel: QueueViewModel,
     apiService: ApiService
 )
 

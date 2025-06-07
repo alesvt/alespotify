@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.alespotify.model.Cancion
+import com.alespotify.model.player.MediaPlayer
 import com.alespotify.ui.navigation.AppViewModel
 import com.alespotify.ui.navigation.DestinosNavegacion
 import com.alespotify.ui.navigation.LoginViewModel

@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.alespotify.model.player.createMediaPlayer
 import com.alespotify.shared.ApiService
 import com.alespotify.ui.screens.DatosScreen
 // import com.alespotify.ui.screens.DatosScreen
@@ -23,8 +24,9 @@ fun NavGraph(
     navController: NavHostController,
     loginViewModel: LoginViewModel = LoginViewModel(),
     appViewModel: AppViewModel = AppViewModel(),
-    queueViewModel: QueueViewModel = QueueViewModel()
-) {
+    queueViewModel: QueueViewModel = QueueViewModel(),
+
+    ) {
     NavHost(
         navController = navController,
         startDestination = DestinosNavegacion.LoginScreen.route,

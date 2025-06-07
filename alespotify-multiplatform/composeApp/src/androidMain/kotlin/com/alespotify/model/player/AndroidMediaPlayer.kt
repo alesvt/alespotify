@@ -1,5 +1,6 @@
 package com.alespotify.model.player
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -18,7 +19,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 
-actual fun createMediaPlayer(): MediaPlayer = AndroidMediaPlayer()
+actual fun createMediaPlayer(): MediaPlayer = AndroidMediaPlayer.getInstance()
 
 
 class AndroidMediaPlayer : MediaPlayer {
@@ -42,6 +43,19 @@ class AndroidMediaPlayer : MediaPlayer {
 
     private val _currentSong = MutableStateFlow<Cancion?>(null)
     override val currentSong: StateFlow<Cancion?> = _currentSong.asStateFlow()
+
+
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        @Volatile
+        private var INSTANCE: AndroidMediaPlayer? = null
+
+        fun getInstance(): AndroidMediaPlayer {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: AndroidMediaPlayer().also { INSTANCE = it }
+            }
+        }
+    }
 
     fun initialize(context: Context) {
         this.context = context
@@ -76,14 +90,14 @@ class AndroidMediaPlayer : MediaPlayer {
     override suspend fun playSong(song: Cancion) {
 
         try {
-            println(_exoPlayer.value) // aqui sale null
-            _exoPlayer.value.let { player ->
+            _exoPlayer.value?.let { player ->
                 val mediaItem = MediaItem.fromUri(song.source)
-                player?.setMediaItem(mediaItem)
-                player?.prepare()
-                player?.play()
+                player.setMediaItem(mediaItem)
+                player.prepare()
+                player.play()
                 _currentSong.value = song
-
+            } ?: run {
+                println("ExoPlayer no está inicializado")
             }
         } catch (e: Exception) {
             e.printStackTrace()

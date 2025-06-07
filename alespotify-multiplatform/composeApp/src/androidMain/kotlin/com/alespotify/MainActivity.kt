@@ -8,12 +8,10 @@ import com.alespotify.model.player.MediaPlayer
 
 
 class MainActivity : ComponentActivity() {
-    private lateinit var mediapl: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mediapl = AndroidMediaPlayer().apply {
-            initialize(this@MainActivity)
-        }
+
+        AndroidMediaPlayer.getInstance().initialize(this)
         setContent {
             App()
         }
@@ -21,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediapl.release()
+        AndroidMediaPlayer.getInstance().release()
     }
 }
 

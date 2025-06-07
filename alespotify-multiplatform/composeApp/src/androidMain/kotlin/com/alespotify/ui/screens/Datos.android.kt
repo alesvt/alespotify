@@ -321,7 +321,7 @@ fun MadeForYouSection(playlists: List<Playlist>, queueViewModel: QueueViewModel)
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(playlists) { pl ->
-                MadeForYouItem(pl, queueViewModel = QueueViewModel())
+                MadeForYouItem(pl, queueViewModel = queueViewModel)
             }
         }
     }
