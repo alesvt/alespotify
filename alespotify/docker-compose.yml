@@ -1,6 +1,0 @@
-services:
-  app:
-    container_name: "testdockercp"
-    image: 'ale'
-    ports:
-      - 8080:8080
